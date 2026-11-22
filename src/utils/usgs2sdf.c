@@ -314,7 +314,8 @@ char *argv[];
 		fprintf(stdout," Done!\nWriting \"%s\"... ",splatfile);
 		fflush(stdout);
 
-		fd=fopen(splatfile,"w");
+		fd=fopen(splatfile,"wb");	/* WIN32PORT P9: binary, so SDF files are
+						   byte-identical to Linux (no CR-LF); same as "w" on Linux */
 
 		fprintf(fd,"%.0f\n%.0f\n%.0f\n%.0f\n", max_west, min_north, min_west, max_north);
 
