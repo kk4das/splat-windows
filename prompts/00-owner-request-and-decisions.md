@@ -30,3 +30,5 @@
 - "Approve Stage 3 and D12" (Stage 3 approved; last-digit tolerance for .gp/.ano ratified).
 - "Yes, start Stage 4" (D8 → MSYS2 gnuplot). D9: "ppm2png helper (Recommended)". USGS postdownload: "Defer it (Recommended)".
 - "Accept D13" (graph PNGs pass on same size plus .gp data passing D12; pixel % for information).
+- (Stage 4 README run) "that worked" (coverage map in Google Earth Pro). "yes, add kmz to ppm2png and the readme". Project moved to D:\ClaudeAI\projects\SPLATWIN at owner request.
+- "Checkpoint and save now. Next step is to plan a GUI front end to eliminate the need for command line and make it a modern windows program. It needs multiple options for locating stations - a call sign lookup on QRZ.com is the most common. hams are familiar with maidenhead square designation so we should provide that option as well. We should view the coverage map in the application itself and provide a link out to google earth pro if possible."

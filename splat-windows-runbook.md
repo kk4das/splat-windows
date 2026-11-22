@@ -243,7 +243,7 @@ Windows.
   owner ratifies the tolerance**; Code doesn't pick one silently.
 - **Gate:** a pass/fail table for every case, and the ratified tolerance recorded here.
 
-### Stage 4 — Graphs, data pipeline, and helpers (DONE 2026-11-22, awaiting owner review + owner's end-to-end run)
+### Stage 4 — Graphs, data pipeline, and helpers (DONE 2026-11-22; owner's end-to-end run done, with fixes; formal approval pending)
 *Plain language:* make the everyday workflow work end-to-end on Windows: get terrain, convert it,
 make plots.
 - Install and verify gnuplot (D8); render every graph type on Windows and compare it visually to
@@ -256,7 +256,7 @@ make plots.
   add a post-step that converts PPM to PNG.
 - **Gate:** owner runs one real job end to end from the README instructions alone.
 
-### Stage 5 — Packaging & hand-off ⬅ next, needs D10
+### Stage 5 — Packaging & hand-off (needs D10; the GUI plan proposes folding it into G6)
 *Plain language:* produce a zip someone else can unpack and use.
 - `dist\splat-1.4.2-win64.zip`: all `.exe`s, the English docs (text and PDF), sample data,
   `COPYING`, a Windows `README`, and the port's source (GPL).
@@ -271,7 +271,18 @@ make plots.
   compile-time builds.
 - Multi-threading of coverage maps (the 5950X has 32 threads, and coverage runs are slow), **verified
   against golden output**.
-- A simple GUI or PowerShell front end.
+- ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
+
+### Stages G0–G6 — GUI front end ⬅ next: PLAN written, awaiting owner decisions G1–G8
+*Plain language:* a normal Windows program, with no command line. Stations are located by call
+sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
+coverage map is shown in the window, with a button that opens it in Google Earth Pro.
+- **Full plan, research and decisions: `reference/gui-plan.md`.** The GUI drives the verified
+  `splat.exe` unchanged, so equivalence with Linux still holds.
+- G0 spike (map overlay) → G1 stations → G2 QRZ → G3 path → G4 coverage → G5 Google Earth and polish
+  → G6 packaging (absorbs Stage 5).
+- **Needs before G0:** the owner's G1–G8 answers, approval to install the .NET 10 SDK (not on this
+  PC), and an explicit "start Stage G0".
 
 ---
 
@@ -378,6 +389,20 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — CHECKPOINT (owner: "Checkpoint and save now").**
+  - **State:** the port is done and equivalent to Linux (Stages 0–3 approved). Stage 4 is done;
+    the owner ran it end to end from the README (terrain, path reports, a coverage map, PNG, and
+    Google Earth web and Pro). That run produced the README, KMZ and path-KML fixes below.
+    Formal Stage 4 approval is pending.
+  - **GUI front end planned** at the owner's request: `reference/gui-plan.md`, with stages G0–G6
+    and decisions G1–G8.
+  - **Research:** QRZ XML spec 1.34 (read in the browser; automated fetch was refused with 403):
+    full data needs an XML subscription; the `geoloc` field gives the position source. callook.info
+    is free, US only, and geocodes the mailing address.
+  - **This PC:** WebView2 157 is present, the .NET SDK is not, Google Earth Pro is installed.
+  - **Answered for the owner, no code change:** point-to-point `-kml` gives
+    `<TX>-to-<RX>.kml` (both sites and the path); it opens in Google Earth Pro only (it has the
+    same Pro-only icon). That file was never compared with Linux (it is a G5 test item).
 - **2026-11-22 — Owner's README run (Stage 4 gate, in progress): fixes from what the owner hit.**
   - Project moved to `D:\ClaudeAI\projects\SPLATWIN` at the owner's request. The app's copy left
     out `.git`; Code copied it across (347 files, `git fsck` clean, all tracked files matched).
