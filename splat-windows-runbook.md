@@ -300,7 +300,7 @@ make plots.
 
   | Site | Role | Lat, Lon (WGS84) | Antenna AGL | In git as |
   |---|---|---|---|---|
-  | Club repeater **K4HTS** | TX | 38.924216, −77.205793 | 240 ft | exact (public site) |
+  | Club repeater **K4HTA** | TX | 38.924216, −77.205793 | 240 ft | exact (public site) |
   | KK4DAS home QTH | RX 1 | 38.963031, −77.276738 | 30 ft (second-story chimney mount) | **rounded to 38.96, −77.28** (private residence; about 0.6 mi, a negligible change at this path length) |
   | American Legion Hall, 330 Center St N, Vienna | RX 2 | 38.905259, −77.270717 | 6 ft (mobile) | exact (public site) |
 
@@ -314,9 +314,12 @@ make plots.
 - **2026-11-21 — D7 receive sites completed** (owner: "american legion hall - use mobile - about
   6' - my QTH on second story chimney - about 30' - repeater call sign is K4HTS"). See the table
   above.
-- **Still open:** D3–D6, D8–D10. Polarization is assumed **vertical** and has not been confirmed. D5
-  (analysis area) defaults to the recommendation (standard 8×8°, HD 4×4°) unless the owner says
-  otherwise.
+- **2026-11-21 — Correction: the repeater call sign is K4HTA, not K4HTS** (owner: "correction -
+  repeater is k4hta"). The quote above is kept verbatim; the table is corrected.
+- **2026-11-21 — Polarization → vertical, confirmed** (owner: "vertical polarization is correct").
+  This completes D7.
+- **Still open:** D3–D6, D8–D10. D5 (analysis area) defaults to the recommendation (standard 8×8°,
+  HD 4×4°) unless the owner says otherwise.
 
 ---
 

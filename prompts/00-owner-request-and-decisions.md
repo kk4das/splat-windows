@@ -20,3 +20,4 @@
   the runbook (the home QTH is rounded there).
 - "25-30 miles is right" (D7 coverage radius).
 - "american legion hall - use mobile - about 6' - my QTH on second story chimney - about 30'  - repeater call sign is K4HTS" (D7).
+- "correction - repeater is k4hta, vertical polarization is correct" (call sign K4HTA; D7 complete).
