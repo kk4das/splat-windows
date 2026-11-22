@@ -45,7 +45,8 @@ which tiles you need, downloads them from public sources (no login), and convert
 ## 3. Describe your sites
 
 Make a working folder, for example `C:\splat-work`, and create one **`.qth`** file per site in
-Notepad: name, latitude, longitude, and antenna height above ground (feet, or add `meters`).
+Notepad: name, latitude, longitude, and antenna height above ground. **Height is in feet** unless
+you write `meters` after it: `9.14` means 9.14 **feet**, while `9.14 meters` means 30 ft.
 **SPLAT! uses WEST longitude as a positive number**, so `-77.205793` from Google Maps is written
 `77.205793`:
 
@@ -87,7 +88,10 @@ Other jobs use the same pattern; `...\sdf3` below is short for the full `-d` pat
 | Same in dBm instead of dBµV/m | add `-dbm` | |
 | High resolution (1″ terrain) | use `splat-hd` and `-d ...\sdf1` | |
 
-`-L 6` means "receiver antenna 6 ft above ground". Run `splat` with no arguments for every option.
+`-L 6` means "receiver antenna 6 ft above ground". **The number is required:** with `-L` alone
+(`-L -R 30`), SPLAT! silently skips the coverage calculation and draws only grey terrain and blue
+water, with no colours and no error. The same is true of `-c`. Run `splat` with no arguments for
+every option.
 
 To avoid typing `-d` each time, put the SDF folder's path on the first line of
 `%USERPROFILE%\.splat_path` (e.g. `C:\Users\you\.splat_path`).

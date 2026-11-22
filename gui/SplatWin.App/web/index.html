@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPLAT! map</title>
+<link rel="stylesheet" href="vendor/leaflet-1.9.4/leaflet.css">
+<style>
+  html, body, #map { height: 100%; margin: 0; }
+  body { font: 13px/1.4 "Segoe UI Variable", "Segoe UI", sans-serif; background: #f3f3f3; }
+  #empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+           color: #555; font-size: 15px; pointer-events: none; z-index: 500; }
+  [hidden] { display: none !important; }   /* #empty uses display:flex, which would beat the hidden attribute */
+  #readout { position: absolute; left: 10px; bottom: 26px; z-index: 600; background: rgba(255,255,255,.9);
+             padding: 3px 8px; border-radius: 4px; font: 12px Consolas, monospace; color: #222; }
+  @media (prefers-color-scheme: dark) { body { background: #202020; } #empty { color: #bbb; } }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="empty">Open a SPLAT! coverage map (.kml) to show it here.</div>
+<div id="readout" hidden></div>
+<script src="vendor/leaflet-1.9.4/leaflet.js"></script>
+<script>
+"use strict";
+// Background maps (owner decision G2): streets and terrain, no satellite. Both need attribution.
+const streets = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' });
+const terrain = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
+  maxZoom: 17, subdomains: "abc",
+  attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, SRTM | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)' });
+
+const map = L.map("map", { zoomSnap: 0.25, layers: [streets] }).setView([39.0, -77.2], 9);
+L.control.layers({ "Streets": streets, "Terrain": terrain }, null, { position: "topright" }).addTo(map);
+L.control.scale({ imperial: true, metric: true }).addTo(map);
+
+let overlay = null, sites = L.layerGroup().addTo(map), opacity = 0.65;
+const readout = document.getElementById("readout");
+map.on("mousemove", e => {
+  readout.hidden = false;
+  readout.textContent = `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
+});
+
+// fitBounds needs the map's real size. If the view has no size yet (window still laying out),
+// fit as soon as it gets one; otherwise Leaflet zooms out to the whole world.
+function fitWhenSized(bounds) {
+  map.invalidateSize();
+  const s = map.getSize();
+  if (s.x > 0 && s.y > 0) { map.fitBounds(bounds); return; }
+  const ro = new ResizeObserver(() => {
+    map.invalidateSize();
+    const t = map.getSize();
+    if (t.x > 0 && t.y > 0) { ro.disconnect(); map.fitBounds(bounds); }
+  });
+  ro.observe(document.getElementById("map"));
+}
+
+function post(msg) { if (window.chrome && chrome.webview) chrome.webview.postMessage(msg); }
+
+// Called by the app (or by ?overlay=<json url> for testing in a plain browser).
+// The image is already re-sampled to Web Mercator rows, so a plain stretch between the corners is exact.
+window.splat = {
+  showMap(m) {
+    document.getElementById("empty").hidden = true;
+    if (overlay) map.removeLayer(overlay);
+    sites.clearLayers();
+    const bounds = [[m.south, m.west], [m.north, m.east]];
+    overlay = L.imageOverlay(m.image, bounds, { opacity, interactive: false }).addTo(map);
+    overlay.on("load", () => post({ type: "overlay-loaded" }));
+    overlay.on("error", () => post({ type: "error", text: "map image failed to load" }));
+    for (const p of m.placemarks || [])
+      L.marker([p.lat, p.lon], { title: p.name }).bindTooltip(p.name, { permanent: true, direction: "right" }).addTo(sites);
+    fitWhenSized(bounds);
+  },
+  setOpacity(v) { opacity = v; if (overlay) overlay.setOpacity(v); },
+};
+
+const q = new URLSearchParams(location.search).get("overlay");
+if (q) {
+  const base = new URL(q, location.href);   // the image path in the JSON is relative to the JSON file
+  fetch(base).then(r => r.json()).then(m => { m.image = new URL(m.image, base).href; window.splat.showMap(m); });
+}
+post({ type: "ready" });
+</script>
+</body>
+</html>

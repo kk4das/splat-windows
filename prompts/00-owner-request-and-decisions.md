@@ -35,3 +35,4 @@
 - GUI G3: "Yes, I subscribe" (QRZ XML Logbook Data subscription).
 - GUI decisions: G1 "C#/.NET 10 WPF (Recommended)", G2 "Streets + terrain (Recommended)", G4 "App draws graphs (Recommended)", G5/D10 "Club members too (Recommended)", G6 "GUI first (Recommended)", G7 "GPLv2 (Recommended)", G8 "SPLAT! for Windows".
 - D6: "we can host on my github - kk4das - I'll make generally available to hams once we have club members try it out". "start G0" (approves the .NET 10 SDK install).
+- (G0) owner approved the .NET 10 SDK install with "start G0".

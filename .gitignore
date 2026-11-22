@@ -10,3 +10,7 @@ work/
 src/splat.h
 src/std-parms.h
 src/hd-parms.h
+# GUI build output
+gui/**/bin/
+gui/**/obj/
+gui/publish/

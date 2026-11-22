@@ -1,0 +1,24 @@
+﻿<Window x:Class="SplatWin.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="SPLAT! for Windows (G0 preview)" Width="1200" Height="820" MinWidth="640" MinHeight="420"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Padding="12,8">
+            <DockPanel LastChildFill="False">
+                <Button x:Name="OpenButton" Content="Open coverage map…" Padding="14,6" Click="Open_Click"
+                        ToolTip="Open a SPLAT! coverage map (.kml made with -kml)"/>
+                <Button x:Name="EarthButton" Content="Open in Google Earth Pro" Padding="14,6" Margin="8,0,0,0"
+                        IsEnabled="False" Click="Earth_Click"/>
+                <TextBlock Text="Map opacity" VerticalAlignment="Center" Margin="24,0,8,0"/>
+                <Slider x:Name="OpacitySlider" Width="160" Minimum="0" Maximum="1" Value="0.65" VerticalAlignment="Center"
+                        ValueChanged="Opacity_Changed" IsEnabled="False"/>
+            </DockPanel>
+        </Border>
+        <Border DockPanel.Dock="Bottom" Padding="12,4">
+            <TextBlock x:Name="Status" Text="Starting…" TextTrimming="CharacterEllipsis"/>
+        </Border>
+        <wv2:WebView2 x:Name="Web"/>
+    </DockPanel>
+</Window>

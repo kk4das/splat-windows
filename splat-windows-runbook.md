@@ -79,6 +79,9 @@ from PowerShell or `cmd` and **produce the same answers as the Linux build** for
 | winget | present | Proposed installer for MSYS2 (with approval). |
 | WSL | `Debian` (stopped, default), `docker-desktop` (stopped). **Added 2026-11-21: `splat-ref`** (Debian 13.5, `%LOCALAPPDATA%\wsl\{ebb27f84-3027-43a7-b551-44aade80d4a1}`, 2.86 GB) with g++ 14.2, libbz2-dev 1.0.8, gnuplot 6.0.2; upstream built in `/opt/splat`, reference runs in `/opt/ref` | The Linux oracle. **Never modify the existing `Debian`.** Run work in `splat-ref` as script files (`wsl -d splat-ref -u root -- bash /mnt/c/.../x.sh`); `bash -c` strings through `wsl.exe` get mangled. A harmless "Failed to detect nested virtualization" warning prints on every call. Remove with `wsl --unregister splat-ref`. |
 | gnuplot | **Installed 2026-11-22 (D8): MSYS2 `mingw-w64-ucrt-x86_64-gnuplot` 6.0.6** (about 1 GB with its GUI dependencies, inside `C:\msys64`; not on PATH) | `dist\gnuplot.cmd` (written by `build.ps1`) points SPLAT! at it; put `dist\` on PATH for the session. fontconfig's install hook warns "failed to write cache"; that's harmless (a per-user cache exists). |
+| .NET SDK (GUI) | **10.0.404, installed 2026-11-22 for G0** (owner: "start G0") at `D:\ClaudeAI\tools\dotnet10` (775 MB), via Microsoft's signed `dotnet-install.ps1`, **not on PATH**, no admin | Used only through `gui\build-gui.ps1`, which turns off .NET telemetry and puts the NuGet cache at `D:\ClaudeAI\tools\nuget-packages` (439 MB). Kept off C:, which has only about 23 GB free. A .NET 6 runtime at `C:\Program Files\dotnet` was there before and is untouched. |
+| WebView2 runtime | 157 (part of Windows 11) | The GUI's map view. |
+| Google Earth Pro | installed by the owner, `C:\Program Files\Google\Google Earth Pro\client\googleearth.exe` | The GUI's "Open in Google Earth Pro" button. |
 | Image viewer for PPM | none needed (D9) | `scripts\ppm2png.ps1` converts maps to PNG with .NET, plus a Google Earth `*-png.kml` (Pro) and `.kmz` (web). Google Earth Pro installed by the owner 2026-11-22; both it and Google Earth on the web are used. |
 | Hardware | Ryzen 9 5950X (16C/32T), 64 GB RAM | Enough for the largest SPLAT! HD build (8×8°, about 3.3 GB). |
 
@@ -273,7 +276,7 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G6 — GUI front end ⬅ next: decisions G1–G8 made; awaiting .NET SDK approval + "start Stage G0"
+### Stages G0–G6 — GUI front end (G0 DONE 2026-11-22, awaiting owner's alignment check; G1 next)
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
@@ -396,6 +399,18 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — Stage G0 (map spike) complete. HALT for owner review.**
+  - WPF app in `gui\` (a Core library, 18 unit tests, and the app), the .NET 10 SDK on D:, and
+    Leaflet 1.9.4 vendored (npm sha512 checked).
+  - SPLAT! maps are re-sampled to Web Mercator rows; a naive overlay is up to 0.5 mi out at 39 N.
+    End to end in the rendered page, 1600/1600 points show SPLAT!'s colour within one map pixel;
+    unwarped, only 942/1600 do. The unit tests fail when the warp is removed.
+  - **Found in the owner's run:**
+    - Their `coverage.ppm` had no signal at all, because the command was `-L -R 30` (no height).
+      SPLAT! silently skips the calculation; reproduced byte for byte.
+    - `KK4DAS.qth` holds 9.14 without `meters`, so it is read as 9.14 ft.
+    - The README now warns about both, and the GUI will validate these inputs.
+  - Report: `reports/stageG0-map-spike.md`.
 - **2026-11-22 — CHECKPOINT (owner: "Checkpoint and save now").**
   - **State:** the port is done and equivalent to Linux (Stages 0–3 approved). Stage 4 is done;
     the owner ran it end to end from the README (terrain, path reports, a coverage map, PNG, and
