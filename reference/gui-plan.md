@@ -1,7 +1,7 @@
 # SPLAT! for Windows: GUI front end, plan for owner review (2026-11-22)
 
-**Status: PLAN ONLY.** Nothing is built yet. This document needs the owner's decisions (G1–G8 at
-the end) and an explicit "start Stage G0" before any work begins.
+**Status: PLAN, all decisions G1–G8 made 2026-11-22.** Nothing is built yet. Before any work: owner
+approval to install the .NET 10 SDK, and an explicit "start Stage G0".
 
 ## The owner's request
 > "plan a GUI front end to eliminate the need for command line and make it a modern windows
@@ -160,11 +160,11 @@ antenna.**
 ## Decisions for the owner
 | # | Decision | Recommendation |
 |---|---|---|
-| **G1** | **UI technology** | C#/.NET 10 + WPF (Fluent theme) + WebView2/Leaflet; install the .NET 10 SDK. |
-| **G2** | **Background maps** | OpenStreetMap streets (free, with attribution) plus a free terrain layer; satellite only if you want it, which may need a free account or key. |
+| **G1** | **UI technology** | **DECIDED 2026-11-22:** C#/.NET 10 + WPF (Fluent theme) + WebView2/Leaflet; install the .NET 10 SDK. |
+| **G2** | **Background maps** | **DECIDED 2026-11-22:** streets + terrain (OpenStreetMap, plus a free topographic layer); no satellite. Was: OpenStreetMap streets (free, with attribution) plus a free terrain layer; satellite only if you want it, which may need a free account or key. |
 | **G3** | **Do you have a QRZ XML Logbook Data subscription?** Without one, QRZ lookups won't give usable positions. | **DECIDED 2026-11-22: the owner subscribes** ("Yes, I subscribe"). QRZ is the primary lookup. callook.info stays as the free US fallback for users without a subscription. |
-| **G4** | **Draw graphs in the app instead of gnuplot** (removes the ~1 GB dependency) | Yes. gnuplot stays available for the command line. |
-| **G5** | **Who uses it (this is D10)**: just you, or club members too? This decides the installer, per-user QRZ sign-in and help text. | Build for "club members on their own PCs" from the start; it costs little. |
-| **G6** | **Order: GUI before Stage 5 packaging**, so one package holds both | Yes. Stage 5 becomes G6. |
-| **G7** | **Licence for the GUI.** It ships with GPLv2 SPLAT!. | GPLv2 as well (simplest, matches SPLAT!). |
-| **G8** | **App name** shown in the window and Start menu | e.g. "SPLAT! for Windows"; your call. |
+| **G4** | **Draw graphs in the app instead of gnuplot** (removes the ~1 GB dependency) | **DECIDED 2026-11-22:** the app draws the graphs. gnuplot stays available for the command line. |
+| **G5** | **Who uses it (this is D10)**: just you, or club members too? This decides the installer, per-user QRZ sign-in and help text. | **DECIDED 2026-11-22:** club members too. Build for "club members on their own PCs" from the start; it costs little. |
+| **G6** | **Order: GUI before Stage 5 packaging**, so one package holds both | **DECIDED 2026-11-22:** GUI first. Stage 5 becomes G6. |
+| **G7** | **Licence for the GUI.** It ships with GPLv2 SPLAT!. | **DECIDED 2026-11-22:** GPLv2 as well (simplest, matches SPLAT!). |
+| **G8** | **App name** shown in the window and Start menu | **DECIDED 2026-11-22:** "SPLAT! for Windows". |

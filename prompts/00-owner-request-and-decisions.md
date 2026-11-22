@@ -33,3 +33,4 @@
 - (Stage 4 README run) "that worked" (coverage map in Google Earth Pro). "yes, add kmz to ppm2png and the readme". Project moved to D:\ClaudeAI\projects\SPLATWIN at owner request.
 - "Checkpoint and save now. Next step is to plan a GUI front end to eliminate the need for command line and make it a modern windows program. It needs multiple options for locating stations - a call sign lookup on QRZ.com is the most common. hams are familiar with maidenhead square designation so we should provide that option as well. We should view the coverage map in the application itself and provide a link out to google earth pro if possible."
 - GUI G3: "Yes, I subscribe" (QRZ XML Logbook Data subscription).
+- GUI decisions: G1 "C#/.NET 10 WPF (Recommended)", G2 "Streets + terrain (Recommended)", G4 "App draws graphs (Recommended)", G5/D10 "Club members too (Recommended)", G6 "GUI first (Recommended)", G7 "GPLv2 (Recommended)", G8 "SPLAT! for Windows".

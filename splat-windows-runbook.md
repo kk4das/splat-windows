@@ -273,7 +273,7 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G6 — GUI front end ⬅ next: PLAN written, awaiting owner decisions G1–G8
+### Stages G0–G6 — GUI front end ⬅ next: decisions G1–G8 made; awaiting .NET SDK approval + "start Stage G0"
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
@@ -281,8 +281,11 @@ coverage map is shown in the window, with a button that opens it in Google Earth
   `splat.exe` unchanged, so equivalence with Linux still holds.
 - G0 spike (map overlay) → G1 stations → G2 QRZ → G3 path → G4 coverage → G5 Google Earth and polish
   → G6 packaging (absorbs Stage 5).
-- **Needs before G0:** the owner's G1–G8 answers, approval to install the .NET 10 SDK (not on this
-  PC), and an explicit "start Stage G0".
+- **Decided 2026-11-22:** G1 C#/.NET 10 WPF · G2 streets + terrain, no satellite · G3 QRZ subscriber
+  · G4 app draws graphs · G5 club members too (settles **D10**) · G6 GUI first, Stage 5 → G6 · G7 GPLv2
+  · G8 "SPLAT! for Windows".
+- **Needs before G0:** approval to install the .NET 10 SDK (not on this PC), and an explicit "start
+  Stage G0".
 
 ---
 
@@ -361,7 +364,8 @@ coverage map is shown in the window, with a button that opens it in Google Earth
   difference for information. It fails the graph if any `.gp` file of its case fails, if the size
   differs, or if the PNG is missing (gnuplot is installed now, so a missing PNG is no longer
   DEFERRED). Visual spot-checks with `compare_graphs.ps1` only when gnuplot changes version.
-- **Still open:** D6, D10.
+- **2026-11-22 — D10 → club members too** (via GUI decision G5, "Club members too (Recommended)").
+- **Still open:** D6.
 
 ---
 
