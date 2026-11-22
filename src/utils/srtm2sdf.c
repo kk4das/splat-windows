@@ -17,6 +17,13 @@
 #include <unistd.h>
 #include <bzlib.h>
 
+/* WIN32PORT P3: on Windows, open() defaults to TEXT mode, which turns CR-LF
+   into LF and stops at the first 0x1A byte, silently truncating binary .hgt
+   elevation data. O_BINARY doesn't exist on Linux, where it's a no-op. */
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+
 /* WIN32PORT P1: Windows forbids ':' in filenames; SDF names use '_' there (D3). */
 #ifdef _WIN32
 #define SDF_NAME_FMT "%d_%d_%d_%d"
@@ -164,7 +171,7 @@ int ReadSRTM(char *filename)
 		}
 	}
 
-	infile=open(filename, O_RDONLY);
+	infile=open(filename, O_RDONLY|O_BINARY);
 
 	if (infile==0)
 	{
