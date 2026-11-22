@@ -300,9 +300,9 @@ make plots.
 
   | Site | Role | Lat, Lon (WGS84) | Antenna AGL | In git as |
   |---|---|---|---|---|
-  | Club repeater | TX | 38.924216, −77.205793 | 240 ft | exact (public site) |
-  | KK4DAS home QTH | RX 1 | 38.963031, −77.276738 | **open** | **rounded to 38.96, −77.28** (private residence; about 0.6 mi, a negligible change at this path length) |
-  | American Legion Hall, 330 Center St N, Vienna | RX 2 | 38.905259, −77.270717 | **open** | exact (public site) |
+  | Club repeater **K4HTS** | TX | 38.924216, −77.205793 | 240 ft | exact (public site) |
+  | KK4DAS home QTH | RX 1 | 38.963031, −77.276738 | 30 ft (second-story chimney mount) | **rounded to 38.96, −77.28** (private residence; about 0.6 mi, a negligible change at this path length) |
+  | American Legion Hall, 330 Center St N, Vienna | RX 2 | 38.905259, −77.270717 | 6 ft (mobile) | exact (public site) |
 
   Radio: **146.685 MHz, ERP 93 W**, about 100 ft of hard line (negligible loss, already inside the
   ERP figure). Polarization is assumed **vertical** (FM repeater), to be confirmed. The paths are
@@ -311,8 +311,12 @@ make plots.
   (a 2×2° region).
 - **2026-11-21 — D7 coverage radius → 25–30 mi** (owner: "25-30 miles is right"). Coverage test
   cases use `-R 30`. That needs the four tiles N38W078, N38W077, N39W078, and N39W077.
-- **Still open:** D3–D6, D8–D10; for D7, the two RX antenna heights, polarization, and the
-  repeater's call sign/name.
+- **2026-11-21 — D7 receive sites completed** (owner: "american legion hall - use mobile - about
+  6' - my QTH on second story chimney - about 30' - repeater call sign is K4HTS"). See the table
+  above.
+- **Still open:** D3–D6, D8–D10. Polarization is assumed **vertical** and has not been confirmed. D5
+  (analysis area) defaults to the recommendation (standard 8×8°, HD 4×4°) unless the owner says
+  otherwise.
 
 ---
 

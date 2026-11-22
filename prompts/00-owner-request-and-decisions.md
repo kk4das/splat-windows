@@ -19,3 +19,4 @@
   uses about 100 feet of hard line, feed line loss should be minimal." Coordinates are recorded in
   the runbook (the home QTH is rounded there).
 - "25-30 miles is right" (D7 coverage radius).
+- "american legion hall - use mobile - about 6' - my QTH on second story chimney - about 30'  - repeater call sign is K4HTS" (D7).
