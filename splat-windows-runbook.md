@@ -365,7 +365,10 @@ coverage map is shown in the window, with a button that opens it in Google Earth
   differs, or if the PNG is missing (gnuplot is installed now, so a missing PNG is no longer
   DEFERRED). Visual spot-checks with `compare_graphs.ps1` only when gnuplot changes version.
 - **2026-11-22 — D10 → club members too** (via GUI decision G5, "Club members too (Recommended)").
-- **Still open:** D6.
+- **2026-11-22 — D6 → the owner's GitHub (kk4das)** (owner: "we can host on my github - kk4das - I'll
+  make generally available to hams once we have club members try it out"). Repo creation and the
+  first push are outward-facing: Code asks first (name, and private vs public for the club trial).
+- **Still open:** none of D1–D13. GUI: all of G1–G8 decided.
 
 ---
 
