@@ -27,3 +27,4 @@
 - "Yes, start Stage 2".
 - "Approve, keep CR-LF" (Stage 2 approved; D11 → CR-LF).
 - "Yes, start Stage 3".
+- "Approve Stage 3 and D12" (Stage 3 approved; last-digit tolerance for .gp/.ano ratified).

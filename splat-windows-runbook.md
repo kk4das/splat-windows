@@ -231,7 +231,7 @@ Windows.
 - **Gate:** report with the full port diff stat (`git diff --stat upstream-1.4.2`), the smoke-test
   output, and anything that surprised us.
 
-### Stage 3 — Equivalence with Linux (prove it's the same program) (DONE 2026-11-22, awaiting owner review)
+### Stage 3 — Equivalence with Linux (prove it's the same program) (DONE 2026-11-22; owner approved)
 *Plain language:* run every test case on Windows and show the answers match the Linux originals.
 - `scripts/compare_outputs.py` (project `.venv`): text reports compared line-by-line with numeric
   tolerance; SDF files compared value-by-value; PPM maps compared pixel-by-pixel (count and location
@@ -333,8 +333,11 @@ make plots.
 - **2026-11-22 — D11 → keep CR-LF** for Windows text outputs (owner: "Approve, keep CR-LF").
   Stage 3 compares text with line endings normalised; that is the one ratified expected difference
   so far.
-- **Still open:** D6, D8–D10, **D12** (Windows-vs-Linux numeric tolerance; raised in the Stage 3
-  report; recommended: exact except 1 unit in the last printed digit in `.gp`/`.ano` files).
+- **2026-11-22 — D12 → tolerance ratified** (owner: "Approve Stage 3 and D12"). Windows output must
+  match Linux **exactly**, except in `.gp` (gnuplot data) and `.ano` (alphanumeric output) files,
+  where a number may differ by 1 unit in its last printed digit. This is implemented as
+  `compare_outputs.py --last-digit`, and it is the acceptance test for every later change to the port.
+- **Still open:** D6, D8–D10.
 
 ---
 
@@ -362,6 +365,7 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — Stage 3 approved by owner; D12 tolerance ratified** ("Approve Stage 3 and D12").
 - **2026-11-22 — Stage 3 complete: equivalence with Linux. HALT for owner review.** All 20 cases
   run on Windows with the same exit codes. Of 103 files: **26 byte-identical (all 9 maps including
   the 155 MB HD map, all 8 SDFs, KML, GEO)**, 61 identical apart from the ratified expected
