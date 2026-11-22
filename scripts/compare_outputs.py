@@ -11,11 +11,13 @@ decision or a documented cause, and each application is counted in the output. N
 exactly unless --abs-tol is given (the tolerance is the owner's call, Stage 3 gate).
 
 Statuses: SAME (bytes identical), SAME* (identical after the listed expected differences),
-TOL (numeric differences within --abs-tol), DIFF, MISSING, EXTRA, DEFERRED (output needs a tool
-that isn't installed yet: gnuplot PNGs, Stage 4).
+TOL (numeric differences within --abs-tol), GRAPH (a graph PNG that passes under owner decision
+D13: same size, and every .gp file of its case passes; pixel difference shown for information),
+DIFF, MISSING, EXTRA. (Before Stage 4 a missing PNG was DEFERRED; gnuplot is installed now, so it
+is MISSING.)
 Stdlib only.
 """
-import argparse, hashlib, json, re, shutil, sys, tempfile
+import argparse, hashlib, json, re, shutil, sys, tempfile, zlib
 from pathlib import Path
 
 EXPECTED = {
@@ -112,6 +114,61 @@ def cmp_ppm(lin: bytes, win: bytes, *_):
     return "DIFF", f"{n} of {wa*ha} pixels differ ({100*n/(wa*ha):.4f}%), box x{x0}-{x1} y{y0}-{y1}"
 
 
+def png_pixels(b: bytes):
+    """Decode an 8-bit, non-interlaced PNG to (w, h, list of RGB(A) tuples). Returns (w, h, None)
+    when the format isn't one this small decoder handles (the size is still known)."""
+    if b[:8] != b"\x89PNG\r\n\x1a\n":
+        raise ValueError("not a PNG")
+    pos, ihdr, plte, idat = 8, None, None, b""
+    while pos < len(b):
+        n = int.from_bytes(b[pos:pos + 4], "big"); typ = b[pos + 4:pos + 8]; data = b[pos + 8:pos + 8 + n]
+        if typ == b"IHDR": ihdr = data
+        elif typ == b"PLTE": plte = data
+        elif typ == b"IDAT": idat += data
+        pos += 12 + n
+    w, h = int.from_bytes(ihdr[0:4], "big"), int.from_bytes(ihdr[4:8], "big")
+    depth, ctype, interlace = ihdr[8], ihdr[9], ihdr[12]
+    bpp = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}.get(ctype)
+    if depth != 8 or interlace or bpp is None:
+        return w, h, None
+    raw = zlib.decompress(idat); stride = w * bpp; out = bytearray(); prev = bytearray(stride); p = 0
+    for _ in range(h):
+        f = raw[p]; line = bytearray(raw[p + 1:p + 1 + stride]); p += 1 + stride
+        for i in range(stride):
+            a = line[i - bpp] if i >= bpp else 0; c = prev[i - bpp] if i >= bpp else 0; up = prev[i]
+            if f == 1: line[i] = (line[i] + a) & 255
+            elif f == 2: line[i] = (line[i] + up) & 255
+            elif f == 3: line[i] = (line[i] + ((a + up) >> 1)) & 255
+            elif f == 4:
+                pa, pb, pc = abs(up - c), abs(a - c), abs(a + up - 2 * c)
+                line[i] = (line[i] + (a if pa <= pb and pa <= pc else up if pb <= pc else c)) & 255
+        out += line; prev = line
+    if ctype == 3:
+        px = [tuple(plte[3 * k:3 * k + 3]) for k in out]
+    elif ctype in (0, 4):
+        px = [(out[i],) * 3 + ((out[i + 1],) if ctype == 4 else ()) for i in range(0, len(out), bpp)]
+    else:
+        px = [tuple(out[i:i + bpp]) for i in range(0, len(out), bpp)]
+    if ctype in (4, 6):     # treat fully opaque RGBA like RGB, so the two formats compare
+        px = [q[:3] if q[3] == 255 else q for q in px]
+    return w, h, px
+
+
+def cmp_png(lin: bytes, win: bytes, *_):
+    """Owner decision D13: PNGs from different gnuplot versions never match byte for byte. A graph
+    passes (status GRAPH) when it has the same size; the pixel difference is reported for
+    information only. compare_runs() then fails it if the case's .gp data does not pass."""
+    if lin == win:
+        return "SAME", ""
+    (wa, ha, pa), (wb, hb, pb) = png_pixels(lin), png_pixels(win)
+    if (wa, ha) != (wb, hb):
+        return "DIFF", f"graph size {wa}x{ha} vs {wb}x{hb}"
+    if pa is None or pb is None:
+        return "GRAPH", f"{wa}x{ha}, same size (pixel % not computed for this PNG format)"
+    n = sum(1 for x, y in zip(pa, pb) if x != y)
+    return "GRAPH", f"{wa}x{ha}, same size; {n} of {wa*ha} pixels differ ({100*n/(wa*ha):.2f}%, information only)"
+
+
 def cmp_sdf(lin: bytes, win: bytes, *_):
     if lin == win:
         return "SAME", ""
@@ -128,8 +185,6 @@ def cmp_sdf(lin: bytes, win: bytes, *_):
 def compare_file(name: str, lp: Path, wp: Path, tol: float, lastdig_ext=frozenset()):
     used = set()
     if not wp.exists():
-        if name.endswith(".png"):
-            return "DEFERRED", "PNG not produced (gnuplot not installed: Stage 4)", {"nognuplot"}
         return "MISSING", "", used
     lin, win = lp.read_bytes(), wp.read_bytes()
     suf = Path(name).suffix.lower()
@@ -138,7 +193,7 @@ def compare_file(name: str, lp: Path, wp: Path, tol: float, lastdig_ext=frozense
     elif suf == ".sdf":
         s, d = cmp_sdf(lin, win)
     elif suf == ".png":
-        s, d = ("SAME", "") if lin == win else ("DIFF", "PNG bytes differ (compare visually)")
+        s, d = cmp_png(lin, win)
     elif suf in TEXT_EXT or name.startswith("stdout"):
         s, d = cmp_text(lin, win, name, tol, used, suf in lastdig_ext)
     else:
@@ -171,6 +226,13 @@ def compare_runs(lin_root: Path, win_root: Path, cases_json: Path, tol: float, q
             rows.append((cid, name, s, det))
             for u in used:
                 expected_used[u] = expected_used.get(u, 0) + 1
+        # D13: a graph only passes if the data it was drawn from (the case's .gp files) passes.
+        case_rows = [r for r in rows if r[0] == cid]
+        bad_gp = [r[1] for r in case_rows if r[1].endswith(".gp") and r[2] in ("DIFF", "MISSING")]
+        if bad_gp:
+            for i, r in enumerate(rows):
+                if r[0] == cid and r[2] == "GRAPH":
+                    rows[i] = (cid, r[1], "DIFF", f"graph data {bad_gp[0]} does not pass ({r[3]})")
         for wname in wm.get(cid, {}).get("files", {}):
             if wname not in lin_names:
                 rows.append((cid, wname, "EXTRA", "produced on Windows only"))
@@ -206,14 +268,15 @@ def self_test(lin_root: Path, cases_json: Path):
         bad, _, _ = compare_runs(lin_root, base, cases_json, 0.0, quiet=True)
         results = [("clean Windows-like copy passes", bad == 0, f"{bad} problems")]
 
-        def mutate(label, fn, expect_status, case, fname, lastdig_ext=frozenset()):
+        def mutate(label, fn, expect_status, case, fname, lastdig_ext=frozenset(), also_bad=()):
             # The change must be caught IN THE FILE THAT WAS CHANGED, not anywhere in the run
             # (a first version of this test "passed" on an unrelated difference).
             t = tmp / ("m" + str(len(results)))
             shutil.copytree(base, t)
             fn(t)
             _, rows, _ = compare_runs(lin_root, t, cases_json, 0.0, quiet=True, lastdig_ext=lastdig_ext)
-            others = [x for x in rows if x[2] in ("DIFF", "MISSING", "EXTRA") and (x[0], x[1]) != (case, fname)]
+            others = [x for x in rows if x[2] in ("DIFF", "MISSING", "EXTRA") and (x[0], x[1]) != (case, fname)
+                      and (x[0], x[1]) not in also_bad]
             hit = [x for x in rows if x[2] == expect_status and (x[0], x[1]) == (case, fname)]
             if others:
                 hit = []
@@ -259,6 +322,25 @@ def self_test(lin_root: Path, cases_json: Path):
         mutate("tolerance: .ano path loss +0.002 rejected", lambda t: edit(t / "M04/loss.ano", b"115.368", b"115.370"), "DIFF", "M04", "loss.ano", L)
         mutate("tolerance: report 0.01 dB still rejected", lambda t: edit(t / "P01/K4HTA-to-KK4DAS.txt", b"116.68 dB", b"116.69 dB"), "DIFF", "P01", "K4HTA-to-KK4DAS.txt", L)
         mutate("stdout-: tile path normalised, content not", lambda t: edit(t / "sdf3/stdout-N38W078.txt", b"Done", b"Dome"), "DIFF", "C01", "stdout-N38W078.txt")
+
+        # D13: graph PNGs. Same size with different pixels passes (GRAPH); anything else fails.
+        def other_graph(t):     # a different 640x480 graph: same size, different picture
+            (t / "P03/profile.png").write_bytes((t / "P03/loss.png").read_bytes())
+        mutate("graph: same size, other pixels -> GRAPH", other_graph, "GRAPH", "P03", "profile.png")
+
+        def small_png(t):
+            raw = bytes([0] + [255] * 30) * 10   # 10x10 white RGB, filter 0 per row
+            ch = lambda k, d: len(d).to_bytes(4, "big") + k + d + zlib.crc32(k + d).to_bytes(4, "big")
+            ihdr = (10).to_bytes(4, "big") * 2 + bytes([8, 2, 0, 0, 0])
+            sig = bytes([137, 80, 78, 71, 13, 10, 26, 10])
+            (t / "P04/normheight.png").write_bytes(sig + ch(b"IHDR", ihdr) + ch(b"IDAT", zlib.compress(raw)) + ch(b"IEND", b""))
+        mutate("graph: different size rejected", small_png, "DIFF", "P04", "normheight.png")
+        mutate("graph: PNG missing", lambda t: (t / "P05/loss_metric.png").unlink(), "MISSING", "P05", "loss_metric.png")
+
+        def graph_bad_data(t):
+            other_graph(t); edit(t / "P03/profile.gp", b"5.491410", b"5.491412")
+        mutate("graph: fails when its .gp data fails", graph_bad_data, "DIFF", "P03", "profile.png", L,
+               also_bad=(("P03", "profile.gp"),))
         ok = all(r[1] for r in results)
         for label, passed, det in results:
             print(f"[{'PASS' if passed else 'FAIL'}] {label:44} {det}")

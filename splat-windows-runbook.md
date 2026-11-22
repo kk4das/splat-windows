@@ -290,7 +290,7 @@ make plots.
 | D9 | **Viewing PPM maps:** document a free viewer (IrfanView/GIMP), or add a PNG conversion step (a new feature) | Document a viewer first | Stage 4 |
 | D11 | **Text-output line endings on Windows:** keep CR-LF (upstream text mode) or force LF to be byte-identical to Linux | Keep CR-LF; Stage 3 compares text with line endings normalised | Stage 3 |
 | D12 | **Numeric tolerance, Windows vs Linux** | Exact everywhere except `.gp` and `.ano` files: ±1 in the last printed digit (measured drift: 1e-6 in graph data, 1e-7° / 0.001° in `.ano` geometry; no dB value differs) | Stage 3 gate |
-| D13 | **Graph PNGs in the acceptance test** (bytes never match across gnuplot versions) | Pass if same size and the `.gp` data passes D12; report pixel-difference % for information | Stage 4 gate |
+| D13 | **Graph PNGs in the acceptance test** (bytes never match across gnuplot versions) | **DECIDED 2026-11-22:** pass if same size and the `.gp` data passes D12; pixel-difference % reported for information | Stage 4 gate |
 | D10 | **Who uses the Windows build** (just the owner, or club members) and where it's installed | — | Stage 5 |
 
 ### Decisions recorded
@@ -345,8 +345,12 @@ make plots.
 - **2026-11-22 — DEFERRED by owner: PowerShell `postdownload` for old USGS DEM files** (owner chose
   "Defer it (Recommended)"). Add it only if USGS DEM data is ever needed; `usgs2sdf.exe` itself
   is built and starts.
-- **Still open:** D6, D10, **D13** (how graph PNGs count in the acceptance test; raised in the
-  Stage 4 report).
+- **2026-11-22 — D13 → graph PNGs pass on same size + passing data** (owner: "Accept D13").
+  `compare_outputs.py` gives a same-size PNG the status **GRAPH** (a pass) and shows its pixel
+  difference for information. It fails the graph if any `.gp` file of its case fails, if the size
+  differs, or if the PNG is missing (gnuplot is installed now, so a missing PNG is no longer
+  DEFERRED). Visual spot-checks with `compare_graphs.ps1` only when gnuplot changes version.
+- **Still open:** D6, D10.
 
 ---
 
@@ -374,6 +378,12 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — D13 accepted and implemented.** `compare_outputs.py` now decodes PNGs (stdlib
+  only) and applies D13. Self-test is 20/20 (4 new graph checks: same size with other pixels
+  passes; different size, missing PNG, and bad `.gp` data each fail). The Stage 4 run is
+  **EQUIVALENT**: 26 SAME, 61 SAME*, 8 TOL, 8 GRAPH (2.70–5.72% of pixels differ, which matches the
+  independent .NET check). Results: `tests/results/stage4-compare-d13.txt`,
+  `stage4-selftest-d13.txt`. Stage 4 still waits on the owner's own README run.
 - **2026-11-22 — Stage 4 complete: graphs, data pipeline, helpers. HALT for owner review and the
   owner's own end-to-end run from README.md.** MSYS2 gnuplot 6.0.6 plus a `dist\gnuplot.cmd` shim;
   all 8 graphs render. They are identical to Linux in data and commands, and the PNGs differ only in
