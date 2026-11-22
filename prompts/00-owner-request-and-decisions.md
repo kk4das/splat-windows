@@ -28,3 +28,4 @@
 - "Approve, keep CR-LF" (Stage 2 approved; D11 → CR-LF).
 - "Yes, start Stage 3".
 - "Approve Stage 3 and D12" (Stage 3 approved; last-digit tolerance for .gp/.ano ratified).
+- "Yes, start Stage 4" (D8 → MSYS2 gnuplot). D9: "ppm2png helper (Recommended)". USGS postdownload: "Defer it (Recommended)".

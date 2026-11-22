@@ -78,8 +78,8 @@ from PowerShell or `cmd` and **produce the same answers as the Linux build** for
 | VS Code | 1.146.0 (`%LOCALAPPDATA%\Programs\Microsoft VS Code`), with the C/C++ extension pack (`ms-vscode.cpptools`), CMake Tools, and Remote-WSL | Optional editor/debugger for the port. It's an editor, not a compiler, and works with MSYS2 UCRT64 GCC: point IntelliSense at `C:\msys64\ucrt64\bin\g++.exe` (mode `windows-gcc-x64`) and debug with MSYS2's `gdb`. Remote-WSL can open the Linux reference tree. A tracked `.vscode/` config is optional; the build never depends on VS Code. |
 | winget | present | Proposed installer for MSYS2 (with approval). |
 | WSL | `Debian` (stopped, default), `docker-desktop` (stopped). **Added 2026-11-21: `splat-ref`** (Debian 13.5, `%LOCALAPPDATA%\wsl\{ebb27f84-3027-43a7-b551-44aade80d4a1}`, 2.86 GB) with g++ 14.2, libbz2-dev 1.0.8, gnuplot 6.0.2; upstream built in `/opt/splat`, reference runs in `/opt/ref` | The Linux oracle. **Never modify the existing `Debian`.** Run work in `splat-ref` as script files (`wsl -d splat-ref -u root -- bash /mnt/c/.../x.sh`); `bash -c` strings through `wsl.exe` get mangled. A harmless "Failed to detect nested virtualization" warning prints on every call. Remove with `wsl --unregister splat-ref`. |
-| gnuplot | not installed | Needed for `-p -e -h -H -l` graphs (decision D8). |
-| Image viewer for PPM | not checked | SPLAT! maps are large binary PPM files. Windows Photos can't open them (decision D9). |
+| gnuplot | **Installed 2026-11-22 (D8): MSYS2 `mingw-w64-ucrt-x86_64-gnuplot` 6.0.6** (about 1 GB with its GUI dependencies, inside `C:\msys64`; not on PATH) | `dist\gnuplot.cmd` (written by `build.ps1`) points SPLAT! at it; put `dist\` on PATH for the session. fontconfig's install hook warns "failed to write cache"; that's harmless (a per-user cache exists). |
+| Image viewer for PPM | none needed (D9) | `scripts\ppm2png.ps1` converts maps to PNG with .NET, plus a Google Earth `*-png.kml`. |
 | Hardware | Ryzen 9 5950X (16C/32T), 64 GB RAM | Enough for the largest SPLAT! HD build (8×8°, about 3.3 GB). |
 
 **Claude-app PATH caveat (inherited lesson):** the desktop app captures PATH at launch. If a newly
@@ -243,7 +243,7 @@ Windows.
   owner ratifies the tolerance**; Code doesn't pick one silently.
 - **Gate:** a pass/fail table for every case, and the ratified tolerance recorded here.
 
-### Stage 4 — Graphs, data pipeline, and helpers ⬅ next, needs D8
+### Stage 4 — Graphs, data pipeline, and helpers (DONE 2026-11-22, awaiting owner review + owner's end-to-end run)
 *Plain language:* make the everyday workflow work end-to-end on Windows: get terrain, convert it,
 make plots.
 - Install and verify gnuplot (D8); render every graph type on Windows and compare it visually to
@@ -256,7 +256,7 @@ make plots.
   add a post-step that converts PPM to PNG.
 - **Gate:** owner runs one real job end to end from the README instructions alone.
 
-### Stage 5 — Packaging & hand-off
+### Stage 5 — Packaging & hand-off ⬅ next, needs D10
 *Plain language:* produce a zip someone else can unpack and use.
 - `dist\splat-1.4.2-win64.zip`: all `.exe`s, the English docs (text and PDF), sample data,
   `COPYING`, a Windows `README`, and the port's source (GPL).
@@ -290,6 +290,7 @@ make plots.
 | D9 | **Viewing PPM maps:** document a free viewer (IrfanView/GIMP), or add a PNG conversion step (a new feature) | Document a viewer first | Stage 4 |
 | D11 | **Text-output line endings on Windows:** keep CR-LF (upstream text mode) or force LF to be byte-identical to Linux | Keep CR-LF; Stage 3 compares text with line endings normalised | Stage 3 |
 | D12 | **Numeric tolerance, Windows vs Linux** | Exact everywhere except `.gp` and `.ano` files: ±1 in the last printed digit (measured drift: 1e-6 in graph data, 1e-7° / 0.001° in `.ano` geometry; no dB value differs) | Stage 3 gate |
+| D13 | **Graph PNGs in the acceptance test** (bytes never match across gnuplot versions) | Pass if same size and the `.gp` data passes D12; report pixel-difference % for information | Stage 4 gate |
 | D10 | **Who uses the Windows build** (just the owner, or club members) and where it's installed | — | Stage 5 |
 
 ### Decisions recorded
@@ -337,7 +338,15 @@ make plots.
   match Linux **exactly**, except in `.gp` (gnuplot data) and `.ano` (alphanumeric output) files,
   where a number may differ by 1 unit in its last printed digit. This is implemented as
   `compare_outputs.py --last-digit`, and it is the acceptance test for every later change to the port.
-- **Still open:** D6, D8–D10.
+- **2026-11-22 — D8 → MSYS2 gnuplot** (owner: "Yes, start Stage 4" in answer to "Start Stage 4 and
+  install gnuplot from MSYS2?"). Note: it installed at about 1 GB, not the ~50 MB Code quoted (see
+  the Stage 4 report).
+- **2026-11-22 — D9 → `ppm2png` helper** (owner chose "ppm2png helper (Recommended)").
+- **2026-11-22 — DEFERRED by owner: PowerShell `postdownload` for old USGS DEM files** (owner chose
+  "Defer it (Recommended)"). Add it only if USGS DEM data is ever needed; `usgs2sdf.exe` itself
+  is built and starts.
+- **Still open:** D6, D10, **D13** (how graph PNGs count in the acceptance test; raised in the
+  Stage 4 report).
 
 ---
 
@@ -365,6 +374,13 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — Stage 4 complete: graphs, data pipeline, helpers. HALT for owner review and the
+  owner's own end-to-end run from README.md.** MSYS2 gnuplot 6.0.6 plus a `dist\gnuplot.cmd` shim;
+  all 8 graphs render. They are identical to Linux in data and commands, and the PNGs differ only in
+  font rendering (2.7–5.7% of pixels, lettering only). `ppm2png.ps1` (pixel-verified, with a Google
+  Earth KML companion), `get_terrain.ps1` (its SDFs are byte-identical to the Linux goldens), and
+  `README.md` (dry-run followed literally: works). USGS postdownload deferred by owner. Install-size
+  misquote (~1 GB vs ~50 MB) disclosed. D13 raised. Report: `reports/stage4-graphs-pipeline.md`.
 - **2026-11-22 — Stage 3 approved by owner; D12 tolerance ratified** ("Approve Stage 3 and D12").
 - **2026-11-22 — Stage 3 complete: equivalence with Linux. HALT for owner review.** All 20 cases
   run on Windows with the same exit codes. Of 103 files: **26 byte-identical (all 9 maps including
