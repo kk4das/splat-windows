@@ -34,8 +34,13 @@ New-Item -ItemType Directory -Force $Out, $Logs | Out-Null
 
 # Upstream src/build:       g++ -O2 -s -fomit-frame-pointer -ffast-math -pipe -march=$cpu $model ... -lm -lbz2
 # Upstream src/utils/build: cc  -O2 -s -fomit-frame-pointer ...
-$SplatFlags = @('-O2','-s','-fomit-frame-pointer','-ffast-math','-pipe','-march=x86-64','-static')
-$UtilFlags  = @('-O2','-s','-fomit-frame-pointer','-static')
+# WIN32PORT P12: -Wl,--stack,8388608 gives every program an 8 MB stack, the Linux default
+# (ulimit -s 8192). Windows' default is 1 MB, and splat's LoadPAT() alone keeps about 1.5 MB of
+# local arrays (float elevation_pattern[361][1001], ...), so unpatched splat.exe crashes with
+# 0xC00000FD (stack overflow) on every run. This is a link setting only; no source change.
+$Stack      = '-Wl,--stack,8388608'
+$SplatFlags = @('-O2','-s','-fomit-frame-pointer','-ffast-math','-pipe','-march=x86-64','-static', $Stack)
+$UtilFlags  = @('-O2','-s','-fomit-frame-pointer','-static', $Stack)
 
 function Invoke-Compile([string]$cc, [string[]]$argList, [string]$name) {
     $log = Join-Path $Logs "$name.log"
