@@ -16,7 +16,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>SplatForWindows</AssemblyName>
     <Product>SPLAT! for Windows</Product>
-    <Version>0.2.1</Version>
+    <Version>0.3.0</Version>
     <!-- ThemeMode (the Fluent theme) is marked experimental in WPF; it is what gives the modern look. -->
     <NoWarn>$(NoWarn);WPF0001</NoWarn>
   </PropertyGroup>

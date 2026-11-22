@@ -1,0 +1,25 @@
+﻿<Window x:Class="SplatWin.App.QrzSignInWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="QRZ.com sign-in" Width="440" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+    <StackPanel Margin="20,16,20,18">
+        <TextBlock Text="Sign in to QRZ.com" FontSize="20" FontWeight="SemiBold"/>
+        <TextBlock Margin="0,8,0,0" TextWrapping="Wrap" Opacity="0.78" FontSize="12"
+                   Text="Your QRZ.com user name and password. Positions in QRZ lookups need a QRZ XML Logbook Data subscription. The password is kept in Windows Credential Manager, encrypted for your Windows account; it is never written to a file. Sign out removes it."/>
+        <TextBlock x:Name="SavedText" Margin="0,10,0,0" TextWrapping="Wrap" FontWeight="SemiBold"/>
+
+        <TextBlock Text="QRZ.com user name (usually your call sign)" Margin="0,14,0,3" FontSize="12"/>
+        <TextBox x:Name="UserBox" AutomationProperties.Name="QRZ user name"/>
+        <TextBlock Text="Password" Margin="0,10,0,3" FontSize="12"/>
+        <PasswordBox x:Name="PassBox" AutomationProperties.Name="QRZ password" KeyDown="PassBox_KeyDown"/>
+
+        <TextBlock x:Name="ErrorText" Foreground="#D13438" TextWrapping="Wrap" Margin="0,10,0,0"/>
+        <DockPanel Margin="0,14,0,0" LastChildFill="False">
+            <Button x:Name="SignInButton" Content="Sign in" Padding="16,6" Click="SignIn_Click" IsDefault="False"
+                    Style="{DynamicResource AccentButtonStyle}"/>
+            <Button x:Name="SignOutButton" Content="Sign out" Padding="14,6" Margin="8,0,0,0" Click="SignOut_Click"/>
+            <Button x:Name="CloseButton" DockPanel.Dock="Right" Content="Close" Padding="14,6" IsCancel="True"/>
+        </DockPanel>
+    </StackPanel>
+</Window>

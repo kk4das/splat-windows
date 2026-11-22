@@ -125,7 +125,9 @@ public partial class MainWindow
         FindRow.Visibility = CurrentMethod == Method.Map ? Visibility.Collapsed : Visibility.Visible;
         MethodHint.Text = CurrentMethod switch
         {
-            Method.CallSign => "A US call sign, such as KK4DAS. Looked up on callook.info (free FCC licence data).",
+            Method.CallSign => App.QrzSaved() is { } q
+                ? $"A call sign from anywhere, such as KK4DAS. Looked up on QRZ.com (signed in as {q.User})."
+                : "A US call sign, such as KK4DAS. Looked up on callook.info (free FCC licence data). Sign in to QRZ.com (top right) for calls worldwide.",
             Method.Address => "The street address of the antenna site, such as 225 Main St, Newington, CT. Not a PO box. Searched on the US Census geocoder and OpenStreetMap (both free).",
             Method.Grid => "A Maidenhead grid square of 4 to 10 characters, such as FM18jw. The square is drawn on the map.",
             Method.Coordinates => "Decimal degrees as Google Maps shows them (38.9242, -77.2058), or degrees-minutes-seconds (38°55'27\"N 77°12'21\"W).",
@@ -146,6 +148,20 @@ public partial class MainWindow
         {
             switch (CurrentMethod)
             {
+                case Method.CallSign when App.QrzSaved() != null:
+                {
+                    FindButton.IsEnabled = false;
+                    Status.Text = "Looking up " + text.ToUpperInvariant() + " on QRZ.com…";
+                    QrzResult r;
+                    try { r = await App.QrzClient.LookupAsync(text); }
+                    finally { FindButton.IsEnabled = true; }
+                    SetPin(r.Lat, r.Lon, null, $"QRZ.com: {r.Callsign} ({(r.GeoLoc.Length > 0 ? r.GeoLoc : "no geoloc")})", zoom: true);
+                    if (NameBox.Text.Trim().Length == 0) NameBox.Text = r.Callsign.Replace('/', '-');
+                    ShowNote((r.Name.Length > 0 ? r.Callsign + ", " + r.Name + ". " : "") + Qrz.PositionNote(r)
+                             + (r.Message.Length > 0 ? " QRZ.com says: " + r.Message : ""));
+                    Status.Text = $"Found {r.Callsign} on QRZ.com (position from: {(r.GeoLoc.Length > 0 ? r.GeoLoc : "not stated")}).";
+                    break;
+                }
                 case Method.CallSign:
                 {
                     FindButton.IsEnabled = false;
@@ -198,6 +214,11 @@ public partial class MainWindow
                     break;
                 }
             }
+        }
+        catch (QrzSignInException ex)
+        {
+            EditorError.Text = ex.Message + " Use \"QRZ.com\" at the top right to sign in again.";
+            Status.Text = "";
         }
         catch (Exception ex) when (ex is FormatException or LookupException)
         {

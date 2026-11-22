@@ -1,7 +1,7 @@
 # SPLAT! for Windows: GUI front end, plan for owner review (2026-11-22)
 
-**Status: in progress.** All decisions G1–G8 made 2026-11-22. G0 (map spike) approved; G1
-(stations) done 2026-11-22, awaiting the owner's check. Progress is in the runbook and `reports\`.
+**Status: in progress.** All decisions G1–G8 made 2026-11-22. G0 approved; G1 (stations,
+plus street addresses) passed the owner's check; G2 (QRZ) done 2026-11-22, awaiting the owner's check. Progress is in the runbook and `reports\`.
 
 ## The owner's request
 > "plan a GUI front end to eliminate the need for command line and make it a modern windows

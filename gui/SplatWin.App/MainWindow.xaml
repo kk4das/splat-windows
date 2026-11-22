@@ -26,6 +26,8 @@
                 <TextBlock Text="Map opacity" VerticalAlignment="Center" Margin="24,0,8,0"/>
                 <Slider x:Name="OpacitySlider" Width="160" Minimum="0" Maximum="1" Value="0.65" VerticalAlignment="Center"
                         ValueChanged="Opacity_Changed" IsEnabled="False"/>
+                <Button x:Name="QrzButton" DockPanel.Dock="Right" Content="QRZ.com: sign in…" Padding="14,6" Click="Qrz_Click"
+                        ToolTip="Sign in to QRZ.com for worldwide call sign lookups (needs your QRZ XML Logbook Data subscription)"/>
             </DockPanel>
         </Border>
         <Border DockPanel.Dock="Bottom" Padding="12,4">

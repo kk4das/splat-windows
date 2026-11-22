@@ -276,7 +276,7 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G6 — GUI front end (G0 APPROVED 2026-11-22; G1 DONE 2026-11-22 + address lookup, awaiting owner's check; G2 next)
+### Stages G0–G6 — GUI front end (G0, G1 passed 2026-11-22; G2 DONE 2026-11-22, awaiting owner's check; G3 next)
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
@@ -293,6 +293,8 @@ coverage map is shown in the window, with a button that opens it in Google Earth
 - **GUI checks, every stage:** `gui\build-gui.ps1 test` (unit tests) and
   `scripts\gui_stations_uitest.ps1 -App gui\publish\SplatForWindows.exe -Work work\g1-uitest`
   (drives the real window with UI Automation, using its own stations file).
+  Also, from G2, `scripts\gui_qrz_uitest.ps1 -App gui\publish\SplatForWindows.exe -Work work\g2-uitest`
+  (QRZ sign-in and lookup against a stand-in on localhost, with a throwaway credential entry).
 - **Run `verify_toolchain.ps1` from PowerShell, not Git Bash.** Git Bash sets `HOME`, so the
   "P4 HOME unset" finding can't reproduce there and the script reports PROBLEMS.
 
@@ -405,6 +407,22 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — Stage G2 (QRZ.com) complete. HALT for owner review.**
+  - Started on the owner's words "Start G2".
+  - QRZ sign-in window. The owner types the password; it is saved only once QRZ accepts it, in
+    Windows Credential Manager (`SPLATforWindows/QRZ.com`), and Sign out deletes it.
+  - The Call sign tab uses QRZ while signed in, and callook.info otherwise. Every position gets a
+    note by its `geoloc`, and zip, state and country centres get a loud warning.
+  - Per spec v1.34: requests by POST (so no password in URLs), session reuse, one re-sign-in on
+    expiry, and a stop on "Connection refused".
+  - Checks:
+    - 207 unit tests, from the spec's example replies (not live recordings).
+    - Seven deliberate breakages were each caught.
+    - 24/24 window checks against a stand-in QRZ on localhost. They caught a real double-sign-in
+      bug, now fixed. The G1 build fails the script.
+    - The stations script still passes 31/31.
+  - No live QRZ traffic yet: the owner's check is the first.
+  - Report: `reports/stageG2-qrz.md`.
 - **2026-11-22 — Owner's G1 check passed.** Owner: "address lookup worked for post-180 and for
   K4HTA … new address based with drag and pin is more accurate". All of KK4DAS, KD4MM, Post-180 and
   K4HTA were added without typing coordinates. K4HTA's new position is about 80 m from the old `.qth`

@@ -11,7 +11,7 @@ public partial class MainWindow : Window
 {
     const string AppHost = "app.splat.local";   // the map page (files shipped with the app)
     const string MapHost = "map.splat.local";   // the images made from the opened map
-    public const string AgentName = "SPLATforWindows/0.2.1";   // identifies the app to map-tile servers
+    public const string AgentName = "SPLATforWindows/0.3";   // identifies the app to map-tile servers
 
     static readonly string DataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SPLATforWindows");
     static readonly string MapCache = Path.Combine(DataDir, "map-cache");
@@ -25,7 +25,19 @@ public partial class MainWindow : Window
         _startupKml = startupKml;
         InitializeComponent();
         LoadLibrary(stationsPath);
+        UpdateQrzButton();
         Loaded += async (_, _) => await InitWebAsync();
+    }
+
+    void UpdateQrzButton() =>
+        QrzButton.Content = App.QrzSaved() is { } q ? $"QRZ.com: {q.User}" : "QRZ.com: sign in…";
+
+    void Qrz_Click(object sender, RoutedEventArgs e)
+    {
+        var w = new QrzSignInWindow { Owner = this };
+        if (w.ShowDialog() == true && w.Outcome != null) Status.Text = w.Outcome;
+        UpdateQrzButton();
+        if (EditorPanel.Visibility == Visibility.Visible) ShowMethodHint();
     }
 
     async Task InitWebAsync()
