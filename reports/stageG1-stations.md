@@ -172,4 +172,10 @@ site ("We need to add a postal address lookup").
 - Outside OSM's mapped buildings, the US Census only estimates along the street. Rural routes can
   be off by a lot.
 
+## Owner's check: passed (2026-11-22)
+"address lookup worked for post-180 and for K4HTA … new address based with drag and pin is more
+accurate." The four stations were added without typing coordinates: KK4DAS and KD4MM by call sign,
+Post-180 by address (OpenStreetMap), and K4HTA by address (US Census) and then a drag. K4HTA's new
+pin is about 80 m from the old `.qth` position.
+
 ## Halted for owner review.

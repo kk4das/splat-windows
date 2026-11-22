@@ -405,6 +405,10 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — Owner's G1 check passed.** Owner: "address lookup worked for post-180 and for
+  K4HTA … new address based with drag and pin is more accurate". All of KK4DAS, KD4MM, Post-180 and
+  K4HTA were added without typing coordinates. K4HTA's new position is about 80 m from the old `.qth`
+  site; coverage runs in G4 should use the library station. G2 waits for an explicit go-ahead.
 - **2026-11-22 — G1 addition: street-address lookup. HALT for owner review.**
   - The owner's G1 check found that callook.info places K4HTA at its PO box, not the repeater
     site, and asked for a postal-address lookup.
