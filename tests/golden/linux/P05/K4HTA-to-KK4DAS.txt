@@ -1,0 +1,71 @@
+
+		--==[ SPLAT! v1.4.2 Path Analysis ]==--
+
+---------------------------------------------------------------------------
+
+Transmitter site: K4HTA
+Site location: 38.9242 North / 77.2058 West (38° 55' 27" N / 77° 12' 20" W)
+Ground elevation: 105.00 meters AMSL
+Antenna height: 73.15 meters AGL / 178.15 meters AMSL
+Distance to KK4DAS: 7.55 kilometers
+Azimuth to KK4DAS: 301.82 degrees
+Depression angle to KK4DAS: -0.6789 degrees
+Depression angle to the first obstruction: -0.6655 degrees
+
+---------------------------------------------------------------------------
+
+Receiver site: KK4DAS
+Site location: 38.9600 North / 77.2800 West (38° 57' 36" N / 77° 16' 48" W)
+Ground elevation: 84.00 meters AMSL
+Antenna height: 9.14 meters AGL / 93.14 meters AMSL
+Distance to K4HTA: 7.55 kilometers
+Azimuth to K4HTA: 121.78 degrees
+Elevation angle to K4HTA: +0.6110 degrees
+Elevation angle to the first obstruction: +0.6517 degrees
+
+---------------------------------------------------------------------------
+
+ITWOM Version 3.0 Parameters Used In This Analysis:
+
+Earth's Dielectric Constant: 15.000
+Earth's Conductivity: 0.005 Siemens/meter
+Atmospheric Bending Constant (N-units): 301.000 ppm
+Frequency: 146.685 MHz
+Radio Climate: 5 (Continental Temperate)
+Polarization: 1 (Vertical)
+Fraction of Situations: 50.0%
+Fraction of Time: 90.0%
+Transmitter ERP: 93 Watts (+49.68 dBm)
+Transmitter EIRP: 152 Watts (+51.82 dBm)
+
+---------------------------------------------------------------------------
+
+Summary For The Link Between K4HTA and KK4DAS:
+
+Free space path loss: 93.36 dB
+ITWOM Version 3.0 path loss: 116.68 dB
+Attenuation due to terrain shielding: 23.33 dB
+Field strength at KK4DAS: 55.73 dBuV/meter
+Signal power level at KK4DAS: -64.86 dBm
+Signal power density at KK4DAS: -90.06 dBW per square meter
+Voltage across a 50 ohm dipole at KK4DAS: 163.50 uV (44.27 dBuV)
+Voltage across a 75 ohm dipole at KK4DAS: 200.24 uV (46.03 dBuV)
+Mode of propagation: Double Horizon Diffraction Dominant
+ITWOM error number: 0 (No error)
+
+---------------------------------------------------------------------------
+
+Between KK4DAS and K4HTA, SPLAT! detected obstructions at:
+
+    38.9568 N,  77.2733 W,  0.68 kilometers, 101.00 meters AMSL
+    38.9528 N,  77.2651 W,  1.52 kilometers, 111.00 meters AMSL
+    38.9517 N,  77.2628 W,  1.75 kilometers, 114.00 meters AMSL
+
+Antenna at KK4DAS must be raised to at least 11.89 meters AGL
+to clear all obstructions detected by SPLAT!.
+
+Antenna at KK4DAS must be raised to at least 99.97 meters AGL
+to clear the first Fresnel zone.
+
+Antenna at KK4DAS must be raised to at least 55.78 meters AGL
+to clear 60% of the first Fresnel zone.

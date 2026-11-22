@@ -77,7 +77,7 @@ from PowerShell or `cmd` and **produce the same answers as the Linux build** for
 | Python | 3.10.6 (system), `py` launcher | Allowed for the compare/test scripts, in a project `.venv\` only. Never `pip install` into the system Python. |
 | VS Code | 1.146.0 (`%LOCALAPPDATA%\Programs\Microsoft VS Code`), with the C/C++ extension pack (`ms-vscode.cpptools`), CMake Tools, and Remote-WSL | Optional editor/debugger for the port. It's an editor, not a compiler, and works with MSYS2 UCRT64 GCC: point IntelliSense at `C:\msys64\ucrt64\bin\g++.exe` (mode `windows-gcc-x64`) and debug with MSYS2's `gdb`. Remote-WSL can open the Linux reference tree. A tracked `.vscode/` config is optional; the build never depends on VS Code. |
 | winget | present | Proposed installer for MSYS2 (with approval). |
-| WSL | `Debian` (stopped), `docker-desktop` (stopped) | Candidate for building the Linux reference (decision D2). **Don't modify the existing Debian.** |
+| WSL | `Debian` (stopped, default), `docker-desktop` (stopped). **Added 2026-11-21: `splat-ref`** (Debian 13.5, `%LOCALAPPDATA%\wsl\{ebb27f84-3027-43a7-b551-44aade80d4a1}`, 2.86 GB) with g++ 14.2, libbz2-dev 1.0.8, gnuplot 6.0.2; upstream built in `/opt/splat`, reference runs in `/opt/ref` | The Linux oracle. **Never modify the existing `Debian`.** Run work in `splat-ref` as script files (`wsl -d splat-ref -u root -- bash /mnt/c/.../x.sh`); `bash -c` strings through `wsl.exe` get mangled. A harmless "Failed to detect nested virtualization" warning prints on every call. Remove with `wsl --unregister splat-ref`. |
 | gnuplot | not installed | Needed for `-p -e -h -H -l` graphs (decision D8). |
 | Image viewer for PPM | not checked | SPLAT! maps are large binary PPM files. Windows Photos can't open them (decision D9). |
 | Hardware | Ryzen 9 5950X (16C/32T), 64 GB RAM | Enough for the largest SPLAT! HD build (8×8°, about 3.3 GB). |
@@ -186,7 +186,7 @@ project ends (`wsl --unregister splat-ref`).
 
 ## Plan — stages and gates (each ends in a report + HALT for owner review)
 
-### Stage 0 — Scaffold & toolchain (DONE 2026-11-21, awaiting owner review)
+### Stage 0 — Scaffold & toolchain (DONE 2026-11-21; owner approved)
 *Plain language:* set up the project, bring in the original SPLAT! source untouched, install the
 compiler, and prove it can build a trivial Windows program, without touching anything else on the PC.
 - `git init`; commit the **verbatim upstream tree** into `src/`; tag `upstream-1.4.2`. Record the
@@ -199,7 +199,7 @@ compiler, and prove it can build a trivial Windows program, without touching any
   test `.exe` → flagged by the DLL check.
 - **Gate:** report with real output; system Python and the existing WSL distros are unchanged.
 
-### Stage 1 — Linux reference baseline (the oracle) ⬅ next, needs D5 + D7
+### Stage 1 — Linux reference baseline (the oracle) (DONE 2026-11-21, awaiting owner review)
 *Plain language:* build the original program on Linux and record exactly what it outputs, so we have
 something objective to compare the Windows version against.
 - In the reference WSL distro (D2), build **unmodified** upstream with its own `configure`/`build`
@@ -216,7 +216,7 @@ something objective to compare the Windows version against.
 - **Gate:** report listing each case, its command line, and its golden outputs; owner confirms the
   case list covers how they'll actually use SPLAT!.
 
-### Stage 2 — Minimum native port (make it compile and run)
+### Stage 2 — Minimum native port (make it compile and run) ⬅ next, needs D3 + D4
 *Plain language:* make the smallest set of changes that lets every SPLAT! program build and run on
 Windows.
 - `build.ps1`: replaces `configure` + `build`. Takes `-StdPages 9 -HdPages 1` (or the D5 choices),
@@ -318,8 +318,11 @@ make plots.
   repeater is k4hta"). The quote above is kept verbatim; the table is corrected.
 - **2026-11-21 — Polarization → vertical, confirmed** (owner: "vertical polarization is correct").
   This completes D7.
-- **Still open:** D3–D6, D8–D10. D5 (analysis area) defaults to the recommendation (standard 8×8°,
-  HD 4×4°) unless the owner says otherwise.
+- **2026-11-21 — D5 → standard 8×8° (MAXPAGES 64), HD 4×4° (MAXPAGES 16)** (owner: "Yes, start
+  Stage 1", in answer to "Start Stage 1 with the recommended region sizes?").
+- **2026-11-21 — Terrain source (part of D7) → public, no-login tiles** (owner chose "Yes, download
+  both"): 1″ from the AWS `elevation-tiles-prod/skadi` bucket, 3″ from viewfinderpanoramas `dem3`.
+- **Still open:** D3, D4 (needed for Stage 2), D6, D8–D10.
 
 ---
 
@@ -347,6 +350,15 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-21 — Stage 1 complete: Linux reference baseline. HALT for owner review.** New WSL distro
+  `splat-ref` (the existing Debian is untouched). Upstream copied byte-exact and built with its own
+  scripts (8×8° / 4×4°). 4 real tiles (1″ + 3″, about 36 MB, owner-approved). 18 cases + 2
+  conversions all exit 0. **Linux is deterministic: 103/103 files identical on a second run.** The
+  golden copy on Windows was verified 103/103 (a 1-bit change is detected); 77 small text outputs are
+  tracked in `tests/golden/linux/`. Findings: the GitHub copy lost the exec bits on its scripts;
+  **`-kml` together with `-geo` writes neither file** (upstream quirk, pinned as case M08); `-log`
+  records the exe path (an expected difference for Stage 3). K4HTA→KK4DAS predicted at −64.9 dBm
+  (owner sanity check requested). Report: `reports/stage1-linux-reference.md`.
 - **2026-11-21 — Stage 0 complete: scaffold and toolchain. HALT for owner review.** Repo created,
   and upstream imported **verbatim** as tag `upstream-1.4.2` (the `src/` tree is the same git object
   as upstream, `ed514466`). The first import attempt was caught by the hash check (system

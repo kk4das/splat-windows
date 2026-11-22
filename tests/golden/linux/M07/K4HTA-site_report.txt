@@ -1,0 +1,21 @@
+
+	--==[ SPLAT! HD v1.4.2 Site Analysis Report For: K4HTA ]==--
+
+---------------------------------------------------------------------------
+
+Site location: 38.9242 North / 77.2058 West (38° 55' 27" N / 77° 12' 20" W)
+Ground elevation: 351.05 feet AMSL
+Antenna height: 240.00 feet AGL / 591.05 feet AMSL
+Antenna height above average terrain: 293.82 feet
+
+Average terrain at   0 degrees azimuth: 298.69 feet AMSL
+Average terrain at  45 degrees azimuth: 262.62 feet AMSL
+Average terrain at  90 degrees azimuth: 212.55 feet AMSL
+Average terrain at 135 degrees azimuth: 250.85 feet AMSL
+Average terrain at 180 degrees azimuth: 309.87 feet AMSL
+Average terrain at 225 degrees azimuth: 381.98 feet AMSL
+Average terrain at 270 degrees azimuth: 352.36 feet AMSL
+Average terrain at 315 degrees azimuth: 308.95 feet AMSL
+
+---------------------------------------------------------------------------
+

@@ -1,0 +1,6 @@
+# This PC has a system-wide core.autocrlf=true (Stage 0 finding). These files are compared
+# byte-for-byte against Linux output, so git must never convert their line endings, even in a
+# clone that doesn't carry this repo's local core.autocrlf=false.
+src/**            -text
+tests/golden/**   -text
+tests/cases/**    -text

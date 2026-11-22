@@ -1,0 +1,1 @@
+/opt/splat-bin/splat -t k4hta -c 6 -R 30 -d ../sdf3 -o los.ppm -s cities.dat -kml -log cmd.log 

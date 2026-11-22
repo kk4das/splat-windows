@@ -1,0 +1,10 @@
+
+		--==[ Welcome To SPLAT! HD v1.4.2 ]==--
+
+Loading "../sdf1/38:39:77:78-hd.sdf" into page 1... Done!
+
+Site analysis report written to: "K4HTA-site_report.txt"
+
+Path Loss Report written to: "K4HTA-to-KK4DAS.txt"
+Terrain plot written to: "profile_hd.png"
+

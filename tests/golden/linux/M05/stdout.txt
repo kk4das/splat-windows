@@ -1,0 +1,11 @@
+
+		--==[ Welcome To SPLAT! v1.4.2 ]==--
+
+Loading "../sdf3/38:39:76:77.sdf" into page 1... Done!
+Loading "../sdf3/39:40:76:77.sdf" into page 2... Done!
+Loading "../sdf3/38:39:77:78.sdf" into page 3... Done!
+Loading "../sdf3/39:40:77:78.sdf" into page 4... Done!
+
+Reading "loss.ano"...  Done!
+
+Writing "from_ani.ppm" (2400x2430 pixmap image)... Done!

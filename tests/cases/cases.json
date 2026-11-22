@@ -1,0 +1,335 @@
+{
+  "_about": "SPLAT! port test cases. Each case runs in a fresh directory containing every file from tests/cases/inputs plus any 'needs' files. 'sdf' says which converted terrain set is reachable as ../sdf3 (standard) or ../sdf1 (HD). Coverage exercised is listed in 'covers'. Sites: K4HTA repeater (TX, 240 ft), KK4DAS (RX, 30 ft, rounded location), Legion Hall (RX, 6 ft mobile).",
+  "convert": [
+    {
+      "id": "C01",
+      "program": "srtm2sdf",
+      "hgt": "hgt3",
+      "out": "sdf3",
+      "covers": "SRTM-3 .hgt -> standard SDF (P1 colon names, P3 binary read)"
+    },
+    {
+      "id": "C02",
+      "program": "srtm2sdf-hd",
+      "hgt": "hgt1",
+      "out": "sdf1",
+      "covers": "SRTM-1 .hgt -> HD SDF; HD mode chosen from program name (P6)"
+    }
+  ],
+  "cases": [
+    {
+      "id": "P01",
+      "program": "splat",
+      "sdf": "sdf3",
+      "args": [
+        "-t",
+        "k4hta",
+        "-r",
+        "kk4das",
+        "-d",
+        "../sdf3"
+      ],
+      "covers": "point-to-point report, ITWOM (default model)"
+    },
+    {
+      "id": "P02",
+      "program": "splat",
+      "sdf": "sdf3",
+      "args": [
+        "-t",
+        "k4hta",
+        "-r",
+        "kk4das",
+        "-d",
+        "../sdf3",
+        "-olditm",
+        "-erp",
+        "50"
+      ],
+      "covers": "old ITM model, ERP override"
+    },
+    {
+      "id": "P03",
+      "program": "splat",
+      "sdf": "sdf3",
+      "args": [
+        "-t",
+        "k4hta",
+        "-r",
+        "legion",
+        "-d",
+        "../sdf3",
+        "-f",
+        "146.685",
+        "-p",
+        "profile.png",
+        "-e",
+        "elevation.png",
+        "-h",
+        "height.png",
+        "-l",
+        "loss.png",
+        "-gpsav"
+      ],
+      "covers": "terrain profile, elevation, height and path-loss graphs (gnuplot data kept with -gpsav)"
+    },
+    {
+      "id": "P04",
+      "program": "splat",
+      "sdf": "sdf3",
+      "args": [
+        "-t",
+        "k4hta",
+        "-r",
+        "legion",
+        "-d",
+        "../sdf3",
+        "-f",
+        "146.685",
+        "-H",
+        "normheight.png",
+        "-gc",
+        "30",
+        "-fz",
+        "80",
+        "-gpsav"
+      ],
+      "covers": "normalized height graph, ground clutter, Fresnel clearance %"
+    },
+    {
+      "id": "P05",
+      "program": "splat",
+      "sdf": "sdf3",
+      "args": [
+        "-t",
+        "k4hta",
+        "-r",
+        "kk4das",
+        "-d",
+        "../sdf3",
+        "-metric",
+        "-l",
+        "loss_metric.png",
+        "-gpsav"
+      ],
+      "covers": "metric units"
+    },
+    {
+      "id": "P06",
+      "program": "splat",
+      "sdf": "sdf3",
+      "args": [
+        "-t",
+        "k4hta",
+        "-r",
+        "kk4das",
+        "-d",
+        "../sdf3",
+        "-udt",
+        "obstacle.udt",
+        "-p",
+        "profile_udt.png",
+        "-gpsav"
+      ],
+      "covers": "user-defined terrain (P5 /tmp temp file)"
+    },
+    {
+      "id": "P07",
+      "program": "splat",
+      "sdf": "sdf3",
+      "args": [
+        "-t",
+        "k4hta_pat",
+        "-r",
+        "kk4das",
+        "-d",
+        "../sdf3"
+      ],
+      "covers": "antenna pattern files (.az/.el, borrowed from upstream sample_data)"
+    },
+    {
+      "id": "P08",
+      "program": "splat-hd",
+      "sdf": "sdf1",
+      "args": [
+        "-t",
+        "k4hta",
+        "-r",
+        "kk4das",
+        "-d",
+        "../sdf1",
+        "-p",
+        "profile_hd.png",
+        "-gpsav"
+      ],
+      "covers": "HD point-to-point report and profile"
+    },
+    {
+      "id": "M01",
+      "program": "splat",
+      "sdf": "sdf3",
+      "args": [
+        "-t",
+        "k4hta",
+        "-c",
+        "6",
+        "-R",
+        "30",
+        "-d",
+        "../sdf3",
+        "-o",
+        "los.ppm",
+        "-s",
+        "cities.dat",
+        "-kml",
+        "-log",
+        "cmd.log"
+      ],
+      "covers": "line-of-sight coverage map, city labels, KML, -log"
+    },
+    {
+      "id": "M02",
+      "program": "splat",
+      "sdf": "sdf3",
+      "args": [
+        "-t",
+        "k4hta",
+        "-L",
+        "6",
+        "-R",
+        "30",
+        "-d",
+        "../sdf3",
+        "-o",
+        "fs.ppm",
+        "-s",
+        "cities.dat",
+        "-geo"
+      ],
+      "covers": "path-loss map as field strength (dBuV/m), 30 mi radius, Xastir GEO file"
+    },
+    {
+      "id": "M03",
+      "program": "splat",
+      "sdf": "sdf3",
+      "args": [
+        "-t",
+        "k4hta",
+        "-L",
+        "6",
+        "-R",
+        "30",
+        "-d",
+        "../sdf3",
+        "-dbm",
+        "-sc",
+        "-o",
+        "dbm.ppm"
+      ],
+      "covers": "received power (dBm) contours, smooth colours"
+    },
+    {
+      "id": "M04",
+      "program": "splat",
+      "sdf": "sdf3",
+      "args": [
+        "-t",
+        "k4hta",
+        "-L",
+        "6",
+        "-R",
+        "10",
+        "-d",
+        "../sdf3",
+        "-ano",
+        "loss.ano"
+      ],
+      "covers": "alphanumeric output (-ano)"
+    },
+    {
+      "id": "M05",
+      "program": "splat",
+      "sdf": "sdf3",
+      "needs": [
+        "M04/loss.ano"
+      ],
+      "args": [
+        "-t",
+        "k4hta",
+        "-d",
+        "../sdf3",
+        "-ani",
+        "loss.ano",
+        "-o",
+        "from_ani.ppm"
+      ],
+      "covers": "alphanumeric input (-ani) re-plotted as a map"
+    },
+    {
+      "id": "M06",
+      "program": "splat",
+      "sdf": "sdf3",
+      "args": [
+        "-t",
+        "k4hta",
+        "-r",
+        "legion",
+        "-n",
+        "-d",
+        "../sdf3",
+        "-o",
+        "topo.ppm"
+      ],
+      "covers": "plain topographic map"
+    },
+    {
+      "id": "M07",
+      "program": "splat-hd",
+      "sdf": "sdf1",
+      "args": [
+        "-t",
+        "k4hta",
+        "-L",
+        "6",
+        "-R",
+        "30",
+        "-d",
+        "../sdf1",
+        "-o",
+        "hd_fs.ppm",
+        "-kml"
+      ],
+      "covers": "HD path-loss map, 30 mi radius (large memory)"
+    },
+    {
+      "id": "M08",
+      "program": "splat",
+      "sdf": "sdf3",
+      "args": [
+        "-t",
+        "k4hta",
+        "-c",
+        "6",
+        "-R",
+        "5",
+        "-d",
+        "../sdf3",
+        "-o",
+        "both.ppm",
+        "-kml",
+        "-geo"
+      ],
+      "covers": "upstream quirk: -kml together with -geo writes NEITHER file (must stay that way in the port)"
+    },
+    {
+      "id": "U01",
+      "program": "bearing",
+      "sdf": null,
+      "args": [
+        "k4hta",
+        "kk4das"
+      ],
+      "covers": "bearing utility"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+
+		--==[ Welcome To SPLAT! v1.4.2 ]==--
+
+Loading "../sdf3/38:39:77:78.sdf" into page 1... Done!
+Loading "../sdf3/38:39:76:77.sdf" into page 2... Done!
+Loading "../sdf3/39:40:76:77.sdf" into page 3... Done!
+Loading "../sdf3/39:40:77:78.sdf" into page 4... Done!
+
+Computing ITWOM field strength contours of "K4HTA"
+out to a radius of 30.00 miles with an RX antenna at 6.00 feet AGL...
+
+ 0% to  25% .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo
+25% to  50% .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo
+50% to  75% .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo
+75% to 100% .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo
+Done!
+
+Site analysis report written to: "K4HTA-site_report.txt"
+
+Reading "cities.dat"... Done!
+
+Writing "fs.ppm" (2400x2400 pixmap image)... Done!
+

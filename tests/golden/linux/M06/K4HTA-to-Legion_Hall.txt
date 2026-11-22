@@ -1,0 +1,72 @@
+
+		--==[ SPLAT! v1.4.2 Path Analysis ]==--
+
+---------------------------------------------------------------------------
+
+Transmitter site: K4HTA
+Site location: 38.9242 North / 77.2058 West (38° 55' 27" N / 77° 12' 20" W)
+Ground elevation: 344.49 feet AMSL
+Antenna height: 240.00 feet AGL / 584.49 feet AMSL
+Distance to Legion_Hall: 3.73 miles
+Azimuth to Legion_Hall: 249.45 degrees
+Depression angle to Legion_Hall: -0.6317 degrees
+Depression angle to the first obstruction: -0.6214 degrees
+
+---------------------------------------------------------------------------
+
+Receiver site: Legion_Hall
+Site location: 38.9053 North / 77.2707 West (38° 54' 18" N / 77° 16' 14" W)
+Ground elevation: 370.73 feet AMSL
+Antenna height: 6.00 feet AGL / 376.73 feet AMSL
+Distance to K4HTA: 3.73 miles
+Azimuth to K4HTA: 69.41 degrees
+Elevation angle to K4HTA: +0.5777 degrees
+Elevation angle to the first obstruction: +0.7075 degrees
+
+---------------------------------------------------------------------------
+
+ITWOM Version 3.0 Parameters Used In This Analysis:
+
+Earth's Dielectric Constant: 15.000
+Earth's Conductivity: 0.005 Siemens/meter
+Atmospheric Bending Constant (N-units): 301.000 ppm
+Frequency: 146.685 MHz
+Radio Climate: 5 (Continental Temperate)
+Polarization: 1 (Vertical)
+Fraction of Situations: 50.0%
+Fraction of Time: 90.0%
+Transmitter ERP: 93 Watts (+49.68 dBm)
+Transmitter EIRP: 152 Watts (+51.82 dBm)
+
+---------------------------------------------------------------------------
+
+Summary For The Link Between K4HTA and Legion_Hall:
+
+Free space path loss: 91.36 dB
+ITWOM Version 3.0 path loss: 94.26 dB
+Attenuation due to terrain shielding: 2.90 dB
+Field strength at Legion_Hall: 78.15 dBuV/meter
+Signal power level at Legion_Hall: -42.44 dBm
+Signal power density at Legion_Hall: -67.63 dBW per square meter
+Voltage across a 50 ohm dipole at Legion_Hall: 2160.81 uV (66.69 dBuV)
+Voltage across a 75 ohm dipole at Legion_Hall: 2646.44 uV (68.45 dBuV)
+Mode of propagation: Double Horizon Diffraction Dominant
+ITWOM error number: 0 (No error)
+
+---------------------------------------------------------------------------
+
+Between Legion_Hall and K4HTA, SPLAT! detected obstructions at:
+
+    38.9076 N,  77.2626 W,  0.47 miles, 406.82 feet AMSL
+    38.9079 N,  77.2618 W,  0.51 miles, 416.67 feet AMSL
+    38.9142 N,  77.2402 W,  1.75 miles, 485.56 feet AMSL
+    38.9144 N,  77.2394 W,  1.80 miles, 488.85 feet AMSL
+
+Antenna at Legion_Hall must be raised to at least 34.00 feet AGL
+to clear all obstructions detected by SPLAT!.
+
+Antenna at Legion_Hall must be raised to at least 492.00 feet AGL
+to clear the first Fresnel zone.
+
+Antenna at Legion_Hall must be raised to at least 281.00 feet AGL
+to clear 60% of the first Fresnel zone.

@@ -1,0 +1,11 @@
+
+	--==[ SPLAT! v1.4.2 Site Analysis Report For: K4HTA ]==--
+
+---------------------------------------------------------------------------
+
+Site location: 38.9242 North / 77.2058 West (38° 55' 27" N / 77° 12' 20" W)
+Ground elevation: 105.00 meters AMSL
+Antenna height: 73.15 meters AGL / 178.15 meters AMSL
+
+---------------------------------------------------------------------------
+
