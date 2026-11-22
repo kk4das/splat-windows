@@ -2256,17 +2256,39 @@ void LoadUDT(char *filename)
 	   elevation data already loaded into memory. */
 
 	int	i, x, y, z, ypix, xpix, tempxpix, tempypix, fd=0;
-	char	input[80], str[3][80], tempname[15], *pointer=NULL;
+	char	input[80], str[3][80], tempname[512], *pointer=NULL;	/* WIN32PORT P5: was [15] */
 	double	latitude, longitude, height, tempheight;
 	FILE	*fd1=NULL, *fd2=NULL;
 
+#ifdef _WIN32
+	/* WIN32PORT P5: there is no /tmp on Windows. Create the temporary
+	   file in the user's temp folder instead. */
+	{
+		const char *tmpdir=getenv("TEMP");
+
+		if (tmpdir==NULL)
+			tmpdir=getenv("TMP");
+		if (tmpdir==NULL)
+			tmpdir=".";
+
+		snprintf(tempname,sizeof(tempname),"%s\\splatXXXXXX",tmpdir);
+	}
+#else
 	strcpy(tempname,"/tmp/XXXXXX\0");
+#endif
 
 	fd1=fopen(filename,"r");
 
 	if (fd1!=NULL)
 	{
 		fd=mkstemp(tempname);
+#ifdef _WIN32
+		/* WIN32PORT P5: upstream never closes this descriptor. Windows can't
+		   delete a file that is still open, so the unlink() at the end would
+		   leave the temp file behind. Only the unique name is needed. */
+		if (fd!=-1)
+			close(fd);
+#endif
 		fd2=fopen(tempname,"w");
 
 		fgets(input,78,fd1);
