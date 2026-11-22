@@ -163,7 +163,17 @@ struct dem {	int min_north;
 		short data[IPPD][IPPD];
 		unsigned char mask[IPPD][IPPD];
 		unsigned char signal[IPPD][IPPD];
-           }	dem[MAXPAGES];
+           }
+#ifdef _WIN32
+	/* WIN32PORT P2: one static terrain array this big can't be linked on
+	   Windows above about 2 GB (HD 6x6 and up; Linux relies on
+	   -mcmodel=medium, which has no Windows equivalent). Allocate the same
+	   array on the heap at start-up instead; indexing (dem[indx].data[x][y])
+	   is unchanged, and calloc() zeroes it just as static storage would be. */
+	*dem;
+#else
+	dem[MAXPAGES];
+#endif
 
 struct LR {	double eps_dielect; 
 		double sgm_conductivity; 
@@ -7944,6 +7954,17 @@ int main(int argc, char *argv[])
 		tx_site[x].lat=91.0;
 		tx_site[x].lon=361.0;
 	}
+
+#ifdef _WIN32
+	/* WIN32PORT P2: allocate the terrain pages (see the declaration of dem). */
+	dem=(struct dem *)calloc(MAXPAGES,sizeof(struct dem));
+
+	if (dem==NULL)
+	{
+		fprintf(stderr,"\n*** ERROR: not enough memory for %d terrain pages (%.0f MB)\n",MAXPAGES,(double)MAXPAGES*sizeof(struct dem)/1048576.0);
+		exit(-1);
+	}
+#endif
 
 	for (x=0; x<MAXPAGES; x++)
 	{
