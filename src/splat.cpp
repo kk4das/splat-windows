@@ -8337,6 +8337,13 @@ int main(int argc, char *argv[])
 	if (sdf_path[0]==0)
 	{
 		env=getenv("HOME");
+#ifdef _WIN32
+		/* WIN32PORT P4: HOME is normally unset on Windows, and a NULL
+		   passed to "%s" is undefined. Fall back to %USERPROFILE%, so the
+		   file is %USERPROFILE%\.splat_path (owner decision D4). */
+		if (env==NULL)
+			env=getenv("USERPROFILE");
+#endif
 		snprintf(string,253,"%s/.splat_path",env);
 		fd=fopen(string,"r");
 

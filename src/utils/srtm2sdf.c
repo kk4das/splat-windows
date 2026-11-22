@@ -702,6 +702,11 @@ int main(int argc, char **argv)
 	if (sdf_path[0]==0)
 	{
 		env=getenv("HOME");
+#ifdef _WIN32
+		/* WIN32PORT P4: HOME is normally unset on Windows; use %USERPROFILE% (D4). */
+		if (env==NULL)
+			env=getenv("USERPROFILE");
+#endif
 
 		sprintf(string,"%s/.splat_path",env);
 
