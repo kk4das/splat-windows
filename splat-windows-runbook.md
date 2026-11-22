@@ -295,7 +295,22 @@ make plots.
 - **2026-11-21 — D1 → MSYS2 UCRT64** (owner: "Approve, start Stage 0", in answer to "Approve MSYS2
   UCRT64 as the toolchain and start Stage 0?"). Installed in Stage 0. VS Code works with it (see
   §Environment notes); VS Code is optional.
-- **Still open:** D3–D10.
+- **2026-11-21 — D7 (test sites), partly decided.** The owner gave Google Maps links. The
+  coordinates came from the links' redirects:
+
+  | Site | Role | Lat, Lon (WGS84) | Antenna AGL | In git as |
+  |---|---|---|---|---|
+  | Club repeater | TX | 38.924216, −77.205793 | 240 ft | exact (public site) |
+  | KK4DAS home QTH | RX 1 | 38.963031, −77.276738 | **open** | **rounded to 38.96, −77.28** (private residence; about 0.6 mi, a negligible change at this path length) |
+  | American Legion Hall, 330 Center St N, Vienna | RX 2 | 38.905259, −77.270717 | **open** | exact (public site) |
+
+  Radio: **146.685 MHz, ERP 93 W**, about 100 ft of hard line (negligible loss, already inside the
+  ERP figure). Polarization is assumed **vertical** (FM repeater), to be confirmed. The paths are
+  short: TX→home ≈ 4.7 mi (7.5 km), TX→Legion ≈ 3.7 mi (6.0 km). All three sites are in SRTM tile
+  **N38W078**. A repeater coverage map out to about 30 mi also needs N38W077, N39W078, and N39W077
+  (a 2×2° region).
+- **Still open:** D3–D6, D8–D10; for D7, the two RX antenna heights, polarization, the repeater's
+  call sign/name, and the coverage-map radius.
 
 ---
 

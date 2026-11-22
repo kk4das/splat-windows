@@ -14,3 +14,7 @@
   requirement, just a question."
 - "The linux version can be built on a new wsl distro" (D2).
 - "Approve, start Stage 0" (D1 → MSYS2 UCRT64).
+- D7 sites (owner, via Google Maps links): club repeater (TX), KK4DAS home QTH (RX 1), American
+  Legion Hall (RX 2). "frequency is 146.685 MHz, ERP of 93 watts, 240 feet above ground level, it
+  uses about 100 feet of hard line, feed line loss should be minimal." Coordinates are recorded in
+  the runbook (the home QTH is rounded there).
