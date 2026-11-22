@@ -30,6 +30,15 @@
 #include "fontdata.h"
 #include "splat.h"
 
+/* WIN32PORT P1: Windows forbids ':' in filenames, so SDF files are named
+   "40_41_74_75.sdf" instead of "40:41:74:75.sdf" (owner decision D3).
+   Linux builds keep the original colon names. */
+#ifdef _WIN32
+#define SDF_NAME_FMT "%d_%d_%d_%d"
+#else
+#define SDF_NAME_FMT "%d:%d:%d:%d"
+#endif
+
 #define GAMMA 2.5
 #define BZBUFFER 65536
 
@@ -1656,7 +1665,7 @@ int LoadSDF_SDF(char *name)
 
 	/* Parse filename for minimum latitude and longitude values */
 
-	sscanf(sdf_file,"%d:%d:%d:%d",&minlat,&maxlat,&minlon,&maxlon);
+	sscanf(sdf_file,SDF_NAME_FMT,&minlat,&maxlat,&minlon,&maxlon);
 
 	sdf_file[x]='.';
 	sdf_file[x+1]='s';
@@ -1885,7 +1894,7 @@ int LoadSDF_BZ(char *name)
 
 	/* Parse sdf_file name for minimum latitude and longitude values */
 
-	sscanf(sdf_file,"%d:%d:%d:%d",&minlat,&maxlat,&minlon,&maxlon);
+	sscanf(sdf_file,SDF_NAME_FMT,&minlat,&maxlat,&minlon,&maxlon);
 
 	sdf_file[x]='.';
 	sdf_file[x+1]='s';
@@ -2066,7 +2075,7 @@ char LoadSDF(char *name)
 	{
 		/* Parse SDF name for minimum latitude and longitude values */
 
-		sscanf(name,"%d:%d:%d:%d",&minlat,&maxlat,&minlon,&maxlon);
+		sscanf(name,SDF_NAME_FMT,&minlat,&maxlat,&minlon,&maxlon);
 
 		/* Is it already in memory? */
 
@@ -7407,9 +7416,9 @@ void LoadTopoData(int max_lon, int min_lon, int max_lat, int min_lat)
 					ymax-=360;
 
 				if (ippd==3600)
-					snprintf(string,19,"%d:%d:%d:%d-hd",x, x+1, ymin, ymax);
+					snprintf(string,19,SDF_NAME_FMT "-hd",x, x+1, ymin, ymax);
 				else
-					snprintf(string,16,"%d:%d:%d:%d",x, x+1, ymin, ymax);
+					snprintf(string,16,SDF_NAME_FMT,x, x+1, ymin, ymax);
 				LoadSDF(string);
 			}
 	}
@@ -7436,9 +7445,9 @@ void LoadTopoData(int max_lon, int min_lon, int max_lat, int min_lat)
 					ymax-=360;
 
 				if (ippd==3600)
-					snprintf(string,19,"%d:%d:%d:%d-hd",x, x+1, ymin, ymax);
+					snprintf(string,19,SDF_NAME_FMT "-hd",x, x+1, ymin, ymax);
 				else
-					snprintf(string,16,"%d:%d:%d:%d",x, x+1, ymin, ymax);
+					snprintf(string,16,SDF_NAME_FMT,x, x+1, ymin, ymax);
 				LoadSDF(string);
 			}
 	}

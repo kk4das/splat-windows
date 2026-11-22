@@ -304,7 +304,12 @@ char *argv[];
 
 		/* Write splat data file to disk */
 
+#ifdef _WIN32
+		/* WIN32PORT P1: Windows forbids ':' in filenames; SDF names use '_' (D3). */
+		sprintf(splatfile,"%.0f_%.0f_%.0f_%.0f.sdf",min_north,max_north,min_west,max_west);
+#else
 		sprintf(splatfile,"%.0f:%.0f:%.0f:%.0f.sdf",min_north,max_north,min_west,max_west);
+#endif
 
 		fprintf(stdout," Done!\nWriting \"%s\"... ",splatfile);
 		fflush(stdout);

@@ -17,6 +17,13 @@
 #include <unistd.h>
 #include <bzlib.h>
 
+/* WIN32PORT P1: Windows forbids ':' in filenames; SDF names use '_' there (D3). */
+#ifdef _WIN32
+#define SDF_NAME_FMT "%d_%d_%d_%d"
+#else
+#define SDF_NAME_FMT "%d:%d:%d:%d"
+#endif
+
 #define BZBUFFER 65536
 
 char	sdf_filename[30], sdf_path[255], replacement_flag, opened=0,
@@ -177,9 +184,9 @@ int ReadSRTM(char *filename)
 	lseek(infile,0L,SEEK_SET);
 
 	if (ippd==3600)
-		sprintf(sdf_filename, "%d:%d:%d:%d-hd.sdf", min_north, max_north, min_west, max_west);
+		sprintf(sdf_filename, SDF_NAME_FMT "-hd.sdf", min_north, max_north, min_west, max_west);
 	else
-		sprintf(sdf_filename, "%d:%d:%d:%d.sdf", min_north, max_north, min_west, max_west);
+		sprintf(sdf_filename, SDF_NAME_FMT ".sdf", min_north, max_north, min_west, max_west);
 
 	error=0;
 	replacement_flag=0;
@@ -428,7 +435,7 @@ int ReadUSGS()
 	   Full path and extentions are added later though
 	   subsequent function calls. */
 
-	sprintf(usgs_filename, "%d:%d:%d:%d", min_north, max_north, min_west, max_west);
+	sprintf(usgs_filename, SDF_NAME_FMT, min_north, max_north, min_west, max_west);
 
 	return (LoadSDF(usgs_filename));
 }
