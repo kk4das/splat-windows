@@ -162,7 +162,7 @@ antenna.**
 |---|---|---|
 | **G1** | **UI technology** | C#/.NET 10 + WPF (Fluent theme) + WebView2/Leaflet; install the .NET 10 SDK. |
 | **G2** | **Background maps** | OpenStreetMap streets (free, with attribution) plus a free terrain layer; satellite only if you want it, which may need a free account or key. |
-| **G3** | **Do you have a QRZ XML Logbook Data subscription?** Without one, QRZ lookups won't give usable positions. | If not, build callook.info (US, free) first, and QRZ in G2 anyway for anyone who has one. |
+| **G3** | **Do you have a QRZ XML Logbook Data subscription?** Without one, QRZ lookups won't give usable positions. | **DECIDED 2026-11-22: the owner subscribes** ("Yes, I subscribe"). QRZ is the primary lookup. callook.info stays as the free US fallback for users without a subscription. |
 | **G4** | **Draw graphs in the app instead of gnuplot** (removes the ~1 GB dependency) | Yes. gnuplot stays available for the command line. |
 | **G5** | **Who uses it (this is D10)**: just you, or club members too? This decides the installer, per-user QRZ sign-in and help text. | Build for "club members on their own PCs" from the start; it costs little. |
 | **G6** | **Order: GUI before Stage 5 packaging**, so one package holds both | Yes. Stage 5 becomes G6. |
