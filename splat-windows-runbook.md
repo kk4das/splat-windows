@@ -199,7 +199,7 @@ compiler, and prove it can build a trivial Windows program, without touching any
   test `.exe` → flagged by the DLL check.
 - **Gate:** report with real output; system Python and the existing WSL distros are unchanged.
 
-### Stage 1 — Linux reference baseline (the oracle) (DONE 2026-11-21, awaiting owner review)
+### Stage 1 — Linux reference baseline (the oracle) (DONE 2026-11-21; owner approved)
 *Plain language:* build the original program on Linux and record exactly what it outputs, so we have
 something objective to compare the Windows version against.
 - In the reference WSL distro (D2), build **unmodified** upstream with its own `configure`/`build`
@@ -322,7 +322,11 @@ make plots.
   Stage 1", in answer to "Start Stage 1 with the recommended region sizes?").
 - **2026-11-21 — Terrain source (part of D7) → public, no-login tiles** (owner chose "Yes, download
   both"): 1″ from the AWS `elevation-tiles-prod/skadi` bucket, 3″ from viewfinderpanoramas `dem3`.
-- **Still open:** D3, D4 (needed for Stage 2), D6, D8–D10.
+- **2026-11-21 — D3 → underscore.** SDF names become `40_41_74_75.sdf` / `…-hd.sdf` (owner: "use
+  underscore for filenames"). Stage 2 also makes the name parsing accept `_`.
+- **2026-11-21 — D4 → `%USERPROFILE%\.splat_path`** (owner: "userprofile is good for settings").
+  `HOME` is still used first if it is set (same as Linux); otherwise `USERPROFILE`.
+- **Still open:** D6, D8–D10.
 
 ---
 
@@ -350,6 +354,7 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-21 — Stage 1 approved by owner** ("stage 1 approved"). D3 → `_`, D4 → `%USERPROFILE%`.
 - **2026-11-21 — Stage 1 complete: Linux reference baseline. HALT for owner review.** New WSL distro
   `splat-ref` (the existing Debian is untouched). Upstream copied byte-exact and built with its own
   scripts (8×8° / 4×4°). 4 real tiles (1″ + 3″, about 36 MB, owner-approved). 18 cases + 2
