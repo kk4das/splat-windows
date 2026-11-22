@@ -309,8 +309,10 @@ make plots.
   short: TX→home ≈ 4.7 mi (7.5 km), TX→Legion ≈ 3.7 mi (6.0 km). All three sites are in SRTM tile
   **N38W078**. A repeater coverage map out to about 30 mi also needs N38W077, N39W078, and N39W077
   (a 2×2° region).
-- **Still open:** D3–D6, D8–D10; for D7, the two RX antenna heights, polarization, the repeater's
-  call sign/name, and the coverage-map radius.
+- **2026-11-21 — D7 coverage radius → 25–30 mi** (owner: "25-30 miles is right"). Coverage test
+  cases use `-R 30`. That needs the four tiles N38W078, N38W077, N39W078, and N39W077.
+- **Still open:** D3–D6, D8–D10; for D7, the two RX antenna heights, polarization, and the
+  repeater's call sign/name.
 
 ---
 
