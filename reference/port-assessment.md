@@ -112,6 +112,14 @@ with a PowerShell equivalent if USGS DEM data is wanted. `install` is not ported
   report files are unaffected. Owner's call whether to touch it (it's a behaviour change).
 - No threads, sockets, signals, `fork`, or locale use: nothing else OS-specific found.
 
+### P11, P12 — found in Stage 2 (not predicted here)
+- **P11:** `srtm2sdf.c:62` `base=strrchr(filename,'/')` doesn't see `\` separators, so a full
+  Windows path is rejected.
+- **P12:** `LoadPAT()` (`splat.cpp:1278–1286`) has about 1.5 MB of local `float` arrays, more than
+  the Windows 1 MB default stack. It is fixed in the link step.
+- Also learned: on Windows `bzlib.h` includes `windows.h` (hence `ARRAYSIZE redefined`), and
+  `srtm2sdf` reports "Done!" even when its output file couldn't be created.
+
 ## Not changed by the port
 ITM/ITWOM maths, CLI options and their meanings, all input and output file formats (except the SDF
 filename separator, P1), default parameter values, and report wording.

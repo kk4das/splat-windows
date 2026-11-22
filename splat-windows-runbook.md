@@ -149,6 +149,8 @@ Full findings, with file and line references, are in `reference/port-assessment.
 | P7 | **Shell scripts** (`configure`, `build`, `install`, `utils/build`, `utils/postdownload`). | Bash-only. | `build.ps1` replaces `configure`+`build`. `postdownload` becomes `postdownload.ps1` (it only decompresses and reblocks a file). There's no `install` step until D10 decides where binaries go. |
 | P8 | **Graphs call `system("gnuplot splat.gp")`.** | Needs gnuplot on PATH, and the PNG terminal must exist in the Windows gnuplot build. | Install gnuplot (D8). Probably no code change. Verify each graph type renders. |
 | P9 | **Text vs binary mode** in a few `fopen` calls (for example `usgs2sdf` writes SDF with `"w"`, giving CRLF line endings). | Output files differ from Linux byte-for-byte, though SPLAT! may still read them fine. | Use binary mode where Linux and Windows files should be identical; prove it with the compare script. |
+| P11 | *(found in Stage 2)* **`srtm2sdf` finds the tile name after the last `/` only.** | A full Windows path (`C:\data\N38W078.hgt`) is rejected as "not a valid .hgt filename". | On Windows, use the last `\` or `/`. Fixed (`237b0e3`). |
+| P12 | *(found in Stage 2)* **Stack overflow:** `LoadPAT()` keeps about 1.5 MB of local arrays; the Windows default stack is 1 MB (Linux 8 MB). | `splat.exe` crashes (`0xC00000FD`) on every run. | Link with `-Wl,--stack,8388608` (no source change). Fixed (`7392ee5`). |
 | P10 | **`-ffast-math` + a different maths library** (MinGW/UCRT `libm` vs glibc). | Path-loss numbers may differ from Linux in the last digits. | Measure in Stage 3; the owner ratifies a tolerance (for example ±0.01 dB in reports, ≤0.1% of map pixels differing by one colour band). No flag-chasing (Guardrail 5). |
 
 What does **not** need to change: the propagation models (`itwom3.0.cpp` is portable C++; it even
@@ -216,7 +218,7 @@ something objective to compare the Windows version against.
 - **Gate:** report listing each case, its command line, and its golden outputs; owner confirms the
   case list covers how they'll actually use SPLAT!.
 
-### Stage 2 — Minimum native port (make it compile and run) ⬅ next, needs D3 + D4
+### Stage 2 — Minimum native port (make it compile and run) (DONE 2026-11-22, awaiting owner review)
 *Plain language:* make the smallest set of changes that lets every SPLAT! program build and run on
 Windows.
 - `build.ps1`: replaces `configure` + `build`. Takes `-StdPages 9 -HdPages 1` (or the D5 choices),
@@ -229,7 +231,7 @@ Windows.
 - **Gate:** report with the full port diff stat (`git diff --stat upstream-1.4.2`), the smoke-test
   output, and anything that surprised us.
 
-### Stage 3 — Equivalence with Linux (prove it's the same program)
+### Stage 3 — Equivalence with Linux (prove it's the same program) ⬅ next
 *Plain language:* run every test case on Windows and show the answers match the Linux originals.
 - `scripts/compare_outputs.py` (project `.venv`): text reports compared line-by-line with numeric
   tolerance; SDF files compared value-by-value; PPM maps compared pixel-by-pixel (count and location
@@ -286,6 +288,7 @@ make plots.
 | D7 | **Terrain-data source and test area:** NASA Earthdata / USGS EarthExplorer (owner login) or OpenTopography or viewfinderpanoramas.org (no login). Also which real path to use for tests. The old `dds.cr.usgs.gov` link in the docs is defunct. | Owner names the test path; source chosen in Stage 1 research | Stage 1 |
 | D8 | **gnuplot:** MSYS2 package or the native Windows installer | MSYS2 package (no extra installer) | Stage 4 |
 | D9 | **Viewing PPM maps:** document a free viewer (IrfanView/GIMP), or add a PNG conversion step (a new feature) | Document a viewer first | Stage 4 |
+| D11 | **Text-output line endings on Windows:** keep CR-LF (upstream text mode) or force LF to be byte-identical to Linux | Keep CR-LF; Stage 3 compares text with line endings normalised | Stage 3 |
 | D10 | **Who uses the Windows build** (just the owner, or club members) and where it's installed | — | Stage 5 |
 
 ### Decisions recorded
@@ -326,7 +329,8 @@ make plots.
   underscore for filenames"). Stage 2 also makes the name parsing accept `_`.
 - **2026-11-21 — D4 → `%USERPROFILE%\.splat_path`** (owner: "userprofile is good for settings").
   `HOME` is still used first if it is set (same as Linux); otherwise `USERPROFILE`.
-- **Still open:** D6, D8–D10.
+- **Still open:** D6, D8–D10, **D11** (line endings of Windows text outputs: keep CR-LF
+  [recommended] or force LF; raised in the Stage 2 report).
 
 ---
 
@@ -354,6 +358,13 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — Stage 2 complete: minimum native port. HALT for owner review.** `build.ps1` plus
+  8 one-problem commits (P1–P7, P9, and new P11 backslash paths and P12 stack overflow), 110+/14−
+  lines in 3 files, all Windows changes inside `#ifdef _WIN32`. **The patched source built on Linux
+  reproduces 102/102 goldens bit-for-bit** (Linux untouched). Windows smoke test 27/27: all 5 SDF
+  conversions are byte-identical to Linux, and every report is identical apart from CR-LF line
+  endings (D11 raised). HD 8×8° (3.3 GB) builds and runs only with the P2 fix. Report:
+  `reports/stage2-minimum-port.md`.
 - **2026-11-21 — Stage 1 approved by owner** ("stage 1 approved"). D3 → `_`, D4 → `%USERPROFILE%`.
 - **2026-11-21 — Stage 1 complete: Linux reference baseline. HALT for owner review.** New WSL distro
   `splat-ref` (the existing Debian is untouched). Upstream copied byte-exact and built with its own
