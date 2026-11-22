@@ -1,7 +1,7 @@
 # SPLAT! for Windows: GUI front end, plan for owner review (2026-11-22)
 
-**Status: PLAN, all decisions G1–G8 made 2026-11-22.** Nothing is built yet. Before any work: owner
-approval to install the .NET 10 SDK, and an explicit "start Stage G0".
+**Status: in progress.** All decisions G1–G8 made 2026-11-22. G0 (map spike) approved; G1
+(stations) done 2026-11-22, awaiting the owner's check. Progress is in the runbook and `reports\`.
 
 ## The owner's request
 > "plan a GUI front end to eliminate the need for command line and make it a modern windows

@@ -25,6 +25,9 @@
   <ItemGroup>
     <!-- Real SPLAT! output from the Linux golden run (tests\golden\linux). -->
     <None Include="..\..\tests\golden\linux\M01\los.kml" Link="golden\M01\los.kml" CopyToOutputDirectory="PreserveNewest" />
+    <!-- The port's own test sites, and recorded callook.info replies (trustee name replaced). -->
+    <None Include="..\..\tests\cases\inputs\*.qth" Link="inputs\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="samples\*.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

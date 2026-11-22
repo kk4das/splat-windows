@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
@@ -11,7 +11,7 @@ public partial class MainWindow : Window
 {
     const string AppHost = "app.splat.local";   // the map page (files shipped with the app)
     const string MapHost = "map.splat.local";   // the images made from the opened map
-    public const string AgentName = "SPLATforWindows/0.1";   // identifies the app to map-tile servers
+    public const string AgentName = "SPLATforWindows/0.2";   // identifies the app to map-tile servers
 
     static readonly string DataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SPLATforWindows");
     static readonly string MapCache = Path.Combine(DataDir, "map-cache");
@@ -20,10 +20,11 @@ public partial class MainWindow : Window
     LoadedMap? _map;
     bool _pageReady;
 
-    public MainWindow(string? startupKml)
+    public MainWindow(string? startupKml, string stationsPath)
     {
         _startupKml = startupKml;
         InitializeComponent();
+        LoadLibrary(stationsPath);
         Loaded += async (_, _) => await InitWebAsync();
     }
 
@@ -60,8 +61,16 @@ public partial class MainWindow : Window
         {
             case "ready":
                 _pageReady = true;
-                Status.Text = "Ready. Open a SPLAT! coverage map (.kml).";
+                Status.Text = _library == null ? "The stations file couldn't be read (see the left panel)."
+                            : $"Ready. {_library.Stations.Count} station(s) in {_library.FilePath}.";
+                PushStationsToMap();
                 if (_startupKml != null) _ = ShowMapAsync(_startupKml);
+                break;
+            case "pin":
+                PinMovedOnMap(doc.RootElement.GetProperty("lat").GetDouble(), doc.RootElement.GetProperty("lon").GetDouble());
+                break;
+            case "station-click":
+                SelectByName(doc.RootElement.GetProperty("name").GetString() ?? "");
                 break;
             case "overlay-loaded":
                 if (_map != null)
@@ -89,7 +98,7 @@ public partial class MainWindow : Window
             string json = MapLoader.PageJson(map, $"https://{MapHost}/{Uri.EscapeDataString(rel).Replace("%2F", "/")}");
             await Web.CoreWebView2.ExecuteScriptAsync($"window.splat.showMap({json}); window.splat.setOpacity({OpacitySlider.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)});");
             EarthButton.IsEnabled = OpacitySlider.IsEnabled = true;
-            Title = $"{Path.GetFileName(kmlPath)} - SPLAT! for Windows (G0 preview)";
+            Title = $"{Path.GetFileName(kmlPath)} - SPLAT! for Windows (preview)";
         }
         catch (Exception ex)
         {

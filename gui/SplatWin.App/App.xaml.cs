@@ -1,10 +1,22 @@
-﻿using System.IO;
+using System.IO;
+using System.Net.Http;
 using System.Windows;
+using SplatWin.Core;
 
 namespace SplatWin.App;
 
 public partial class App : Application
 {
+    /// <summary>One HTTP client for lookups, identifying the app as the services ask.</summary>
+    public static readonly HttpClient Http = CreateHttp();
+
+    static HttpClient CreateHttp()
+    {
+        var h = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
+        h.DefaultRequestHeaders.UserAgent.ParseAdd(SplatWin.App.MainWindow.AgentName);
+        return h;
+    }
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -25,6 +37,10 @@ public partial class App : Application
             }
             return;
         }
-        new MainWindow(e.Args.FirstOrDefault(a => a.EndsWith(".kml", StringComparison.OrdinalIgnoreCase))).Show();
+        // "--stations <file>" uses another stations library (for testing); the default is Documents\SPLAT\stations.json.
+        string stations = StationLibrary.DefaultPath;
+        int i = Array.IndexOf(e.Args, "--stations");
+        if (i >= 0 && i + 1 < e.Args.Length) stations = Path.GetFullPath(e.Args[i + 1]);
+        new MainWindow(e.Args.FirstOrDefault(a => a.EndsWith(".kml", StringComparison.OrdinalIgnoreCase)), stations).Show();
     }
 }

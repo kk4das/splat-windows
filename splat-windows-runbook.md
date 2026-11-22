@@ -276,7 +276,7 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G6 — GUI front end (G0 DONE 2026-11-22, awaiting owner's alignment check; G1 next)
+### Stages G0–G6 — GUI front end (G0 APPROVED 2026-11-22; G1 DONE 2026-11-22, awaiting owner's check; G2 next)
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
@@ -289,6 +289,12 @@ coverage map is shown in the window, with a button that opens it in Google Earth
   · G8 "SPLAT! for Windows".
 - **Needs before G0:** approval to install the .NET 10 SDK (not on this PC), and an explicit "start
   Stage G0".
+- **G0 approved** (owner, 2026-11-22: "Lines up, start G1"), which was also the go-ahead for G1.
+- **GUI checks, every stage:** `gui\build-gui.ps1 test` (unit tests) and
+  `scripts\gui_stations_uitest.ps1 -App gui\publish\SplatForWindows.exe -Work work\g1-uitest`
+  (drives the real window with UI Automation, using its own stations file).
+- **Run `verify_toolchain.ps1` from PowerShell, not Git Bash.** Git Bash sets `HOME`, so the
+  "P4 HOME unset" finding can't reproduce there and the script reports PROBLEMS.
 
 ---
 
@@ -399,6 +405,21 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — Stage G1 (stations) complete. HALT for owner review.**
+  - G0 approved by the owner ("Lines up, start G1").
+  - Stations panel: add by call sign (callook.info, US), grid square, coordinates or map click;
+    every method ends with a pin the user drags or confirms. Also edit, delete, `.qth` import and
+    export. The library is `Documents\SPLAT\stations.json` (on this PC, in OneDrive), with a `.bak`
+    copy of the previous version.
+  - The `.qth` reader mirrors SPLAT!'s `LoadQTH`/`ReadBearing` but refuses what SPLAT! would
+    silently read as 0 or cut short. Exported files were read by the real `splat.exe` as expected
+    (`9.14 meters` → 29.99 ft).
+  - Checks:
+    - 117 unit tests. Five deliberate breakages were each caught; one of them (the grid-edge nudge)
+      first survived, which exposed a missing test, now added.
+    - 27/27 checks driving the real window, and the same script fails (exit 1) on the G0 build.
+    - The map page's pin, click, drag and station-dot behaviour, checked in a browser.
+  - Report: `reports/stageG1-stations.md`.
 - **2026-11-22 — Stage G0 (map spike) complete. HALT for owner review.**
   - WPF app in `gui\` (a Core library, 18 unit tests, and the app), the .NET 10 SDK on D:, and
     Leaflet 1.9.4 vendored (npm sha512 checked).
