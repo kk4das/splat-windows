@@ -23,7 +23,7 @@ the runbook. The finished `.exe` files themselves need nothing from MSYS2.)
 Each time you open a PowerShell window for SPLAT!, put `dist\` on that window's PATH. This lasts
 until the window closes, and nothing on the PC is changed permanently:
 ```powershell
-$env:PATH = "D:\path\to\this\project\dist;$env:PATH"
+$env:PATH = "D:\ClaudeAI\projects\SPLATWIN\dist;$env:PATH"
 ```
 SPLAT! draws graphs by running `gnuplot`. The `gnuplot.cmd` in `dist\` points it to MSYS2's
 gnuplot, so this PATH line is what makes the graphs work.
@@ -94,14 +94,34 @@ To avoid typing `-d` each time, put the SDF folder's path on the first line of
 
 ## 5. View maps
 
-SPLAT! maps are `.ppm` files, which Windows can't open directly. Convert them:
+SPLAT! maps are `.ppm` files, which Windows can't open directly. Convert them, from your working
+folder, using **your map's own file name**. It's the name you gave with `-o`; without `-o`,
+SPLAT! names the map after the transmitter, e.g. `k4hta.ppm`:
 ```powershell
-D:\path\to\project\scripts\ppm2png.ps1 coverage.ppm
+D:\ClaudeAI\projects\SPLATWIN\scripts\ppm2png.ps1 coverage.ppm
 ```
-This writes `coverage.png` (checked pixel-for-pixel against the `.ppm`). If there is a
-`coverage.kml`, it also writes **`coverage-png.kml`**. Open that one in Google Earth to see the
-coverage overlaid on the map. SPLAT!'s own `.kml` points at the `.ppm`, which Google Earth can't
-show.
+This writes `coverage.png` (checked pixel-for-pixel against the `.ppm`), which opens in Photos or
+any image viewer. If the map was made with `-kml`, it also writes two files for Google Earth:
+
+| File | For |
+|---|---|
+| **`coverage.kmz`** | **Google Earth on the web** (or Pro). One file holding the map and its position. |
+| `coverage-png.kml` | Google Earth Pro, the desktop program (keep it next to `coverage.png`). |
+
+SPLAT!'s own `coverage.kml` points at the `.ppm`, which Google Earth can't show, so don't open
+that one.
+
+**Open the map in Google Earth on the web:**
+1. Go to earth.google.com and click **Launch Earth**.
+2. Open the **Projects** panel (the page-with-bookmark icon in the left menu).
+3. Click **New project**, then **Import KML file from computer**, and pick `coverage.kmz`.
+4. Click the map's name in the project list to fly to it. Warmer colours mean a stronger signal.
+
+To show a newer run, delete the old import first (⋮ next to it, then **Delete**) and import the
+new `.kmz`. In Google Earth Pro, use **File → Open** with either file.
+
+The transmitter's marker is a standard pin in the `.kmz`. SPLAT!'s KML asks for an icon built into
+Google Earth Pro, and the web version refuses the whole file over it.
 
 ---
 

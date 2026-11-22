@@ -79,7 +79,7 @@ from PowerShell or `cmd` and **produce the same answers as the Linux build** for
 | winget | present | Proposed installer for MSYS2 (with approval). |
 | WSL | `Debian` (stopped, default), `docker-desktop` (stopped). **Added 2026-11-21: `splat-ref`** (Debian 13.5, `%LOCALAPPDATA%\wsl\{ebb27f84-3027-43a7-b551-44aade80d4a1}`, 2.86 GB) with g++ 14.2, libbz2-dev 1.0.8, gnuplot 6.0.2; upstream built in `/opt/splat`, reference runs in `/opt/ref` | The Linux oracle. **Never modify the existing `Debian`.** Run work in `splat-ref` as script files (`wsl -d splat-ref -u root -- bash /mnt/c/.../x.sh`); `bash -c` strings through `wsl.exe` get mangled. A harmless "Failed to detect nested virtualization" warning prints on every call. Remove with `wsl --unregister splat-ref`. |
 | gnuplot | **Installed 2026-11-22 (D8): MSYS2 `mingw-w64-ucrt-x86_64-gnuplot` 6.0.6** (about 1 GB with its GUI dependencies, inside `C:\msys64`; not on PATH) | `dist\gnuplot.cmd` (written by `build.ps1`) points SPLAT! at it; put `dist\` on PATH for the session. fontconfig's install hook warns "failed to write cache"; that's harmless (a per-user cache exists). |
-| Image viewer for PPM | none needed (D9) | `scripts\ppm2png.ps1` converts maps to PNG with .NET, plus a Google Earth `*-png.kml`. |
+| Image viewer for PPM | none needed (D9) | `scripts\ppm2png.ps1` converts maps to PNG with .NET, plus a Google Earth `*-png.kml` (Pro) and `.kmz` (web). Google Earth Pro is **not** installed; the owner uses Google Earth on the web. |
 | Hardware | Ryzen 9 5950X (16C/32T), 64 GB RAM | Enough for the largest SPLAT! HD build (8×8°, about 3.3 GB). |
 
 **Claude-app PATH caveat (inherited lesson):** the desktop app captures PATH at launch. If a newly
@@ -378,6 +378,21 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — Owner's README run (Stage 4 gate, in progress): fixes from what the owner hit.**
+  - Project moved to `D:\ClaudeAI\projects\SPLATWIN` at the owner's request. The app's copy left
+    out `.git`; Code copied it across (347 files, `git fsck` clean, all tracked files matched).
+    `.venv` (pip and setuptools only) was not copied and isn't needed.
+  - README step 4 opens with a worked example using the real folders. The owner found the
+    commands table unclear.
+  - README step 5 says to use the map's own file name. The owner's run without `-o` made
+    `k4hta.ppm`, so `coverage.ppm` wasn't found.
+  - Google Earth on the web can't load a KML's image from disk. It also rejects SPLAT!'s KML
+    outright over `root://icons/palette-5.png`, an icon only Google Earth Pro has.
+    `ppm2png.ps1` now also writes a verified `<name>.kmz` (doc.kml with that `<Style>` removed,
+    plus the PNG). The owner loaded a hand-made one of these successfully, and the script's
+    doc.kml is identical to it. Tested: the normal case, a forced verification failure (no KMZ
+    and no `.part` left, PNG kept, exit 1), a re-run, and a map without KML. README step 5
+    explains the web steps.
 - **2026-11-22 — D13 accepted and implemented.** `compare_outputs.py` now decodes PNGs (stdlib
   only) and applies D13. Self-test is 20/20 (4 new graph checks: same size with other pixels
   passes; different size, missing PNG, and bad `.gp` data each fail). The Stage 4 run is
