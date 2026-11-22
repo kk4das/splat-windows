@@ -218,7 +218,7 @@ something objective to compare the Windows version against.
 - **Gate:** report listing each case, its command line, and its golden outputs; owner confirms the
   case list covers how they'll actually use SPLAT!.
 
-### Stage 2 — Minimum native port (make it compile and run) (DONE 2026-11-22, awaiting owner review)
+### Stage 2 — Minimum native port (make it compile and run) (DONE 2026-11-22; owner approved)
 *Plain language:* make the smallest set of changes that lets every SPLAT! program build and run on
 Windows.
 - `build.ps1`: replaces `configure` + `build`. Takes `-StdPages 9 -HdPages 1` (or the D5 choices),
@@ -329,8 +329,10 @@ make plots.
   underscore for filenames"). Stage 2 also makes the name parsing accept `_`.
 - **2026-11-21 — D4 → `%USERPROFILE%\.splat_path`** (owner: "userprofile is good for settings").
   `HOME` is still used first if it is set (same as Linux); otherwise `USERPROFILE`.
-- **Still open:** D6, D8–D10, **D11** (line endings of Windows text outputs: keep CR-LF
-  [recommended] or force LF; raised in the Stage 2 report).
+- **2026-11-22 — D11 → keep CR-LF** for Windows text outputs (owner: "Approve, keep CR-LF").
+  Stage 3 compares text with line endings normalised; that is the one ratified expected difference
+  so far.
+- **Still open:** D6, D8–D10.
 
 ---
 
@@ -358,6 +360,7 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — Stage 2 approved by owner; D11 → keep CR-LF** ("Approve, keep CR-LF").
 - **2026-11-22 — Stage 2 complete: minimum native port. HALT for owner review.** `build.ps1` plus
   8 one-problem commits (P1–P7, P9, and new P11 backslash paths and P12 stack overflow), 110+/14−
   lines in 3 files, all Windows changes inside `#ifdef _WIN32`. **The patched source built on Linux

@@ -25,3 +25,4 @@
 - Terrain download: "Yes, download both (Recommended)" (AWS skadi 1-arc-second + viewfinderpanoramas J18.zip).
 - "stage 1 approved. use underscore for filenames, userprofile is good for settings" (D3 → _, D4 → %USERPROFILE%).
 - "Yes, start Stage 2".
+- "Approve, keep CR-LF" (Stage 2 approved; D11 → CR-LF).
