@@ -65,11 +65,23 @@ polarization, and ERP lines. The manual explains the other values.
 
 ## 4. Run SPLAT!
 
-From your working folder (with `dist\` on PATH, step 1):
+In the PowerShell window from step 1, go to your working folder, then run `splat` there. SPLAT!
+reads the `.qth`/`.lrp` files from the current folder and writes its output there too. The `-d`
+option tells it where the terrain (SDF files from step 2) is. A complete example, with the project
+in `D:\ClaudeAI\projects\SPLATWIN` and the sites in `D:\splat-work`:
+```powershell
+$env:PATH = "D:\ClaudeAI\projects\SPLATWIN\dist;$env:PATH"
+cd D:\splat-work
+splat -t k4hta -r kk4das -d D:\ClaudeAI\projects\SPLATWIN\data\sdf3
+```
+`-t k4hta` means "the transmitter is in `k4hta.qth`" and `-r kk4das` means "the receiver is in
+`kk4das.qth`" (you leave off `.qth`). The report appears as `K4HTA-to-KK4DAS.txt`.
+
+Other jobs use the same pattern; `...\sdf3` below is short for the full `-d` path above:
 
 | What | Command | Output |
 |---|---|---|
-| Path report between two sites | `splat -t k4hta -r kk4das -d D:\path\to\project\data\sdf3` | `K4HTA-to-KK4DAS.txt` |
+| Path report between two sites | `splat -t k4hta -r kk4das -d ...\sdf3` | `K4HTA-to-KK4DAS.txt` |
 | + terrain profile and path-loss graphs | add `-p profile.png -l loss.png` | PNG graphs |
 | Coverage map (signal strength, 30 mi) | `splat -t k4hta -L 6 -R 30 -d ...\sdf3 -o coverage.ppm -kml` | `coverage.ppm`, `coverage.kml` |
 | Same in dBm instead of dBµV/m | add `-dbm` | |
