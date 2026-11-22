@@ -75,6 +75,18 @@ int ReadSRTM(char *filename)
 
 	base=strrchr(filename, '/');
 
+#ifdef _WIN32
+	/* WIN32PORT P11: Windows paths separate folders with '\\' (or a mix of
+	   '\\' and '/'); take whichever separator comes last, so a full path like
+	   C:\\data\\N38W078.hgt is recognised as tile N38W078. */
+	{
+		char *bslash=strrchr(filename, '\\');
+
+		if (bslash!=NULL && (base==NULL || bslash>base))
+			base=bslash;
+	}
+#endif
+
 	if (base==NULL)
 		base=filename;
 	else
