@@ -231,7 +231,7 @@ Windows.
 - **Gate:** report with the full port diff stat (`git diff --stat upstream-1.4.2`), the smoke-test
   output, and anything that surprised us.
 
-### Stage 3 — Equivalence with Linux (prove it's the same program) ⬅ next
+### Stage 3 — Equivalence with Linux (prove it's the same program) (DONE 2026-11-22, awaiting owner review)
 *Plain language:* run every test case on Windows and show the answers match the Linux originals.
 - `scripts/compare_outputs.py` (project `.venv`): text reports compared line-by-line with numeric
   tolerance; SDF files compared value-by-value; PPM maps compared pixel-by-pixel (count and location
@@ -243,7 +243,7 @@ Windows.
   owner ratifies the tolerance**; Code doesn't pick one silently.
 - **Gate:** a pass/fail table for every case, and the ratified tolerance recorded here.
 
-### Stage 4 — Graphs, data pipeline, and helpers
+### Stage 4 — Graphs, data pipeline, and helpers ⬅ next, needs D8
 *Plain language:* make the everyday workflow work end-to-end on Windows: get terrain, convert it,
 make plots.
 - Install and verify gnuplot (D8); render every graph type on Windows and compare it visually to
@@ -289,6 +289,7 @@ make plots.
 | D8 | **gnuplot:** MSYS2 package or the native Windows installer | MSYS2 package (no extra installer) | Stage 4 |
 | D9 | **Viewing PPM maps:** document a free viewer (IrfanView/GIMP), or add a PNG conversion step (a new feature) | Document a viewer first | Stage 4 |
 | D11 | **Text-output line endings on Windows:** keep CR-LF (upstream text mode) or force LF to be byte-identical to Linux | Keep CR-LF; Stage 3 compares text with line endings normalised | Stage 3 |
+| D12 | **Numeric tolerance, Windows vs Linux** | Exact everywhere except `.gp` and `.ano` files: ±1 in the last printed digit (measured drift: 1e-6 in graph data, 1e-7° / 0.001° in `.ano` geometry; no dB value differs) | Stage 3 gate |
 | D10 | **Who uses the Windows build** (just the owner, or club members) and where it's installed | — | Stage 5 |
 
 ### Decisions recorded
@@ -332,7 +333,8 @@ make plots.
 - **2026-11-22 — D11 → keep CR-LF** for Windows text outputs (owner: "Approve, keep CR-LF").
   Stage 3 compares text with line endings normalised; that is the one ratified expected difference
   so far.
-- **Still open:** D6, D8–D10.
+- **Still open:** D6, D8–D10, **D12** (Windows-vs-Linux numeric tolerance; raised in the Stage 3
+  report; recommended: exact except 1 unit in the last printed digit in `.gp`/`.ano` files).
 
 ---
 
@@ -360,6 +362,14 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — Stage 3 complete: equivalence with Linux. HALT for owner review.** All 20 cases
+  run on Windows with the same exit codes. Of 103 files: **26 byte-identical (all 9 maps including
+  the 155 MB HD map, all 8 SDFs, KML, GEO)**, 61 identical apart from the ratified expected
+  differences (CR-LF, `_` SDF names, paths, gnuplot not installed), 8 differ only in the last
+  printed digit (`.gp` graph data, `loss.ano` geometry; **no dB value differs anywhere**), and 8 PNGs
+  deferred to Stage 4. **EQUIVALENT** under the proposed tolerance (D12). Comparer self-test 16/16;
+  its first version passed for the wrong reason, which was caught and fixed. Report:
+  `reports/stage3-equivalence.md`.
 - **2026-11-22 — Stage 2 approved by owner; D11 → keep CR-LF** ("Approve, keep CR-LF").
 - **2026-11-22 — Stage 2 complete: minimum native port. HALT for owner review.** `build.ps1` plus
   8 one-problem commits (P1–P7, P9, and new P11 backslash paths and P12 stack overflow), 110+/14−

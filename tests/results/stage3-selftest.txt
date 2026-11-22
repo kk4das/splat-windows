@@ -1,0 +1,17 @@
+﻿[PASS] clean Windows-like copy passes               0 problems
+[PASS] report: 116.68 dB -> 116.69 dB               K4HTA-to-KK4DAS.txt: 1 numbers differ, max |diff| 0.01, 1 beyond |diff| <= 0 (first: line 46: 116.68 vs 116.69)
+[PASS] report: a word changed                       K4HTA-to-KK4DAS.txt: line 28 text differs: 'Longley-Rice Parameters Used In This Analysis:' vs 'Longley-Ricf Parameters Used In This Analysis:'
+[PASS] PPM map: 10 pixels changed                   fs.ppm: 10 of 5760000 pixels differ (0.0002%), box x527-1400 y2399-2399
+[PASS] SDF: one elevation +1 m                      38:39:77:78.sdf: 1 of 1440004 values differ (first: value #5000: 35 vs 36)
+[PASS] KML: one coordinate digit                    los.kml: 1 numbers differ, max |diff| 1, 1 beyond |diff| <= 0 (first: line 14: 38.00000 vs 39.00000)
+[PASS] gnuplot data: one value                      profile.gp: 1 numbers differ, max |diff| 9, 1 beyond |diff| <= 0 (first: line 1: 0.000000 vs 09.000000)
+[PASS] file missing on Windows                      loss.ano: 
+[PASS] extra file on Windows (M08 quirk broken)     both.kml: produced on Windows only
+[PASS] exit code changed                            (exit code): Linux 0 vs Windows 1
+[PASS] stdout: real change (not just SDF names)     stdout.txt: line 4 text differs: 'Loading "../sdf3/38_39_77_78.sdf" into page 1... Done!' vs 'Loading "../sdf3/38_39_77_78.sdf" into page 1... Dome!'
+[PASS] tolerance: .gp last digit +1 accepted        profile.gp: 1 numbers differ, max |diff| 1e-06, 0 beyond 1 unit in the last printed digit (first: line 11: 5.491410 vs 5.491411)
+[PASS] tolerance: .gp last digit +2 rejected        profile.gp: 1 numbers differ, max |diff| 2e-06, 1 beyond 1 unit in the last printed digit (first: line 11: 5.491410 vs 5.491412)
+[PASS] tolerance: .ano path loss +0.002 rejected    loss.ano: 1 numbers differ, max |diff| 0.002, 1 beyond 1 unit in the last printed digit (first: line 3: 115.368 vs 115.370)
+[PASS] tolerance: report 0.01 dB still rejected     K4HTA-to-KK4DAS.txt: 1 numbers differ, max |diff| 0.01, 1 beyond |diff| <= 0 (first: line 46: 116.68 vs 116.69)
+[PASS] stdout-: tile path normalised, content not   stdout-N38W078.txt: line 2 text differs: 'Writing 38_39_77_78.sdf... Done!' vs 'Writing 38_39_77_78.sdf... Dome!'
+SELF-TEST: OK (16/16)

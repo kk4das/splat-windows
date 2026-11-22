@@ -1,0 +1,85 @@
+﻿C01  stdout-N38W077.txt                 SAME*    
+C01  stdout-N38W078.txt                 SAME*    
+C01  stdout-N39W077.txt                 SAME*    
+C01  stdout-N39W078.txt                 SAME*    
+C02  stdout-N38W077.txt                 SAME*    
+C02  stdout-N38W078.txt                 SAME*    
+C02  stdout-N39W077.txt                 SAME*    
+C02  stdout-N39W078.txt                 SAME*    
+P01  K4HTA-site_report.txt              SAME*    
+P01  K4HTA-to-KK4DAS.txt                SAME*    
+P01  stdout.txt                         SAME*    
+P02  K4HTA-site_report.txt              SAME*    
+P02  K4HTA-to-KK4DAS.txt                SAME*    
+P02  stdout.txt                         SAME*    
+P03  K4HTA-site_report.txt              SAME*    
+P03  K4HTA-to-Legion_Hall.txt           SAME*    
+P03  curvature.gp                       DIFF     2 numbers differ, max |diff| 1e-06, 2 beyond |diff| <= 0 (first: line 11: -401.332750 vs -401.332751)
+P03  elevation.png                      DEFERRED PNG not produced (gnuplot not installed: Stage 4)
+P03  height.png                         DEFERRED PNG not produced (gnuplot not installed: Stage 4)
+P03  loss.png                           DEFERRED PNG not produced (gnuplot not installed: Stage 4)
+P03  profile.gp                         DIFF     2 numbers differ, max |diff| 1e-06, 2 beyond |diff| <= 0 (first: line 11: 5.491410 vs 5.491409)
+P03  profile.png                        DEFERRED PNG not produced (gnuplot not installed: Stage 4)
+P03  splat.gp                           SAME*    
+P03  stdout.txt                         SAME*    
+P04  K4HTA-site_report.txt              SAME*    
+P04  K4HTA-to-Legion_Hall.txt           SAME*    
+P04  clutter.gp                         DIFF     4 numbers differ, max |diff| 1e-06, 4 beyond |diff| <= 0 (first: line 3: 364.975088 vs 364.975087)
+P04  curvature.gp                       DIFF     4 numbers differ, max |diff| 1e-06, 4 beyond |diff| <= 0 (first: line 4: 0.329408 vs 0.329407)
+P04  normheight.png                     DEFERRED PNG not produced (gnuplot not installed: Stage 4)
+P04  profile.gp                         DIFF     4 numbers differ, max |diff| 1e-06, 4 beyond |diff| <= 0 (first: line 4: 334.975088 vs 334.975087)
+P04  splat.gp                           SAME*    
+P04  stdout.txt                         SAME*    
+P05  K4HTA-site_report.txt              SAME*    
+P05  K4HTA-to-KK4DAS.txt                SAME*    
+P05  loss_metric.png                    DEFERRED PNG not produced (gnuplot not installed: Stage 4)
+P05  profile.gp                         SAME*    
+P05  splat.gp                           SAME*    
+P05  stdout.txt                         SAME*    
+P06  K4HTA-site_report.txt              SAME*    
+P06  K4HTA-to-KK4DAS.txt                SAME*    
+P06  profile.gp                         DIFF     1 numbers differ, max |diff| 1e-06, 1 beyond |diff| <= 0 (first: line 79: 3.702228 vs 3.702227)
+P06  profile_udt.png                    DEFERRED PNG not produced (gnuplot not installed: Stage 4)
+P06  splat.gp                           SAME*    
+P06  stdout.txt                         SAME*    
+P07  K4HTA_pattern-site_report.txt      SAME*    
+P07  K4HTA_pattern-to-KK4DAS.txt        SAME*    
+P07  stdout.txt                         SAME*    
+P08  K4HTA-site_report.txt              SAME*    
+P08  K4HTA-to-KK4DAS.txt                SAME*    
+P08  profile.gp                         DIFF     1 numbers differ, max |diff| 1e-06, 1 beyond |diff| <= 0 (first: line 235: 3.702228 vs 3.702227)
+P08  profile_hd.png                     DEFERRED PNG not produced (gnuplot not installed: Stage 4)
+P08  splat.gp                           SAME*    
+P08  stdout.txt                         SAME*    
+M01  K4HTA-site_report.txt              SAME*    
+M01  cmd.log                            SAME*    
+M01  stdout.txt                         SAME*    
+M02  K4HTA-site_report.txt              SAME*    
+M02  k4hta.scf                          SAME*    
+M02  stdout.txt                         SAME*    
+M03  K4HTA-site_report.txt              SAME*    
+M03  k4hta.dcf                          SAME*    
+M03  stdout.txt                         SAME*    
+M04  K4HTA-site_report.txt              SAME*    
+M04  k4hta.scf                          SAME*    
+M04  loss.ano                           DIFF     20 numbers differ, max |diff| 0.001, 20 beyond |diff| <= 0 (first: line 8887: 77.1671484 vs 77.1671483)
+M04  stdout.txt                         SAME*    
+M05  k4hta.scf                          SAME*    
+M05  stdout.txt                         SAME*    
+M06  K4HTA-site_report.txt              SAME*    
+M06  K4HTA-to-Legion_Hall.txt           SAME*    
+M06  stdout.txt                         SAME*    
+M07  K4HTA-site_report.txt              SAME*    
+M07  k4hta.scf                          SAME*    
+M07  stdout.txt                         SAME*    
+M08  K4HTA-site_report.txt              SAME*    
+M08  stdout.txt                         SAME*    
+U01  stdout.txt                         SAME*    
+------------------------------------------------------------------------------
+files: DEFERRED=8, DIFF=8, SAME=26, SAME*=61
+expected difference 'inputpath' applied to 8 file(s): srtm2sdf echoes the tile path it was given; the test runner passes each machine's own absolute path
+expected difference 'crlf' applied to 61 file(s): text files end lines with CR-LF on Windows (upstream text mode; owner decision D11)
+expected difference 'sdfname' applied to 24 file(s): SDF names use '_' instead of ':' on Windows (owner decision D3), as echoed in console output
+expected difference 'nognuplot' applied to 13 file(s): gnuplot is not installed on Windows yet (D8, Stage 4): its 'not recognized' message and the missing PNGs
+expected difference 'argv0' applied to 1 file(s): -log records argv[0], the program's own path, which differs by machine (Stage 1 finding 4)
+RESULT: 8 PROBLEM(S)
