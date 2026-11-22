@@ -126,4 +126,50 @@ You sign in to QRZ in the app (you type the password; it's kept in Windows Crede
 Then lookup by call sign worldwide, with a loud warning when QRZ's position is only a zip code,
 state or grid.
 
+## Addendum (same day): street-address lookup
+**Why:** at the check, the owner found that callook.info puts K4HTA at its PO box, not the repeater
+site ("We need to add a postal address lookup").
+
+**What was added:** a new **Address** tab in Add station, second after Call sign.
+- **Two lookups at once:** type the site's street address, and the app asks two free services, with
+  no account or key:
+  - **The US Census Bureau geocoder** (US addresses). It estimates the spot along the street from
+    the block's house-number range.
+  - **OpenStreetMap's Nominatim** (worldwide). Where OSM has the building mapped, the pin goes on
+    the building itself.
+- **The matches are listed, best first**, each saying how exact it is: "the building or house
+  itself", "estimated from the street's house-number range", "only the street, not the house" or
+  "only the town or area". The best match is selected and the pin goes there. Click another to move
+  it. As with every method, you then drag the pin to the antenna and tick the box.
+- **PO boxes are refused before anything is sent**, with the reason: a PO box is at the post
+  office.
+- **If one service fails**, the other's matches are still shown and the status line says which one
+  failed.
+- **OpenStreetMap's usage policy is followed:** the app names itself, and sends at most one request
+  a second. There is no searching as you type.
+
+**How it was checked:**
+- **153 unit tests pass** (36 new):
+  - recorded replies from both services, for the ARRL HQ address (225 Main St, Newington CT),
+    Munich (east longitude), a street-only match, "no match" and a refused request;
+  - garbled replies, out-of-range positions, the PO-box forms, the rate limit, and one or both
+    services failing.
+  - The ARRL building from OSM is within 30 m of the FCC position callook gives for W1AW, as an
+    independent check.
+- **Five deliberate breakages, all caught:** no PO-box check; the Census longitude and latitude
+  swapped; a street counted as a building; the rate limit removed; one failing service losing
+  everything. The code was then restored and checked identical.
+- **The real window:** 31 of 31 checks pass, including a refused PO box and a live ARRL lookup that
+  got 4 matches from both services, with the pin on the building. The G1 build without the tab fails
+  the script.
+- **An opt-in live test** (`SPLAT_LIVE=1`) checks that both services still answer. It passed.
+- **Live lookups in testing:** the ARRL HQ address and an obviously fake address only. No private
+  addresses were sent.
+
+**Limits:**
+- An address is a building's front door, not the tower. For a repeater on a hill or a shared tower,
+  the Map tab may still be the right tool.
+- Outside OSM's mapped buildings, the US Census only estimates along the street. Rural routes can
+  be off by a lot.
+
 ## Halted for owner review.

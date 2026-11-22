@@ -145,6 +145,19 @@ try {
     $null = Wait-For { (Text 'Status') -like 'Saved W1AW*' } 15000
     Check ((Text 'Status') -like 'Saved W1AW (FN31pr*') 'W1AW looked up and saved, name filled in' (Text 'Status')
 
+    # 2b. Street address (live US Census + OpenStreetMap, a public address only). Cancelled, not saved.
+    Click (ById $script:win 'AddButton')
+    Find-Place 'Address' 'P.O. Box 123, Vienna, VA 22183'
+    Check ((Text 'EditorError') -like '*PO box is at the post office*') 'PO box refused before sending' (Text 'EditorError')
+    Find-Place 'Address' '225 Main St, Newington, CT 06111'
+    $null = Wait-For { (Text 'NoteText') -like '*OpenStreetMap*' -or (Text 'EditorError') } 20000
+    $st = Text 'Status'   # the list only shows the matches that fit, so count them from the status line
+    Check ($st -match '^Found (\d+) matches' -and [int]$Matches[1] -ge 2 -and $st -notmatch '\(') 'several address matches, both services answered' "$st $(Text 'EditorError')"
+    $pin = Text 'PinText'
+    Check ($pin -match '^41\.714\d+, -72\.72\d+') 'pin on the ARRL building (live)' ($pin -replace "`n", ' | ')
+    Check ((Text 'NoteText') -like '*the building or house itself*drag the pin to the antenna*') 'address note says how exact it is' (Text 'NoteText')
+    Click (ById $script:win 'CancelButton')
+
     # 3. Coordinates in deg-min-sec, metres, and a duplicate name.
     Add-Station 'Coordinates' '38°55''27.18"N 77°12''20.85"W' 'K4HTA' '73.15' 'm'
     $null = Wait-For { (Text 'Status') -like 'Saved K4HTA*' }

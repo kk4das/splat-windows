@@ -19,7 +19,7 @@ public partial class MainWindow
     string? _pinSource;           // how the pin's position was found
     bool _pinMoved;               // moved by hand after it was found
 
-    enum Method { CallSign, Grid, Coordinates, Map }
+    enum Method { CallSign, Address, Grid, Coordinates, Map }   // in the order of the tabs
     Method CurrentMethod => (Method)Math.Max(0, MethodTabs.SelectedIndex);
 
     void LoadLibrary(string path)
@@ -83,6 +83,7 @@ public partial class MainWindow
         _editing = s;
         EditorTitle.Text = s == null ? "New station" : "Edit " + s.Name;
         FindBox.Text = "";
+        HideMatches();
         NoteBox.Visibility = Visibility.Collapsed;
         EditorError.Text = "";
         NameBox.Text = s?.Name ?? "";
@@ -115,6 +116,7 @@ public partial class MainWindow
     void Method_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
         if (e.OriginalSource != MethodTabs) return;   // ignore bubbling from inner controls
+        HideMatches();
         ShowMethodHint();
     }
 
@@ -124,6 +126,7 @@ public partial class MainWindow
         MethodHint.Text = CurrentMethod switch
         {
             Method.CallSign => "A US call sign, such as KK4DAS. Looked up on callook.info (free FCC licence data).",
+            Method.Address => "The street address of the antenna site, such as 225 Main St, Newington, CT. Not a PO box. Searched on the US Census geocoder and OpenStreetMap (both free).",
             Method.Grid => "A Maidenhead grid square of 4 to 10 characters, such as FM18jw. The square is drawn on the map.",
             Method.Coordinates => "Decimal degrees as Google Maps shows them (38.9242, -77.2058), or degrees-minutes-seconds (38°55'27\"N 77°12'21\"W).",
             _ => "Click the map where the antenna is. Zoom in first to be precise.",
@@ -158,6 +161,23 @@ public partial class MainWindow
                     Status.Text = $"Found {r.Callsign} on callook.info.";
                     break;
                 }
+                case Method.Address:
+                {
+                    HideMatches();
+                    FindButton.IsEnabled = false;
+                    Status.Text = "Looking up the address…";
+                    AddressSearch found;
+                    try { found = await Geocoder.SearchAsync(App.Http, text); }
+                    finally { FindButton.IsEnabled = true; }
+                    var ms = found.Matches;
+                    _matches = ms;
+                    MatchList.ItemsSource = ms;
+                    MatchList.Visibility = Visibility.Visible;
+                    MatchList.SelectedIndex = 0;      // places the pin on the best match
+                    Status.Text = (ms.Count == 1 ? "Found 1 match." : $"Found {ms.Count} matches; the best is selected. Pick another if it's wrong.")
+                                + (found.Problems.Count > 0 ? " (" + string.Join(" ", found.Problems) + ")" : "");
+                    break;
+                }
                 case Method.Grid:
                 {
                     var g = Maidenhead.Parse(text);
@@ -181,9 +201,37 @@ public partial class MainWindow
         }
         catch (Exception ex) when (ex is FormatException or LookupException)
         {
+            if (CurrentMethod == Method.Address) HideMatches();
             EditorError.Text = ex.Message;
             Status.Text = "";
         }
+    }
+
+    List<AddressMatch>? _matches;
+
+    void HideMatches()
+    {
+        _matches = null;
+        MatchList.ItemsSource = null;
+        MatchList.Visibility = Visibility.Collapsed;
+    }
+
+    void MatchList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if (MatchList.SelectedItem is not AddressMatch m) return;
+        string label = m.Label.Length > 60 ? m.Label[..60] + "…" : m.Label;
+        SetPin(m.Lat, m.Lon, null, $"Address ({m.Source}): {label}", zoom: true);
+        string advice = m.Precision switch
+        {
+            MatchPrecision.Building when m.Source == Geocoder.CensusName =>
+                "The Census geocoder estimates the spot along the street from its house numbers, so it can be off by a few lots, and an address is the front door, not the tower. Drag the pin to the antenna.",
+            MatchPrecision.Building =>
+                "OpenStreetMap has this building, so the pin should be on it. An address is still the building, not necessarily the tower: drag the pin to the antenna.",
+            MatchPrecision.Street =>
+                "Only the street was found, not the house number. The pin could be anywhere along it: drag it to the antenna.",
+            _ => "Only the town or area was found, not the address. Zoom in and put the pin on the antenna yourself.",
+        };
+        ShowNote($"{m.Label}\n{m.Source}: {m.PrecisionText}. {advice}");
     }
 
     void ShowNote(string text)

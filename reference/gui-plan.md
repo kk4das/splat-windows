@@ -49,6 +49,7 @@ antenna height (ft or m). The reason is in caveat 1 below.
 |---|---|---|
 | **Call sign, QRZ.com** | QRZ XML Logbook Data API, `https://xmldata.qrz.com/xml/current/` | The owner's own QRZ login. **Full data, including lat/lon/grid, needs a paid QRZ XML Logbook Data subscription.** Without one, QRZ returns limited fields and says that access is for testing (G3). Worldwide. |
 | **Call sign, free (US only)** | callook.info, `https://callook.info/<call>/json` | No account, no key, free. FCC data. The coordinates are a geocode of the licence **mailing address** (Bing), and the grid is computed from them. A fallback when there's no QRZ subscription. |
+| **Street address** (added at the owner's G1 check) | US Census geocoder and OpenStreetMap Nominatim, both free with no key | For a site whose licence address is a PO box (K4HTA). US Census estimates the spot along the street; OSM often has the building. PO boxes are refused. |
 | **Maidenhead grid** | Computed in the app (no network) | 4, 6, 8 or 10 characters. The pin goes at the centre of the square, **and the square is drawn on the map** so its size is obvious (see the precision table). |
 | **Coordinates** | Typed or pasted | Decimal degrees or deg-min-sec, and **ordinary signs (west negative)**. The app converts to SPLAT!'s west-positive. Accepts a pasted Google Maps "38.92, -77.21". |
 | **Click the map** | In-app map | Also used to refine any of the above. |

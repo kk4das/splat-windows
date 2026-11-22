@@ -276,7 +276,7 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G6 — GUI front end (G0 APPROVED 2026-11-22; G1 DONE 2026-11-22, awaiting owner's check; G2 next)
+### Stages G0–G6 — GUI front end (G0 APPROVED 2026-11-22; G1 DONE 2026-11-22 + address lookup, awaiting owner's check; G2 next)
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
@@ -405,6 +405,19 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — G1 addition: street-address lookup. HALT for owner review.**
+  - The owner's G1 check found that callook.info places K4HTA at its PO box, not the repeater
+    site, and asked for a postal-address lookup.
+  - New **Address** tab: free, no account. It asks the US Census geocoder (US, estimated along the
+    street) and OpenStreetMap Nominatim (worldwide, often the building) at once and lists the
+    matches with how exact each is. PO boxes are refused before anything is sent. Nominatim's policy
+    is kept: the app identifies itself and sends at most one request a second.
+  - Checks:
+    - 153 unit tests, from recorded replies for public addresses only.
+    - Five deliberate breakages were each caught.
+    - 31/31 window checks, with live lookups of the ARRL HQ address only; the old G1 build fails
+      the script.
+  - Report: `reports/stageG1-stations.md` (addendum).
 - **2026-11-22 — Stage G1 (stations) complete. HALT for owner review.**
   - G0 approved by the owner ("Lines up, start G1").
   - Stations panel: add by call sign (callook.info, US), grid square, coordinates or map click;
