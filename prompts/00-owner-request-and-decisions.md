@@ -24,3 +24,4 @@
 - "Yes, start Stage 1" (D5 → recommended region sizes).
 - Terrain download: "Yes, download both (Recommended)" (AWS skadi 1-arc-second + viewfinderpanoramas J18.zip).
 - "stage 1 approved. use underscore for filenames, userprofile is good for settings" (D3 → _, D4 → %USERPROFILE%).
+- "Yes, start Stage 2".
