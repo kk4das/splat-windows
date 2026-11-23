@@ -276,7 +276,7 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G6 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 next)
+### Stages G0–G6 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 DONE 2026-11-23, awaiting owner's check; G5 next)
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
@@ -300,6 +300,10 @@ coverage map is shown in the window, with a button that opens it in Google Earth
   `scripts\gui_path_equiv.ps1 -App gui\publish\SplatForWindows.exe -Work work\g3-equiv`
   (the app's own path jobs against the Linux goldens, via `compare_outputs.py`; must say EQUIVALENT).
   Every UI test passes a throwaway `--qrz-credential`, so none uses the owner's real QRZ sign-in.
+  From G4, `scripts\gui_coverage_uitest.ps1 -App gui\publish\SplatForWindows.exe -Work work\g4-uitest`
+  and `scripts\gui_coverage_equiv.ps1 -App gui\publish\SplatForWindows.exe -Work work\g4-equiv`
+  (coverage from an empty terrain folder against the Linux goldens; must say EQUIVALENT). Both use
+  `scriptsake_terrain.ps1`, a localhost stand-in for the terrain sources, so tests never download.
 - **Run `verify_toolchain.ps1` from PowerShell, not Git Bash.** Git Bash sets `HOME`, so the
   "P4 HOME unset" finding can't reproduce there and the script reports PROBLEMS.
 
@@ -412,6 +416,25 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-23 — Stage G4 (coverage) complete. HALT for owner review.**
+  - Started on the owner's words "Start G4".
+  - "Coverage map…": signal strength, received power, path loss or line of sight, with radius and
+    receiver height.
+  - Missing terrain is fetched automatically, for path analysis too. `get_terrain.ps1` is now in
+    C#, with the same D7 sources, cache and checks; open water is recorded.
+  - The map is shown in the window with SPLAT!'s colour key (also in the KMZ now). There is a
+    cancel, and an "Earlier maps" history from each job folder's `job.json`.
+  - The default terrain folder is `%LOCALAPPDATA%\SPLATforWindows\Terrain`; the owner's choice
+    (`data\sdf3`) is kept.
+  - Site files are now lower case (`k4hta.qth`), so SPLAT!'s `.scf` matches the CLI's.
+  - Checks:
+    - `gui_coverage_equiv.ps1` EQUIVALENT for M01 and M07 from an empty terrain folder (maps and KML
+      byte-identical).
+    - 273 unit tests; fetched SDFs are byte-identical to the Linux goldens.
+    - Window tests: coverage 34/34, path 33/33, stations 31/31, QRZ 24/24.
+    - Ten breakages caught; one was missed at first and its test was added.
+    - One live download (K18.zip, 27 MB) worked.
+  - Report: `reports/stageG4-coverage.md`.
 - **2026-11-22 — Owner's G3 check passed.** Owner: "Paths look right", after choosing the terrain
   folder once (it asked, as designed; automatic terrain comes in G4). G4 waits for an explicit go-ahead.
 - **2026-11-22 — Stage G3 (path analysis) complete. HALT for owner review.**

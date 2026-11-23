@@ -57,8 +57,10 @@ public sealed class PathJob
     PathJob(Station tx, Station rx, RadioSettings radio, PathOptions o, string terrain, string engine, string folder, IReadOnlyList<string> tiles)
     {
         Tx = tx; Rx = rx; Radio = radio.Clone(); Options = o; TerrainFolder = terrain; EngineFolder = engine; Folder = folder; Tiles = tiles;
-        TxFile = SafeName(tx.Name, "tx");
-        RxFile = SafeName(rx.Name, "rx");
+        // Site files are lower case, as in SPLAT!'s documentation (k4hta.qth): SPLAT! names some of
+        // its outputs after them (k4hta.scf, and inside it), so the app's match the command line's.
+        TxFile = SafeName(tx.Name, "tx").ToLowerInvariant();
+        RxFile = SafeName(rx.Name, "rx").ToLowerInvariant();
         if (string.Equals(TxFile, RxFile, StringComparison.OrdinalIgnoreCase)) RxFile += "_rx";
     }
 
@@ -79,7 +81,7 @@ public sealed class PathJob
     }
 
     /// <summary>Why this job can't run, or null.</summary>
-    public static string? Problem(Station? tx, Station? rx, RadioSettings radio, PathOptions o, string? terrain, string engine)
+    public static string? Problem(Station? tx, Station? rx, RadioSettings radio, PathOptions o, string? terrain, string engine, bool checkTerrain = true)
     {
         if (tx == null || rx == null) return "Choose a transmitter and a receiver.";
         if (ReferenceEquals(tx, rx) || (tx.Lat == rx.Lat && tx.Lon == rx.Lon)) return "The transmitter and the receiver are at the same place. Choose two different stations.";
@@ -95,8 +97,10 @@ public sealed class PathJob
         string exe = Path.Combine(engine, o.Hd ? "splat-hd.exe" : "splat.exe");
         if (!File.Exists(exe)) return $"The SPLAT! program wasn't found at {exe}.";
         if (terrain != null && terrain.Length > 200) return "The terrain folder's path is too long for SPLAT! (at most 200 characters). Move the terrain to a shorter path.";
-        return Terrain.Problem(terrain, Terrain.TilesFor(new[] { (tx.Lat, tx.Lon), (rx.Lat, rx.Lon) }, o.Hd), o.Hd);
+        return checkTerrain ? Terrain.Problem(terrain, TilesFor(tx, rx, o), o.Hd) : null;
     }
+
+    public static List<string> TilesFor(Station tx, Station rx, PathOptions o) => Terrain.TilesFor(new[] { (tx.Lat, tx.Lon), (rx.Lat, rx.Lon) }, o.Hd);
 
     /// <summary>Checks the job, makes its folder under <paramref name="jobsRoot"/> and writes the inputs.</summary>
     public static PathJob Create(string jobsRoot, Station tx, Station rx, RadioSettings radio, PathOptions o, string terrain, string engine, DateTime? when = null)

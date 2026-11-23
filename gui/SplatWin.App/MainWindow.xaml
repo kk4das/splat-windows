@@ -50,8 +50,12 @@
                                 Style="{DynamicResource AccentButtonStyle}"/>
                         <Button x:Name="ImportButton" Content="Import .qth…" Padding="12,5" Margin="8,0,0,0" Click="Import_Click"
                                 ToolTip="Add stations from SPLAT! .qth files (a .lrp file beside one brings its radio settings)"/>
-                        <Button x:Name="PathButton" Content="Analyse a path…" Padding="12,5" Margin="8,0,0,0" Click="PathOpen_Click"
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button x:Name="PathButton" Content="Analyse a path…" Padding="12,5" Click="PathOpen_Click"
                                 ToolTip="Pick a transmitter and a receiver and run SPLAT!'s path analysis"/>
+                        <Button x:Name="CoverageButton" Content="Coverage map…" Padding="12,5" Margin="8,0,0,0" Click="CoverageOpen_Click"
+                                ToolTip="Map a transmitter's coverage with SPLAT!, shown on the map in this window"/>
                     </StackPanel>
                     <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,10,0,0">
                         <Button x:Name="EditButton" Content="Edit…" Padding="12,5" Click="Edit_Click" IsEnabled="False"/>
@@ -138,6 +142,107 @@
                                     Style="{DynamicResource AccentButtonStyle}"/>
                             <Button x:Name="CancelButton" Content="Cancel" Padding="14,6" Margin="8,0,0,0" Click="Cancel_Click"/>
                         </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Coverage maps (G4) -->
+                <ScrollViewer x:Name="CoveragePanel" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,0,6,0">
+                        <TextBlock Text="Coverage map" FontSize="20" FontWeight="SemiBold"/>
+
+                        <TextBlock Style="{StaticResource Heading}" Text="Transmitter"/>
+                        <ComboBox x:Name="CovTxBox" SelectionChanged="CovTxBox_SelectionChanged" AutomationProperties.Name="Coverage transmitter"/>
+                        <TextBlock x:Name="CovRadioHint" Style="{StaticResource Caption}" Margin="0,6,0,6"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Frequency (MHz)" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                                <TextBox x:Name="CovFreqBox" AutomationProperties.Name="Coverage frequency"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="ERP (watts)" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                                <TextBox x:Name="CovErpBox" AutomationProperties.Name="Coverage ERP"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Style="{StaticResource Heading}" Text="Map"/>
+                        <TextBlock Text="What to show" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                        <ComboBox x:Name="CovKindBox" SelectedIndex="0" SelectionChanged="CovKindBox_SelectionChanged" AutomationProperties.Name="What to show">
+                            <ComboBoxItem Content="Signal strength (dBµV/m)"/>
+                            <ComboBoxItem Content="Received power (dBm)"/>
+                            <ComboBoxItem Content="Path loss (dB)"/>
+                            <ComboBoxItem Content="Line of sight"/>
+                        </ComboBox>
+                        <Grid Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock x:Name="CovRadiusLabel" Text="Radius (miles)" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                                <TextBox x:Name="CovRadiusBox" Text="30" AutomationProperties.Name="Radius"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock x:Name="CovRxLabel" Text="Receiver antenna (ft)" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                                <TextBox x:Name="CovRxBox" Text="6" AutomationProperties.Name="Receiver antenna height"/>
+                            </StackPanel>
+                        </Grid>
+                        <TextBlock x:Name="CovKindHint" Style="{StaticResource Caption}" Margin="0,6,0,0"/>
+                        <Expander x:Name="CovMoreBox" Header="More options" Margin="0,10,0,0" AutomationProperties.Name="More options">
+                            <StackPanel Margin="0,6,0,0">
+                                <TextBlock Text="Propagation model" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                                <ComboBox x:Name="CovModelBox" SelectedIndex="0" AutomationProperties.Name="Coverage model">
+                                    <ComboBoxItem Content="ITWOM 3.0 (SPLAT!'s default)"/>
+                                    <ComboBoxItem Content="Longley-Rice ITM (-olditm)"/>
+                                </ComboBox>
+                                <CheckBox x:Name="CovSmoothBox" Content="Smooth colour bands (-sc)" Margin="0,10,0,0"/>
+                                <CheckBox x:Name="CovMetricBox" Content="Kilometres and metres (-metric)" Margin="0,8,0,0" Click="CovMetric_Click"/>
+                                <CheckBox x:Name="CovHdBox" Content="High-definition terrain (1 arc-second, splat-hd; slower)" Margin="0,8,0,0"/>
+                                <TextBlock Style="{StaticResource Caption}" Margin="0,8,0,0"
+                                           Text="Ground, climate and the other radio settings are the transmitter's, from Analyse a path."/>
+                            </StackPanel>
+                        </Expander>
+
+                        <TextBlock Style="{StaticResource Heading}" Text="Terrain"/>
+                        <DockPanel>
+                            <Button x:Name="CovTerrainButton" DockPanel.Dock="Right" Content="Change…" Padding="10,4" Margin="8,0,0,0" Click="Terrain_Click"/>
+                            <TextBlock x:Name="CovTerrainText" Style="{StaticResource Caption}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                        </DockPanel>
+
+                        <TextBlock x:Name="CovError" Foreground="#D13438" TextWrapping="Wrap" Margin="0,12,0,0"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,8">
+                            <Button x:Name="CovRunButton" Content="Run" Padding="18,6" Click="CovRun_Click" Style="{DynamicResource AccentButtonStyle}"/>
+                            <Button x:Name="CovCloseButton" Content="Close" Padding="14,6" Margin="8,0,0,0" Click="CovClose_Click"/>
+                        </StackPanel>
+
+                        <Border x:Name="CovResultBox" Visibility="Collapsed" Padding="10,8" Margin="0,6,0,8" CornerRadius="4" BorderThickness="1"
+                                BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+                            <StackPanel>
+                                <TextBlock x:Name="CovResultText" TextWrapping="Wrap" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="CovResultNote" TextWrapping="Wrap" Margin="0,4,0,0" Style="{StaticResource Caption}"/>
+                                <Image x:Name="CovKeyImage" Margin="0,8,0,0" HorizontalAlignment="Left" Stretch="None"
+                                       AutomationProperties.Name="Colour key" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                                <TextBlock x:Name="CovKeyText" TextWrapping="Wrap" Margin="0,6,0,0" Style="{StaticResource Caption}"/>
+                                <Button x:Name="CovFolderButton" Content="Open the job folder" Padding="10,4" Margin="0,8,0,0" HorizontalAlignment="Left"
+                                        Click="CovFolder_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Style="{StaticResource Heading}" Text="Earlier maps"/>
+                        <TextBlock x:Name="CovHistoryHint" Style="{StaticResource Caption}" Margin="0,0,0,4"/>
+                        <ListBox x:Name="CovHistory" MaxHeight="220" VirtualizingPanel.IsVirtualizing="False" SelectionChanged="CovHistory_SelectionChanged" AutomationProperties.Name="Earlier maps"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Label}" TextWrapping="Wrap" Margin="0,2"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </StackPanel>
                 </ScrollViewer>
 

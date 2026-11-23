@@ -39,7 +39,28 @@ public partial class App : Application
     /// <summary>Set by --terrain (tests): used instead of the saved choice, and never saved.</summary>
     public static string? TerrainOverride { get; private set; }
 
-    public static string? TerrainFolder => TerrainOverride ?? Settings.TerrainFolder;
+    /// <summary>Where terrain is kept and fetched to when none has been chosen: the app's own local data
+    /// (not Documents, which OneDrive may sync).</summary>
+    public static readonly string DefaultTerrainFolder =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SPLATforWindows", "Terrain");
+
+    public static string TerrainFolder => TerrainOverride ?? Settings.TerrainFolder ?? DefaultTerrainFolder;
+
+    /// <summary>Terrain sources (runbook D7); tests point these at a stand-in with --terrain-std-url / --terrain-hd-url.</summary>
+    public static Uri TerrainStdSource { get; private set; } = TerrainFetcher.DefaultStandardSource;
+    public static Uri TerrainHdSource { get; private set; } = TerrainFetcher.DefaultHdSource;
+
+    /// <summary>Downloads of terrain can take minutes; the fetcher sets its own 10-minute limit per file.</summary>
+    public static readonly HttpClient TerrainHttp = CreateTerrainHttp();
+
+    static HttpClient CreateTerrainHttp()
+    {
+        var h = new HttpClient { Timeout = System.Threading.Timeout.InfiniteTimeSpan };
+        h.DefaultRequestHeaders.UserAgent.ParseAdd(SplatWin.App.MainWindow.AgentName);
+        return h;
+    }
+
+    public static TerrainFetcher Fetcher(string folder) => new(TerrainHttp, folder, EngineDir, TerrainStdSource, TerrainHdSource);
 
     public static void SetTerrainFolder(string folder)
     {
@@ -67,6 +88,29 @@ public partial class App : Application
             var r = Task.Run(() => job.RunAsync()).GetAwaiter().GetResult();   // off the UI thread, or the awaits would deadlock
             File.WriteAllText(spec + ".out", r.Folder + "\n" + string.Join("\n", r.Runs.Select(x => $"{Path.GetRelativePath(r.Folder, x.Folder)}\t{x.ExitCode}")));
             return r.GraphErrors.Count == 0 ? 0 : 2;
+        }
+        catch (Exception ex)
+        {
+            File.WriteAllText(spec + ".err", ex.ToString());
+            return 1;
+        }
+    }
+
+    sealed record CoverageSpec(Station Tx, RadioSettings Radio, CoverageOptions Options);
+
+    static int HeadlessCoverageJob(string spec)
+    {
+        try
+        {
+            var o = new System.Text.Json.JsonSerializerOptions { Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() } };
+            var s = System.Text.Json.JsonSerializer.Deserialize<CoverageSpec>(File.ReadAllText(spec), o) ?? throw new InvalidDataException("empty job spec");
+            var tiles = CoverageJob.Tiles(s.Tx, s.Options);
+            var fetched = Task.Run(() => Fetcher(TerrainFolder).EnsureAsync(tiles, s.Options.Hd)).GetAwaiter().GetResult();
+            if (fetched.FirstOrDefault(f => !f.Ok) is { } bad) throw new IOException($"terrain {bad.Tile}: {bad.What}");
+            var job = CoverageJob.Create(JobsDir, s.Tx, s.Radio, s.Options, TerrainFolder, EngineDir);
+            var r = Task.Run(() => job.RunAsync()).GetAwaiter().GetResult();
+            File.WriteAllLines(spec + ".out", new[] { r.Folder, r.ExitCode.ToString() }.Concat(fetched.Select(f => f.Tile + "\t" + f.What)));
+            return 0;
         }
         catch (Exception ex)
         {
@@ -114,6 +158,15 @@ public partial class App : Application
         if (Arg(e.Args, "--engine") is { } en) EngineDir = Path.GetFullPath(en);
         if (Arg(e.Args, "--terrain") is { } te) TerrainOverride = Path.GetFullPath(te);
         if (Arg(e.Args, "--jobs") is { } jo) JobsDir = Path.GetFullPath(jo);
+        if (Arg(e.Args, "--terrain-std-url") is { } ts) TerrainStdSource = new Uri(ts);
+        if (Arg(e.Args, "--terrain-hd-url") is { } th) TerrainHdSource = new Uri(th);
+        // Test hook: "--coverage-job <spec.json>" fetches terrain and runs one coverage job as the window
+        // does, without a window; the job folder goes to <spec.json>.out (or the error to .err).
+        if (Arg(e.Args, "--coverage-job") is { } cspec)
+        {
+            Shutdown(HeadlessCoverageJob(cspec));
+            return;
+        }
         // Test hook: "--path-job <spec.json>" runs one path job exactly as the window does, without a
         // window, and writes the job folder's path to <spec.json>.out (or the error to <spec.json>.err).
         if (Arg(e.Args, "--path-job") is { } spec)

@@ -11,7 +11,7 @@ public partial class MainWindow : Window
 {
     const string AppHost = "app.splat.local";   // the map page (files shipped with the app)
     const string MapHost = "map.splat.local";   // the images made from the opened map
-    public const string AgentName = "SPLATforWindows/0.4";   // identifies the app to map-tile servers
+    public const string AgentName = "SPLATforWindows/0.5";   // identifies the app to map-tile servers
 
     static readonly string DataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SPLATforWindows");
     static readonly string MapCache = Path.Combine(DataDir, "map-cache");
@@ -86,8 +86,13 @@ public partial class MainWindow : Window
                 break;
             case "overlay-loaded":
                 if (_map != null)
-                    Status.Text = $"{Path.GetFileName(_map.KmlPath)}: {_map.Width}×{_map.Height} map, " +
-                                  $"{_map.Kml.South:0.###}° to {_map.Kml.North:0.###}° N, {_map.Kml.West:0.###}° to {_map.Kml.East:0.###}° E";
+                {
+                    string where = $"{Path.GetFileName(_map.KmlPath)}: {_map.Width}×{_map.Height} map, " +
+                                   $"{_map.Kml.South:0.###}° to {_map.Kml.North:0.###}° N, {_map.Kml.West:0.###}° to {_map.Kml.East:0.###}° E";
+                    // A coverage run puts its own summary in the status line; the map's extent goes to screen readers (and the UI test).
+                    if (CoveragePanel.Visibility != Visibility.Visible) Status.Text = where;
+                    System.Windows.Automation.AutomationProperties.SetHelpText(Web, "Map shows " + where);
+                }
                 break;
             case "path-shown":   // the map drew the path; said for screen readers (and the UI test)
                 System.Windows.Automation.AutomationProperties.SetHelpText(Web,

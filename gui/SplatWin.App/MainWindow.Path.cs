@@ -143,17 +143,18 @@ public partial class MainWindow
 
     void ShowTerrain()
     {
-        string? f = App.TerrainFolder;
-        if (string.IsNullOrEmpty(f)) { TerrainText.Text = "No terrain folder chosen yet."; return; }
+        string f = App.TerrainFolder;
         int n = Directory.Exists(f) ? Directory.GetFiles(f, "*.sdf").Length : 0;
-        TerrainText.Text = $"{f} ({n} .sdf file{(n == 1 ? "" : "s")})";
+        string text = $"{f} ({n} .sdf file{(n == 1 ? "" : "s")}). Missing tiles are downloaded automatically.";
+        TerrainText.Text = text;
         TerrainText.ToolTip = f;
+        if (CovTerrainText != null) { CovTerrainText.Text = text; CovTerrainText.ToolTip = f; }
     }
 
     void Terrain_Click(object sender, RoutedEventArgs e)
     {
         var dlg = new OpenFolderDialog { Title = "Choose the folder that holds your SPLAT! terrain (.sdf) files" };
-        if (App.TerrainFolder is { } cur && Directory.Exists(cur)) dlg.InitialDirectory = cur;
+        if (Directory.Exists(App.TerrainFolder)) dlg.InitialDirectory = App.TerrainFolder;
         if (dlg.ShowDialog(this) != true) return;
         try { App.SetTerrainFolder(dlg.FolderName); }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { PathError.Text = "The choice couldn't be saved: " + ex.Message; }
@@ -168,7 +169,15 @@ public partial class MainWindow
         var rx = RxBox.SelectedItem as Station;
         var (radio, options, bad) = ReadPathForm();
         if (bad != null) { PathError.Text = bad; return; }
-        if (PathJob.Problem(tx, rx, radio!, options!, App.TerrainFolder, App.EngineDir) is { } p) { PathError.Text = p; return; }
+        if (PathJob.Problem(tx, rx, radio!, options!, App.TerrainFolder, App.EngineDir, checkTerrain: false) is { } p) { PathError.Text = p; return; }
+        var tiles = PathJob.TilesFor(tx!, rx!, options!);
+        if (tiles.Count > (options!.Hd ? Terrain.HdMaxTiles : Terrain.StandardMaxTiles)) { PathError.Text = Terrain.Problem(App.TerrainFolder, tiles, options.Hd); return; }
+        AnalyseButton.IsEnabled = false;
+        string? terrainError;
+        try { terrainError = await EnsureTerrainAsync(tiles, options.Hd, CancellationToken.None); }
+        finally { AnalyseButton.IsEnabled = true; ShowTerrain(); }
+        if (terrainError != null) { PathError.Text = terrainError; return; }
+        if (Terrain.Problem(App.TerrainFolder, tiles, options.Hd) is { } tp) { PathError.Text = tp; return; }
 
         // The radio settings belong to the transmitter: save them with it.
         var before = tx!.Radio;
@@ -180,7 +189,7 @@ public partial class MainWindow
         }
 
         PathJob job;
-        try { job = PathJob.Create(App.JobsDir, tx, rx!, radio!, options!, App.TerrainFolder!, App.EngineDir); }
+        try { job = PathJob.Create(App.JobsDir, tx, rx!, radio!, options!, App.TerrainFolder, App.EngineDir); }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
         { PathError.Text = "The job folder couldn't be made: " + ex.Message; return; }
 
@@ -204,6 +213,35 @@ public partial class MainWindow
             PathCloseButton.Content = "Close";
         }
     }
+
+    /// <summary>
+    /// Fetches and converts any terrain tiles the job needs that the terrain folder lacks. Returns
+    /// null when every tile is there (or known to be open water), else why not.
+    /// </summary>
+    async Task<string?> EnsureTerrainAsync(IReadOnlyList<string> tiles, bool hd, CancellationToken ct)
+    {
+        var missing = Terrain.Missing(App.TerrainFolder, tiles);
+        if (missing.Count == 0) return null;
+        Status.Text = $"Fetching {missing.Count} terrain tile(s) into {App.TerrainFolder}…";
+        try
+        {
+            var progress = new Progress<string>(s => Status.Text = s);
+            var done = await Task.Run(() => App.Fetcher(App.TerrainFolder).EnsureAsync(missing, hd, progress, ct), ct);
+            var bad = done.Where(d => !d.Ok).ToList();
+            _lastTerrainNote = string.Join("; ", done.Select(d => $"{d.Tile}: {d.What}"));
+            if (bad.Count > 0)
+                return $"Terrain couldn't be fetched, so nothing was run: " + string.Join("; ", bad.Select(b => $"{b.Tile}: {b.What}"));
+            Status.Text = $"Terrain ready: {_lastTerrainNote}.";
+            return null;
+        }
+        catch (OperationCanceledException) { throw; }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Net.Http.HttpRequestException)
+        {
+            return "Terrain couldn't be fetched, so nothing was run: " + ex.Message;
+        }
+    }
+
+    string? _lastTerrainNote;
 
     void ShowResults(bool on)
     {

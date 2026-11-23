@@ -25,6 +25,8 @@
   <ItemGroup>
     <!-- Real SPLAT! output from the Linux golden run (tests\golden\linux). -->
     <None Include="..\..\tests\golden\linux\M01\los.kml" Link="golden\M01\los.kml" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\tests\golden\linux\M07\hd_fs.kml" Link="golden\M07\hd_fs.kml" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\tests\cases\inputs\cities.dat" Link="inputs\cities.dat" CopyToOutputDirectory="PreserveNewest" />
     <!-- The port's own test sites, and recorded callook.info replies (trustee name replaced). -->
     <!-- Linux golden path reports and graph data (Stage G3: the summary panel and graphs read these). -->
     <None Include="..\..\tests\golden\linux\**\*.txt;..\..\tests\golden\linux\**\*.gp" Link="golden\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />

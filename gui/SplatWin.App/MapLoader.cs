@@ -17,6 +17,7 @@ public sealed class LoadedMap
     public required string MercatorPng { get; init; }   // for the in-app map
     public required string OriginalPng { get; init; }   // lat/lon grid, for Google Earth
     public required string Kmz { get; init; }
+    public string? ColourKeyPng { get; init; }           // SPLAT!'s colour key (signal maps), as PNG
     public int Width { get; init; }
     public int Height { get; init; }
 }
@@ -49,10 +50,20 @@ public static class MapLoader
         }
         string merc = Path.Combine(outDir, stem + "-mercator.png");
         SavePng(MercatorWarp.ToMercator(src, kml.North, kml.South), merc);
+        // The colour key SPLAT! writes beside a signal map (<name>-ck.ppm), named in the KML's ScreenOverlay.
+        string? keyPng = null;
+        var ck = System.Text.RegularExpressions.Regex.Match(kmlText, @"<ScreenOverlay>.*?<href>([^<]*)</href>", System.Text.RegularExpressions.RegexOptions.Singleline);
+        if (ck.Success && Path.GetFileName(ck.Groups[1].Value.Trim()) is { Length: > 0 } ckName && File.Exists(Path.Combine(dir, ckName)))
+        {
+            string ckPath = Path.Combine(dir, ckName);
+            keyPng = Path.Combine(outDir, Path.GetFileNameWithoutExtension(ckName) + ".png");
+            if (ckPath.EndsWith(".ppm", StringComparison.OrdinalIgnoreCase)) SavePng(RgbImage.ReadPpm(File.ReadAllBytes(ckPath)), keyPng);
+            else File.Copy(ckPath, keyPng, true);
+        }
         string kmz = Path.Combine(outDir, stem + ".kmz");
-        Kmz.Write(kmz, kmlText, originalPng);
+        Kmz.Write(kmz, kmlText, originalPng, keyPng);
         return new LoadedMap { KmlPath = kmlPath, Kml = kml, MercatorPng = merc, OriginalPng = originalPng, Kmz = kmz,
-                               Width = src.Width, Height = src.Height };
+                               Width = src.Width, Height = src.Height, ColourKeyPng = keyPng };
     }
 
     /// <summary>The JSON the map page's splat.showMap() takes.</summary>

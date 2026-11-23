@@ -13,21 +13,26 @@ namespace SplatWin.Core;
 /// </summary>
 public static class Kmz
 {
-    public static string WebSafeKml(string kml, string imageName)
+    public static string WebSafeKml(string kml, string imageName, string? keyName = null)
     {
         string doc = Regex.Replace(kml, @"\s*<Style>.*?</Style>", "", RegexOptions.Singleline);
         doc = Regex.Replace(doc, @"(<GroundOverlay>.*?<href>)[^<]*(</href>)", m => m.Groups[1].Value + imageName + m.Groups[2].Value,
                             RegexOptions.Singleline);
+        // SPLAT!'s colour key (signal maps): point it at the PNG inside the KMZ, or drop it if there is none.
+        doc = keyName != null
+            ? Regex.Replace(doc, @"(<ScreenOverlay>.*?<href>)[^<]*(</href>)", m => m.Groups[1].Value + keyName + m.Groups[2].Value, RegexOptions.Singleline)
+            : Regex.Replace(doc, @"\s*<ScreenOverlay>.*?</ScreenOverlay>", "", RegexOptions.Singleline);
         XDocument.Parse(doc);                                                    // must still be valid XML
         if (doc.Contains("root://")) throw new InvalidDataException("KML still refers to a Google Earth Pro built-in icon");
         return doc;
     }
 
     /// <summary>Writes the KMZ via a temporary file, verifies it, then moves it into place.</summary>
-    public static void Write(string kmzPath, string kml, string pngPath)
+    public static void Write(string kmzPath, string kml, string pngPath, string? keyPngPath = null)
     {
         string name = Path.GetFileName(pngPath);
-        string doc = WebSafeKml(kml, name);
+        string? keyName = keyPngPath == null ? null : Path.GetFileName(keyPngPath);
+        string doc = WebSafeKml(kml, name, keyName);
         string part = kmzPath + ".part";
         File.Delete(part);
         try
@@ -36,11 +41,14 @@ public static class Kmz
             {
                 using (var w = new StreamWriter(z.CreateEntry("doc.kml").Open(), new UTF8Encoding(false))) w.Write(doc);
                 z.CreateEntryFromFile(pngPath, name);
+                if (keyPngPath != null) z.CreateEntryFromFile(keyPngPath, keyName!);
             }
             using (var r = ZipFile.OpenRead(part))
             {
                 var img = r.GetEntry(name);
-                if (r.GetEntry("doc.kml") is null || img is null || img.Length != new FileInfo(pngPath).Length)
+                var key = keyPngPath == null ? null : r.GetEntry(keyName!);
+                if (r.GetEntry("doc.kml") is null || img is null || img.Length != new FileInfo(pngPath).Length
+                    || (keyPngPath != null && (key is null || key.Length != new FileInfo(keyPngPath).Length)))
                     throw new InvalidDataException("KMZ check failed: doc.kml or the image is missing or incomplete");
             }
             File.Move(part, kmzPath, overwrite: true);

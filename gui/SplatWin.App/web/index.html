@@ -70,7 +70,9 @@ window.splat = {
     overlay = L.imageOverlay(m.image, bounds, { opacity, interactive: false }).addTo(map);
     overlay.on("load", () => post({ type: "overlay-loaded" }));
     overlay.on("error", () => post({ type: "error", text: "map image failed to load" }));
-    for (const p of m.placemarks || [])
+    // A placemark on one of the user's stations (same name, within ~100 m) is already labelled by the station dot.
+    const near = p => stationList.some(s => s.name.toUpperCase() === (p.name || "").toUpperCase() && map.distance([s.lat, s.lon], [p.lat, p.lon]) < 100);
+    for (const p of (m.placemarks || []).filter(p => !near(p)))
       L.marker([p.lat, p.lon], { title: p.name }).bindTooltip(p.name, { permanent: true, direction: "right" }).addTo(sites);
     fitWhenSized(bounds);
   },
@@ -79,6 +81,7 @@ window.splat = {
   // ---- stations (G1) ----
   // Saved stations: blue dots with their names. Clicking one selects it in the app's list.
   setStations(list) {
+    stationList = list || [];
     stations.clearLayers();
     for (const s of list || [])
       L.circleMarker([s.lat, s.lon], { radius: 6, color: "#0b4f99", weight: 2, fillColor: "#2b88d8", fillOpacity: 0.95 })
@@ -128,7 +131,7 @@ window.splat = {
   clearPath() { path.clearLayers(); },
 };
 
-let path = L.layerGroup().addTo(map);
+let path = L.layerGroup().addTo(map), stationList = [];
 let stations = L.layerGroup().addTo(map), pin = null, square = null, editing = false;
 map.on("click", e => {
   if (!editing) return;

@@ -68,7 +68,13 @@ function Norm([string]$s) { $s -replace "`r`n", "`n" }
 function Golden([string]$rel) { Norm ([IO.File]::ReadAllText((Join-Path $golden $rel), [Text.Encoding]::GetEncoding(28591))) }
 function JobCount { @(Get-ChildItem $jobs -Directory -ErrorAction SilentlyContinue).Count }
 
-$script:proc = Start-Process $App -PassThru -ArgumentList @('--stations', "`"$lib`"", '--terrain', "`"$(Join-Path $root 'data\sdf3')`"", '--jobs', "`"$jobs`"", '--qrz-credential', "SPLATforWindows/ui-test/$([guid]::NewGuid())")
+# A copy of the project's terrain, so nothing is ever added to data\sdf3. Terrain sources point at a
+# closed local port: a tile the test sites don't have must fail to download, never reach the internet.
+$terrain = Join-Path $run 'terrain'
+New-Item -ItemType Directory $terrain | Out-Null
+Copy-Item (Join-Path $root 'data\sdf3\*.sdf') $terrain
+$script:proc = Start-Process $App -PassThru -ArgumentList @('--stations', "`"$lib`"", '--terrain', "`"$terrain`"", '--jobs', "`"$jobs`"", '--qrz-credential', "SPLATforWindows/ui-test/$([guid]::NewGuid())",
+    '--terrain-std-url', 'http://localhost:9/dem3/', '--terrain-hd-url', 'http://localhost:9/skadi/')
 try {
     $script:win = Wait-For { $AE::RootElement.FindFirst($TS::Children, (New-Object $PC($AE::ProcessIdProperty, $script:proc.Id))) } 20000
     $null = Wait-For { (Text 'Status') -like 'Ready.*' } 20000
@@ -81,7 +87,7 @@ try {
     Choose 'TxBox' 'K4HTA'
     Choose 'RxBox' 'KK4DAS'
     Check ((Text 'RadioHint') -like 'Not set for K4HTA yet*') 'no radio settings yet, and it says so' (Text 'RadioHint')
-    Check ((Text 'TerrainText') -like '*data\sdf3 (4 .sdf files)') 'terrain folder shown with its tile count' (Text 'TerrainText')
+    Check ((Text 'TerrainText') -like '*\terrain (4 .sdf files). Missing tiles are downloaded automatically.') 'terrain folder shown with its tile count' (Text 'TerrainText')
 
     # 2. Refusals before anything runs.
     Analyse
@@ -89,8 +95,8 @@ try {
     SetText 'FreqBox' '146.685'; SetText 'ErpBox' '93'
     Choose 'RxBox' 'Far North'
     Analyse
-    $e = Text 'PathError'
-    Check ($e -like '*missing 2 of the 4 tile(s)*40_41_77_78.sdf, 41_42_77_78.sdf*sea level*') 'missing terrain named, job refused' $e
+    $e = Wait-For { $t = Text 'PathError'; if ($t) { $t } } 30000
+    Check ($e -like "Terrain couldn't be fetched, so nothing was run: Couldn't download http://localhost:9/dem3/K18.zip*") 'missing terrain fetched; a failed download stops the job' $e
     Check ((JobCount) -eq 0) 'no job folder made for a refused job' "$(JobCount)"
     Choose 'RxBox' 'KK4DAS'
 

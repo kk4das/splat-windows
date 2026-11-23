@@ -332,7 +332,7 @@ public class PathJobTests
             Assert.All(r.Runs, x => Assert.Equal(0, x.ExitCode));
             // The re-run file has every command, and SPLAT! never found gnuplot (only the engine is on PATH).
             string rerun = File.ReadAllText(Path.Combine(r.Folder, PathJob.ReRunFile));
-            Assert.Contains("-t K4HTA -r KK4DAS -d", rerun);
+            Assert.Contains("-t k4hta -r kk4das -d", rerun);
             Assert.Contains("pushd graph-height && ", rerun);
             Assert.Contains("-h height.png -gpsav", rerun);
             Assert.Contains("'gnuplot' is not recognized", File.ReadAllText(Path.Combine(r.Folder, PathJob.LogFile)));
@@ -404,12 +404,12 @@ public class PathJobTests
         try
         {
             var j = PathJob.Create(jobs, tx, rx, radio, new PathOptions(PathModel.LongleyRice, true, 80, 9.5), Path.Combine(Repo.Root, "data", "sdf3"), Path.Combine(Repo.Root, "dist"));
-            Assert.Equal(new[] { "-t", "K4HTA", "-r", "KK4DAS", "-d", Path.Combine(Repo.Root, "data", "sdf3"), "-olditm", "-metric", "-fz", "80", "-gc", "9.5" }, j.Args(null));
+            Assert.Equal(new[] { "-t", "k4hta", "-r", "kk4das", "-d", Path.Combine(Repo.Root, "data", "sdf3"), "-olditm", "-metric", "-fz", "80", "-gc", "9.5" }, j.Args(null));
             Assert.Equal(new[] { "-l", "loss.png", "-gpsav" }, j.Args(GraphKind.Loss).TakeLast(3));
             // Each graph folder has its own copy of the inputs (SPLAT! cuts .lrp names at the first '.').
             foreach (var g in PathJob.GraphRuns.Values)
-                Assert.Equal(new[] { "K4HTA.lrp", "K4HTA.qth", "KK4DAS.qth" }, Directory.GetFiles(Path.Combine(j.Folder, g.Folder)).Select(Path.GetFileName).Order());
-            Assert.Equal(LrpFile.Format(radio), File.ReadAllText(Path.Combine(j.Folder, "K4HTA.lrp")));
+                Assert.Equal(new[] { "k4hta.lrp", "k4hta.qth", "kk4das.qth" }, Directory.GetFiles(Path.Combine(j.Folder, g.Folder)).Select(Path.GetFileName).Order());
+            Assert.Equal(LrpFile.Format(radio), File.ReadAllText(Path.Combine(j.Folder, "k4hta.lrp")));
         }
         finally { Directory.Delete(jobs, true); }
     }
