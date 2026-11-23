@@ -276,7 +276,7 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G6 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 next)
+### Stages G0–G6 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 DONE 2026-11-22, awaiting owner's check; G4 next)
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
@@ -295,6 +295,11 @@ coverage map is shown in the window, with a button that opens it in Google Earth
   (drives the real window with UI Automation, using its own stations file).
   Also, from G2, `scripts\gui_qrz_uitest.ps1 -App gui\publish\SplatForWindows.exe -Work work\g2-uitest`
   (QRZ sign-in and lookup against a stand-in on localhost, with a throwaway credential entry).
+  From G3, `scripts\gui_path_uitest.ps1 -App gui\publish\SplatForWindows.exe -Work work\g3-uitest`
+  (path analysis in the real window, on the test sites and `data\sdf3`) and the gate,
+  `scripts\gui_path_equiv.ps1 -App gui\publish\SplatForWindows.exe -Work work\g3-equiv`
+  (the app's own path jobs against the Linux goldens, via `compare_outputs.py`; must say EQUIVALENT).
+  Every UI test passes a throwaway `--qrz-credential`, so none uses the owner's real QRZ sign-in.
 - **Run `verify_toolchain.ps1` from PowerShell, not Git Bash.** Git Bash sets `HOME`, so the
   "P4 HOME unset" finding can't reproduce there and the script reports PROBLEMS.
 
@@ -407,6 +412,26 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — Stage G3 (path analysis) complete. HALT for owner review.**
+  - Started on the owner's words "Start G3".
+  - "Analyse a path…": choose a transmitter and a receiver, and the transmitter's radio settings
+    (the `.lrp` values), which are saved with that station. The app writes a job folder
+    (`Documents\SPLAT\Jobs\<date> <tx> to <rx>`) and runs the unchanged `splat.exe`/`splat-hd.exe`
+    there, once for the report and once per graph. `run-again.cmd` repeats it from the command line.
+  - The summary shows SPLAT!'s own report text, never recomputed. Four graphs are drawn in the app
+    from SPLAT!'s `.gp` data (no gnuplot). The map shows the path, green or red, with the obstructions.
+  - Missing terrain tiles are named, and the job is refused, because SPLAT! would quietly use sea
+    level. Fetching terrain is G4.
+  - Gate: `gui_path_equiv.ps1` gave EQUIVALENT for P01, P02, P03, P04, P05 and P08 (20 files; the same
+    3 last-digit `.gp` differences Stage 4 had). The result is in `testsesults\stageG3-gui-path-equiv.txt`.
+  - Checks:
+    - 248 unit tests.
+    - Nine deliberate breakages were all caught.
+    - Window tests: path 33/33, stations 31/31, QRZ 24/24. Broken builds fail both the gate and the
+      window test.
+  - Finding: the G1 stations test had been using the owner's real QRZ sign-in since G2 (three live
+    lookups on 2026-11-22). Fixed with a throwaway credential.
+  - Report: `reports/stageG3-path.md`.
 - **2026-11-22 — Owner's G2 check passed.** Owner: "Lookups work". First live QRZ.com traffic:
   sign-in and call sign lookups in the app, with the password in Credential Manager. G3 waits for an
   explicit go-ahead.

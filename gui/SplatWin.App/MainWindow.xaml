@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:local="clr-namespace:SplatWin.App"
         Title="SPLAT! for Windows (preview)" Width="1280" Height="840" MinWidth="760" MinHeight="480"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
@@ -48,7 +49,9 @@
                         <Button x:Name="AddButton" Content="Add station…" Padding="12,5" Click="Add_Click"
                                 Style="{DynamicResource AccentButtonStyle}"/>
                         <Button x:Name="ImportButton" Content="Import .qth…" Padding="12,5" Margin="8,0,0,0" Click="Import_Click"
-                                ToolTip="Add stations from SPLAT! .qth files"/>
+                                ToolTip="Add stations from SPLAT! .qth files (a .lrp file beside one brings its radio settings)"/>
+                        <Button x:Name="PathButton" Content="Analyse a path…" Padding="12,5" Margin="8,0,0,0" Click="PathOpen_Click"
+                                ToolTip="Pick a transmitter and a receiver and run SPLAT!'s path analysis"/>
                     </StackPanel>
                     <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,10,0,0">
                         <Button x:Name="EditButton" Content="Edit…" Padding="12,5" Click="Edit_Click" IsEnabled="False"/>
@@ -137,10 +140,157 @@
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
+
+                <!-- Path analysis (G3) -->
+                <ScrollViewer x:Name="PathPanel" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,0,6,0">
+                        <TextBlock Text="Path analysis" FontSize="20" FontWeight="SemiBold"/>
+
+                        <TextBlock Style="{StaticResource Heading}" Text="Stations"/>
+                        <TextBlock Text="Transmitter" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                        <ComboBox x:Name="TxBox" SelectionChanged="TxBox_SelectionChanged" AutomationProperties.Name="Transmitter"/>
+                        <TextBlock Text="Receiver" Style="{StaticResource Caption}" Margin="0,8,0,3"/>
+                        <DockPanel>
+                            <Button x:Name="SwapButton" DockPanel.Dock="Right" Content="Swap" Padding="10,4" Margin="8,0,0,0" Click="Swap_Click"
+                                    ToolTip="Swap the transmitter and the receiver"/>
+                            <ComboBox x:Name="RxBox" AutomationProperties.Name="Receiver"/>
+                        </DockPanel>
+
+                        <TextBlock Style="{StaticResource Heading}" Text="Transmitter radio"/>
+                        <TextBlock x:Name="RadioHint" Style="{StaticResource Caption}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Frequency (MHz)" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                                <TextBox x:Name="FreqBox" AutomationProperties.Name="Frequency"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="ERP (watts)" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                                <TextBox x:Name="ErpBox" AutomationProperties.Name="ERP"/>
+                            </StackPanel>
+                        </Grid>
+                        <TextBlock Text="Polarization" Style="{StaticResource Caption}" Margin="0,8,0,3"/>
+                        <ComboBox x:Name="PolBox" SelectedIndex="1" AutomationProperties.Name="Polarization">
+                            <ComboBoxItem Content="Horizontal"/>
+                            <ComboBoxItem Content="Vertical"/>
+                        </ComboBox>
+                        <Button x:Name="LrpButton" Content="Load from a .lrp file…" Padding="10,4" Margin="0,8,0,0" HorizontalAlignment="Left"
+                                Click="Lrp_Click" ToolTip="Fill in these settings from an existing SPLAT! .lrp file"/>
+
+                        <Expander x:Name="MoreBox" Header="Ground, climate and model" Margin="0,12,0,0" AutomationProperties.Name="Ground, climate and model">
+                            <StackPanel Margin="0,6,0,0">
+                                <TextBlock Text="Ground" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                                <ComboBox x:Name="GroundBox" AutomationProperties.Name="Ground"/>
+                                <TextBlock Text="Radio climate" Style="{StaticResource Caption}" Margin="0,8,0,3"/>
+                                <ComboBox x:Name="ClimateBox" AutomationProperties.Name="Radio climate"/>
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="Situations (%)" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                                        <TextBox x:Name="SitBox" AutomationProperties.Name="Situations"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="Time (%)" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                                        <TextBox x:Name="TimeBox" AutomationProperties.Name="Time"/>
+                                    </StackPanel>
+                                </Grid>
+                                <TextBlock Text="Atmospheric bending (N-units)" Style="{StaticResource Caption}" Margin="0,8,0,3"/>
+                                <TextBox x:Name="BendBox" AutomationProperties.Name="Atmospheric bending"/>
+                                <TextBlock Text="Propagation model" Style="{StaticResource Caption}" Margin="0,8,0,3"/>
+                                <ComboBox x:Name="ModelBox" SelectedIndex="0" AutomationProperties.Name="Propagation model">
+                                    <ComboBoxItem Content="ITWOM 3.0 (SPLAT!'s default)"/>
+                                    <ComboBoxItem Content="Longley-Rice ITM (-olditm)"/>
+                                </ComboBox>
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="Fresnel clearance (%)" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                                        <TextBox x:Name="FzBox" Text="60" AutomationProperties.Name="Fresnel clearance"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock x:Name="ClutterLabel" Text="Ground clutter (ft)" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                                        <TextBox x:Name="ClutterBox" Text="0" AutomationProperties.Name="Ground clutter"/>
+                                    </StackPanel>
+                                </Grid>
+                                <TextBlock Text="Units in the report" Style="{StaticResource Caption}" Margin="0,8,0,3"/>
+                                <ComboBox x:Name="UnitsBox" SelectedIndex="0" SelectionChanged="UnitsBox_SelectionChanged" AutomationProperties.Name="Units">
+                                    <ComboBoxItem Content="Miles and feet"/>
+                                    <ComboBoxItem Content="Kilometres and metres (-metric)"/>
+                                </ComboBox>
+                                <CheckBox x:Name="HdBox" Content="High-definition terrain (1 arc-second, splat-hd)" Margin="0,10,0,0"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <TextBlock Style="{StaticResource Heading}" Text="Terrain"/>
+                        <DockPanel>
+                            <Button x:Name="TerrainButton" DockPanel.Dock="Right" Content="Change…" Padding="10,4" Margin="8,0,0,0" Click="Terrain_Click"/>
+                            <TextBlock x:Name="TerrainText" Style="{StaticResource Caption}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                        </DockPanel>
+
+                        <TextBlock x:Name="PathError" Foreground="#D13438" TextWrapping="Wrap" Margin="0,12,0,0"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,8">
+                            <Button x:Name="AnalyseButton" Content="Analyse" Padding="18,6" Click="Analyse_Click"
+                                    Style="{DynamicResource AccentButtonStyle}"/>
+                            <Button x:Name="PathCloseButton" Content="Close" Padding="14,6" Margin="8,0,0,0" Click="PathClose_Click"/>
+                        </StackPanel>
+
+                        <!-- The result's headline numbers: SPLAT!'s own text from the report -->
+                        <Border x:Name="SummaryBox" Visibility="Collapsed" Padding="10,8" Margin="0,6,0,8" CornerRadius="4" BorderThickness="1"
+                                BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+                            <StackPanel>
+                                <TextBlock x:Name="SumTitle" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                <TextBlock x:Name="SumLos" TextWrapping="Wrap" Margin="0,6,0,0" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="SumNumbers" TextWrapping="Wrap" Margin="0,6,0,0" FontFamily="Consolas" FontSize="12"/>
+                                <TextBlock x:Name="SumWarning" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#D13438" Visibility="Collapsed"/>
+                                <TextBlock x:Name="SumClearance" TextWrapping="Wrap" Margin="0,6,0,0" Style="{StaticResource Caption}"/>
+                                <Button x:Name="JobFolderButton" Content="Open the job folder" Padding="10,4" Margin="0,8,0,0" HorizontalAlignment="Left"
+                                        Click="JobFolder_Click" ToolTip="The inputs, SPLAT!'s outputs and run-again.cmd, which repeats the job from the command line"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
             </Grid>
 
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
-            <wv2:WebView2 Grid.Column="2" x:Name="Web"/>
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="120"/>
+                    <RowDefinition x:Name="ResultSplitRow" Height="0"/>
+                    <RowDefinition x:Name="ResultRow" Height="0"/>
+                </Grid.RowDefinitions>
+                <wv2:WebView2 Grid.Row="0" x:Name="Web"/>
+                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeDirection="Rows"/>
+                <TabControl Grid.Row="2" x:Name="ResultTabs" Margin="6,2,6,6" Visibility="Collapsed" AutomationProperties.Name="Path results">
+                    <TabItem Header="Terrain profile" AutomationProperties.Name="Terrain profile">
+                        <Grid><local:GraphView x:Name="GraphProfile" Margin="4"/><TextBlock x:Name="ErrProfile" TextWrapping="Wrap" Margin="12" Foreground="#D13438"/></Grid>
+                    </TabItem>
+                    <TabItem Header="Elevation angle" AutomationProperties.Name="Elevation angle">
+                        <Grid><local:GraphView x:Name="GraphElevation" Margin="4"/><TextBlock x:Name="ErrElevation" TextWrapping="Wrap" Margin="12" Foreground="#D13438"/></Grid>
+                    </TabItem>
+                    <TabItem Header="Height and Fresnel zone" AutomationProperties.Name="Height and Fresnel zone">
+                        <Grid><local:GraphView x:Name="GraphHeight" Margin="4"/><TextBlock x:Name="ErrHeight" TextWrapping="Wrap" Margin="12" Foreground="#D13438"/></Grid>
+                    </TabItem>
+                    <TabItem Header="Path loss" AutomationProperties.Name="Path loss">
+                        <Grid><local:GraphView x:Name="GraphLoss" Margin="4"/><TextBlock x:Name="ErrLoss" TextWrapping="Wrap" Margin="12" Foreground="#D13438"/></Grid>
+                    </TabItem>
+                    <TabItem Header="Report" AutomationProperties.Name="Report">
+                        <TextBox x:Name="ReportBox" IsReadOnly="True" FontFamily="Consolas" FontSize="12" VerticalScrollBarVisibility="Auto"
+                                 HorizontalScrollBarVisibility="Auto" AutomationProperties.Name="SPLAT! report"/>
+                    </TabItem>
+                </TabControl>
+            </Grid>
         </Grid>
     </DockPanel>
 </Window>

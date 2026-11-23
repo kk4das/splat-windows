@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace SplatWin.Core;
@@ -14,6 +14,8 @@ public sealed class Station
     /// <summary>How the position was found, e.g. "Grid FM18jw, moved on map".</summary>
     public string Source { get; set; } = "";
     public DateTime Updated { get; set; }
+    /// <summary>Radio settings (the .lrp values) when this station is used as a transmitter; null until first used.</summary>
+    public RadioSettings? Radio { get; set; }
 
     [JsonIgnore] public double HeightFeet => QthFile.ToFeet(AntennaHeight, HeightUnit);
     [JsonIgnore] public string Grid => Maidenhead.FromLatLon(Lat, Lon, 8);

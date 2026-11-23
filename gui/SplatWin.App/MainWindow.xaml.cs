@@ -11,7 +11,7 @@ public partial class MainWindow : Window
 {
     const string AppHost = "app.splat.local";   // the map page (files shipped with the app)
     const string MapHost = "map.splat.local";   // the images made from the opened map
-    public const string AgentName = "SPLATforWindows/0.3";   // identifies the app to map-tile servers
+    public const string AgentName = "SPLATforWindows/0.4";   // identifies the app to map-tile servers
 
     static readonly string DataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SPLATforWindows");
     static readonly string MapCache = Path.Combine(DataDir, "map-cache");
@@ -88,6 +88,10 @@ public partial class MainWindow : Window
                 if (_map != null)
                     Status.Text = $"{Path.GetFileName(_map.KmlPath)}: {_map.Width}×{_map.Height} map, " +
                                   $"{_map.Kml.South:0.###}° to {_map.Kml.North:0.###}° N, {_map.Kml.West:0.###}° to {_map.Kml.East:0.###}° E";
+                break;
+            case "path-shown":   // the map drew the path; said for screen readers (and the UI test)
+                System.Windows.Automation.AutomationProperties.SetHelpText(Web,
+                    $"Map shows the path with {doc.RootElement.GetProperty("obstructions").GetInt32()} obstruction mark(s).");
                 break;
             case "error":
                 Status.Text = "Map page: " + doc.RootElement.GetProperty("text").GetString();

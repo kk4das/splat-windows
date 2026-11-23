@@ -27,10 +27,52 @@ public partial class App : Application
 
     public static void ResetQrz() { _qrz?.Forget(); _qrz = null; }
 
+    // ---- path analysis (G3) ----
+    /// <summary>The unchanged SPLAT! programs, shipped in the app's engine folder (from dist\).</summary>
+    public static string EngineDir { get; private set; } = Path.Combine(AppContext.BaseDirectory, "engine");
+    /// <summary>Path jobs: Documents\SPLAT\Jobs\&lt;date&gt; &lt;tx&gt; to &lt;rx&gt;\.</summary>
+    public static string JobsDir { get; private set; } =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SPLAT", "Jobs");
+    public static readonly string SettingsPath =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SPLATforWindows", "settings.json");
+    public static AppSettings Settings { get; } = AppSettings.Load(SettingsPath);
+    /// <summary>Set by --terrain (tests): used instead of the saved choice, and never saved.</summary>
+    public static string? TerrainOverride { get; private set; }
+
+    public static string? TerrainFolder => TerrainOverride ?? Settings.TerrainFolder;
+
+    public static void SetTerrainFolder(string folder)
+    {
+        if (TerrainOverride != null) { TerrainOverride = folder; return; }
+        Settings.TerrainFolder = folder;
+        Settings.Save(SettingsPath);
+    }
+
     static string? Arg(string[] args, string name)
     {
         int i = Array.IndexOf(args, name);
         return i >= 0 && i + 1 < args.Length ? args[i + 1] : null;
+    }
+
+    sealed record JobSpec(Station Tx, Station Rx, RadioSettings Radio, PathModel Model, bool Metric, double FresnelPercent, double Clutter, bool Hd);
+
+    static int HeadlessPathJob(string spec)
+    {
+        try
+        {
+            var o = new System.Text.Json.JsonSerializerOptions { Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() } };
+            var s = System.Text.Json.JsonSerializer.Deserialize<JobSpec>(File.ReadAllText(spec), o) ?? throw new InvalidDataException("empty job spec");
+            var job = PathJob.Create(JobsDir, s.Tx, s.Rx, s.Radio, new PathOptions(s.Model, s.Metric, s.FresnelPercent, s.Clutter, s.Hd),
+                                     TerrainFolder ?? "", EngineDir);
+            var r = Task.Run(() => job.RunAsync()).GetAwaiter().GetResult();   // off the UI thread, or the awaits would deadlock
+            File.WriteAllText(spec + ".out", r.Folder + "\n" + string.Join("\n", r.Runs.Select(x => $"{Path.GetRelativePath(r.Folder, x.Folder)}\t{x.ExitCode}")));
+            return r.GraphErrors.Count == 0 ? 0 : 2;
+        }
+        catch (Exception ex)
+        {
+            File.WriteAllText(spec + ".err", ex.ToString());
+            return 1;
+        }
     }
 
     static HttpClient CreateHttp()
@@ -67,6 +109,18 @@ public partial class App : Application
         // keeps the test sign-in in its own Credential Manager entry, away from the real one.
         if (Arg(e.Args, "--qrz-url") is { } qu) QrzService = new Uri(qu);
         if (Arg(e.Args, "--qrz-credential") is { } qc) QrzTarget = qc;
+        // Path analysis: "--engine <dir>" (the SPLAT! programs), "--terrain <dir>" (terrain for this
+        // run only, not saved), "--jobs <dir>" (where job folders go).
+        if (Arg(e.Args, "--engine") is { } en) EngineDir = Path.GetFullPath(en);
+        if (Arg(e.Args, "--terrain") is { } te) TerrainOverride = Path.GetFullPath(te);
+        if (Arg(e.Args, "--jobs") is { } jo) JobsDir = Path.GetFullPath(jo);
+        // Test hook: "--path-job <spec.json>" runs one path job exactly as the window does, without a
+        // window, and writes the job folder's path to <spec.json>.out (or the error to <spec.json>.err).
+        if (Arg(e.Args, "--path-job") is { } spec)
+        {
+            Shutdown(HeadlessPathJob(spec));
+            return;
+        }
         new MainWindow(e.Args.FirstOrDefault(a => a.EndsWith(".kml", StringComparison.OrdinalIgnoreCase)), stations).Show();
     }
 }

@@ -11,7 +11,7 @@
   #empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
            color: #555; font-size: 15px; pointer-events: none; z-index: 500; }
   [hidden] { display: none !important; }   /* #empty uses display:flex, which would beat the hidden attribute */
-  #readout { position: absolute; left: 10px; bottom: 26px; z-index: 600; background: rgba(255,255,255,.9);
+  #readout { position: absolute; left: 10px; bottom: 64px; z-index: 600; background: rgba(255,255,255,.9);
              padding: 3px 8px; border-radius: 4px; font: 12px Consolas, monospace; color: #222; }
   .station-label { font-weight: 600; }
   .editing .leaflet-container, .editing #map { cursor: crosshair; }
@@ -107,8 +107,28 @@ window.splat = {
     if (square) { map.removeLayer(square); square = null; }
   },
   setEditing(on) { editing = !!on; document.body.classList.toggle("editing", editing); },
+
+  // ---- path analysis (G3) ----
+  // The path as a line between the two stations: green when SPLAT! found line of sight, red
+  // dashed when terrain blocks it, with SPLAT!'s obstructions as red rings.
+  showPath(p) {
+    path.clearLayers();
+    const a = [p.tx.lat, p.tx.lon], b = [p.rx.lat, p.rx.lon];
+    L.polyline([a, b], p.clear ? { color: "#107c10", weight: 4, opacity: 0.9 }
+                               : { color: "#d13438", weight: 4, opacity: 0.9, dashArray: "10 6" })
+      .bindTooltip(`${p.tx.name} to ${p.rx.name}: ${p.clear ? "line of sight" : "blocked by terrain"}`, { sticky: true })
+      .addTo(path);
+    for (const o of p.obstructions || [])
+      L.circleMarker([o.lat, o.lon], { radius: 6, color: "#a4262c", weight: 2, fillColor: "#ffffff", fillOpacity: 0.9 })
+        .bindTooltip(o.label).addTo(path);
+    document.getElementById("empty").hidden = true;
+    fitWhenSized(L.latLngBounds([a, b]).pad(0.15));
+    post({ type: "path-shown", obstructions: (p.obstructions || []).length });
+  },
+  clearPath() { path.clearLayers(); },
 };
 
+let path = L.layerGroup().addTo(map);
 let stations = L.layerGroup().addTo(map), pin = null, square = null, editing = false;
 map.on("click", e => {
   if (!editing) return;

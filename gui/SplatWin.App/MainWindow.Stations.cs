@@ -325,6 +325,7 @@ public partial class MainWindow
             Name = NameBox.Text.Trim(), Lat = lat, Lon = lon, AntennaHeight = h,
             HeightUnit = UnitBox.SelectedIndex == 1 ? HeightUnit.Meters : HeightUnit.Feet,
             Source = FinalSource(), Updated = DateTime.Now,
+            Radio = _editing?.Radio,   // the transmitter settings from path analysis are kept
         };
         if (candidate.Problem(_library.Stations.Where(x => !ReferenceEquals(x, _editing))) is { } problem)
         { EditorError.Text = problem; return; }
@@ -394,6 +395,14 @@ public partial class MainWindow
                     if (answer == MessageBoxResult.Cancel) break;
                     if (answer != MessageBoxResult.Yes) continue;
                     _library.Stations.Remove(existing);
+                    st.Radio = existing.Radio;
+                }
+                // A .lrp beside the .qth (as SPLAT! looks for it) brings the transmitter's radio settings.
+                string lrp = Path.ChangeExtension(f, ".lrp");
+                if (File.Exists(lrp))
+                {
+                    try { st.Radio = LrpFile.Parse(File.ReadAllText(lrp)); }
+                    catch (FormatException ex) { problems.Add($"{Path.GetFileName(lrp)} wasn't used: {ex.Message}"); }
                 }
                 if (st.Problem(_library.Stations) is { } p) { problems.Add($"{file}: {p}"); continue; }
                 _library.Stations.Add(st);
