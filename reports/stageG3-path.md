@@ -180,4 +180,8 @@ Coverage jobs from the app: pick a transmitter, a radius and a receiver height, 
 
 The gate is that you run the 30-mile K4HTA map from the app alone.
 
+## Owner's check: passed (2026-11-22)
+Owner: "Paths look right". The terrain folder had to be chosen once with Change… before the first
+analysis, as designed until G4 brings automatic terrain. Stage G4 waits for an explicit go-ahead.
+
 ## Halted for owner review.
