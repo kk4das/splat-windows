@@ -137,4 +137,8 @@ Pick a transmitter and a receiver from the list and click **Analyse**. The app r
 shows the summary, the graphs (drawn in the app) and the path on the map. The gate is the same
 numbers as the command-line reports, with the equivalence test passing.
 
+## Owner's check: passed (2026-11-22)
+Owner: "Lookups work". These were the first live QRZ.com sign-in and lookups. Stage G3 waits for
+an explicit go-ahead.
+
 ## Halted for owner review.

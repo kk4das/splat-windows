@@ -276,7 +276,7 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G6 — GUI front end (G0, G1 passed 2026-11-22; G2 DONE 2026-11-22, awaiting owner's check; G3 next)
+### Stages G0–G6 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 next)
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
@@ -407,6 +407,9 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-22 — Owner's G2 check passed.** Owner: "Lookups work". First live QRZ.com traffic:
+  sign-in and call sign lookups in the app, with the password in Credential Manager. G3 waits for an
+  explicit go-ahead.
 - **2026-11-22 — Stage G2 (QRZ.com) complete. HALT for owner review.**
   - Started on the owner's words "Start G2".
   - QRZ sign-in window. The owner types the password; it is saved only once QRZ accepts it, in
