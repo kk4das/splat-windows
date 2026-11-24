@@ -158,6 +158,7 @@ antenna.**
 | **G5 Google Earth + polish** | Pro and web KMZ, the point-to-point KML test, settings, icons, the click readout. Owner added (2026-11-23): stations in Google Earth, terrain shading off, antenna patterns and -udt. (Help moved to G6.) | The owner's review. |
 | **G6 Help + getting started** | A Help menu with indexed, searchable help (offline); step-by-step getting started; a first-run wizard if decision G9 says so. See below. | A new user gets from a fresh start to a first coverage map using only the help (and wizard); the owner's review. |
 | **G7 Packaging** | Merges with Stage 5: a zip or installer, a clean-machine test, D10. Was G6 until 2026-11-23. | A clean-PC report. |
+| **G8 3D path view** | Added 2026-11-24 at the owner's request: a 3D view of a path's terrain, line of sight and Fresnel zone, seen from either antenna, and better Google Earth path files. See below. | Same blocking points and heights as SPLAT!'s report and height graph; the owner's review. |
 
 ## Stage G6: help and getting started (added 2026-11-23 at the owner's request)
 The owner: add a stage after G5 for "a help menu with an indexed searchable help documents",
@@ -194,6 +195,77 @@ prompts the user for the necessary information would be helpful". Club members o
   driven end to end by a UI test with a throwaway QRZ credential and the stand-in terrain server.
   Shown to fire, as always.
 
+## Stage G8: 3D path view (added 2026-11-24 at the owner's request)
+The owner: "is it possible to produce a 3D view from transmitter to receiver or reverse to make it
+easier to see what might be blocking the signal". A club member's path to K4HTA is "blocked by
+terrain, but its difficult to visualize"; Google Earth Pro got "close ... but still not very
+satisfying". On that path SPLAT! puts the blockage on a rise about half a mile from the receiver,
+which neither the 2D graphs nor the map make obvious.
+
+**What the user gets**
+- After a path analysis, **3D view...** opens a window (decision G10) showing a strip of terrain
+  along the path: both antennas as masts at their real heights, the **line of sight** between
+  them, the **60 % Fresnel zone** as a see-through tube (the full first zone as an option), and
+  **SPLAT!'s blocking points** marked in red where the terrain cuts into it, labeled with distance
+  and height.
+- **Viewpoints:** *From <receiver>'s antenna, looking at <transmitter>*; the reverse; *side view*
+  (the 3D equivalent of the height graph); *overview*. Mouse to rotate, zoom and pan; **Reset view**.
+- **Height exaggeration** slider, 1x to 10x (default 3x). At true scale a 50 ft rise ten miles away
+  can't be seen; with exaggeration the line of sight and Fresnel tube scale with the terrain, so
+  what's blocked stays blocked.
+- **Ground:** topographic map, street map, or colored by height (works offline); decision G11.
+  **Strip width** about 1 mile either side of the path by default, adjustable (decision G12).
+- A short status line in plain words: "Blocked: terrain 0.4-0.6 mi from the receiver rises up to 49 ft
+  above the line of sight", or "Clear: the 60 % Fresnel zone is clear of terrain".
+- A reminder, in the window and the help: SPLAT!'s terrain is bare ground. Trees and buildings
+  aren't in it, and Google Earth (which has 3D buildings) is the place to look for those.
+
+**How it stays faithful to SPLAT!**
+- **Along the path, SPLAT!'s own numbers are used, not recomputed.** The height graph run
+  (`graph-height`, kept with `-gpsav`) already gives the terrain relative to the line of sight with
+  Earth's curvature applied (`profile.gp`), and the Fresnel zones (`fresnel.gp`,
+  `fresnel_pt_6.gp`). The blocking points come from the report (already parsed).
+- **Either side of the path** the app reads the same terrain (.sdf) files SPLAT! used, with a new
+  reader in SplatWin.Core that follows SPLAT!'s own file layout and elevation lookup, and applies
+  the same Earth-curvature correction so the strip joins the center line exactly.
+- **The scene is drawn with curvature already taken out** (heights relative to a flat reference,
+  as SPLAT!'s height graph does), so the line of sight is a straight line and exaggeration keeps it
+  straight.
+
+**Technology:** WebView2 (already used for the map and help) with **three.js**, a widely used 3D
+library (MIT license), vendored and pinned like Leaflet, so it works offline and installs nothing.
+Map tiles for the ground come from the same servers and caching as the 2D map; only the strip is
+fetched.
+
+**Google Earth path files (the quick improvement)**
+- The path KMZ/KML gets: the line of sight at its true height (each point's altitude computed with
+  SPLAT!'s curvature, so it is the real ray, not a line hugging the globe), mast lines at both
+  sites, red placemarks on the blocking points with their heights, and a starting **camera at the
+  receiver's antenna looking at the transmitter**. Google Earth's own terrain differs slightly from
+  SPLAT!'s, so the line can sit a few feet off; the help says so.
+
+**Checks (shown to fire, as always)**
+- **Terrain reader:** heights it reads along the path equal SPLAT!'s profile graph data
+  (`graph-profile\profile.gp`) at every point, on the 20 test cases' paths and the owner's
+  stations; standard and HD terrain.
+- **Curvature and line of sight:** the app's height of terrain above or below the line of sight
+  equals SPLAT!'s `profile.gp` in `graph-height`, and its Fresnel radii equal `fresnel.gp` and
+  `fresnel_pt_6.gp`, to 0.01 ft.
+- **Blocking points:** the points the view marks red are exactly SPLAT!'s list in the report, and
+  "Clear" appears only when SPLAT!'s report has no obstructions.
+- **Exaggeration:** at every setting, a point is above or below the line of sight exactly as at 1x.
+- **KML:** the line-of-sight altitudes at both ends equal the antenna heights AMSL in the report;
+  the file passes the existing KML checks; the owner opens it in Google Earth Pro and on the web.
+- **Window test:** opens from a finished path, each viewpoint and the slider work, no script
+  errors, a picture of each viewpoint kept with the results; it refuses politely when the path
+  hasn't been run or its terrain is gone. A 50-mile path stays smooth.
+- The SPLAT! equivalence gates are run again (nothing in SPLAT! or its runs changes).
+- Help: a "3D path view" page, troubleshooting entries for its messages, getting started mentions
+  it; README.
+
+**Not in this stage:** a 3D coverage map; trees and buildings (SPLAT!'s `-gc` clutter height could be
+shown later as a raised layer).
+
 ## Decisions for the owner
 | # | Decision | Recommendation |
 |---|---|---|
@@ -206,3 +278,6 @@ prompts the user for the necessary information would be helpful". Club members o
 | **G7** | **Licence for the GUI.** It ships with GPLv2 SPLAT!. | **DECIDED 2026-11-22:** GPLv2 as well (simplest, matches SPLAT!). |
 | **G8** | **App name** shown in the window and Start menu | **DECIDED 2026-11-22:** "SPLAT! for Windows". |
 | **G9** | **First-run wizard?** (stage G6) | **DECIDED 2026-11-24: short wizard** (owner: "Short wizard (Recommended)"). Was recommended: a short wizard that opens once on first run, can be skipped, and can be reopened from Help: (1) welcome and what the app does; (2) terrain folder (the default is fine for most); (3) call-sign lookup: QRZ sign-in (the user types the password) or the free callook.info; (4) add your first station; (5) offer to run a first coverage map. Alternative: no wizard; the Getting started page opens on first run, and empty panels show what to do next. |
+| **G10** | **Where the 3D view shows** | **Its own window (Recommended)**, opened by a 3D view... button after a path is analyzed: big, resizable, can sit beside the main window. The alternative is a sixth tab beside the graphs, which is small. |
+| **G11** | **What covers the ground** | **Topographic map by default (Recommended)**, with street map and "colored by height" (offline) as choices. |
+| **G12** | **Strip width** | **About 1 mile either side by default (Recommended)**, adjustable from 1/4 to 5 miles. |

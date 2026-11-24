@@ -1,4 +1,4 @@
-# SPLAT! for Windows — Runbook
+﻿# SPLAT! for Windows — Runbook
 
 A native Windows build of **SPLAT!** (KD2BD's terrestrial RF path and terrain analysis tool, v1.4.2),
 ported from the Linux source at `https://github.com/jmcmellen/splat`. The result is a set of `.exe`
@@ -428,6 +428,12 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-24 — Stage G8 (3D path view) planned** at the owner's request ("is it possible to
+  produce a 3D view from transmitter to receiver or reverse to make it easier to see what might be
+  blocking the signal"; owner: "Yes, plan it"). Plan and decisions G10-G12 in reference/gui-plan.md.
+  Checked against SPLAT!'s own height-graph data and report, as before. Waiting on the owner's
+  decisions and "start G8". (A club member's path that prompted it is not named here: the
+  repository is public.)
 - **2026-11-24 — 0.9.0 published.** Public repository https://github.com/kk4das/splat-windows
   (full history, 49 commits) and pre-release v0.9.0 with SPLATforWindows-0.9.0-win64.zip
   (SHA-256 817ca369…0e999, re-downloaded and checked) and its .sha256. Clean-PC test in Windows
