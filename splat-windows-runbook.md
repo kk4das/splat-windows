@@ -276,7 +276,7 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G7 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 passed 2026-11-23; G5 DONE 2026-11-23, awaiting owner's review; G6 next)
+### Stages G0–G7 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 passed 2026-11-23; G5 passed 2026-11-23; G6 next)
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
@@ -425,6 +425,9 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-23 — Owner's G5 review passed.** Owner: "all checks passed" (the coverage readout,
+  terrain shading off, station pins in Google Earth, the path in Google Earth, Settings showing
+  the terrain folder `data\sdf3`). G6 waits for an explicit go-ahead.
 - **2026-11-23 — Stage G5 (Google Earth and polish) complete. HALT for owner review.**
   - Started on the owner's words "Start G5". Owner's scope choice (asked at the start): the
     planned items plus **stations in Google Earth, terrain shading off, antenna patterns and

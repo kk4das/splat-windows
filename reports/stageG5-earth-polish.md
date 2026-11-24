@@ -210,4 +210,9 @@ The new version (0.6.0) is open.
 
 Then G7, packaging.
 
+## Owner's review: passed (2026-11-23)
+Owner: "all checks passed": the coverage readout, terrain shading off, station pins and
+the path in Google Earth Pro, and Settings showing the terrain folder (`data\sdf3`, as chosen in G3).
+Stage G6 waits for an explicit go-ahead.
+
 ## Halted for owner review.
