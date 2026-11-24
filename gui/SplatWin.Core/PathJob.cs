@@ -10,7 +10,7 @@ public enum PathModel { Itwom, LongleyRice }
 /// SPLAT! reuses the same data file names (profile.gp, ...) for every graph.</summary>
 public enum GraphKind { Profile, Elevation, Height, Loss }
 
-/// <summary>Options for a path analysis. Clutter is in metres when Metric is on (as SPLAT! reads -gc).
+/// <summary>Options for a path analysis. Clutter is in meters when Metric is on (as SPLAT! reads -gc).
 /// UdtFile is a user-defined terrain file (-udt) to copy into the job; Kml asks SPLAT! for its path KML (-kml, report run only).</summary>
 public sealed record PathOptions(PathModel Model = PathModel.Itwom, bool Metric = false, double FresnelPercent = 60,
                                  double Clutter = 0, bool Hd = false, string? UdtFile = null, bool Kml = true);

@@ -44,7 +44,7 @@
             <StackPanel x:Name="Page3" Visibility="Collapsed">
                 <TextBlock Text="Looking up call signs" FontSize="22" FontWeight="SemiBold"/>
                 <TextBlock Style="{StaticResource Body}"
-                           Text="A station can be found by its call sign. Without signing in, US call signs are looked up free on callook.info (FCC licence data)."/>
+                           Text="A station can be found by its call sign. Without signing in, US call signs are looked up free on callook.info (FCC license data)."/>
                 <TextBlock Style="{StaticResource Body}"
                            Text="For call signs worldwide, sign in to QRZ.com. Positions from QRZ.com need its XML Logbook Data subscription. You type your password; it is kept in Windows Credential Manager, never in a file."/>
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0">

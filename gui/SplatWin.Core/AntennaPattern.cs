@@ -56,7 +56,7 @@ public sealed class AntennaPattern
     }
 
     // SPLAT! reads at most 253 characters a line, strips anything after ';', takes the first line's
-    // numbers as settings, then "angle amplitude" pairs. Amplitudes are normalised field values (0 to 1).
+    // numbers as settings, then "angle amplitude" pairs. Amplitudes are normalized field values (0 to 1).
     static string? Check(string text, string kind, int headerNumbers, double minAngle, double maxAngle)
     {
         var lines = text.Replace("\r", "").Split('\n');
@@ -88,7 +88,7 @@ public sealed class AntennaPattern
             if (nums[0] < minAngle || nums[0] > maxAngle)
                 return $"The {kind} file's line {n} has angle {nums[0].ToString(CultureInfo.InvariantCulture)}; SPLAT! uses {minAngle:0} to {maxAngle:0} degrees.";
             if (nums[1] < 0 || nums[1] > 1)
-                return $"The {kind} file's line {n} has amplitude {nums[1].ToString(CultureInfo.InvariantCulture)}; SPLAT! expects normalised values from 0 to 1.";
+                return $"The {kind} file's line {n} has amplitude {nums[1].ToString(CultureInfo.InvariantCulture)}; SPLAT! expects normalized values from 0 to 1.";
             pairs++;
         }
         if (header) return $"The {kind} file is empty.";

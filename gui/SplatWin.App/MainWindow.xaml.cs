@@ -108,8 +108,8 @@ public partial class MainWindow : Window
                     double lat = doc.RootElement.GetProperty("lat").GetDouble(), lon = doc.RootElement.GetProperty("lon").GetDouble();
                     string? what = _map?.Probe(lat, lon);
                     string text = what == null
-                        ? (_map == null ? "" : "Outside the coverage map, or its colour key isn't known.")
-                        : $"{what} (read from the map's colour, so approximate)";
+                        ? (_map == null ? "" : "Outside the coverage map, or its color key isn't known.")
+                        : $"{what} (read from the map's color, so approximate)";
                     if (text.Length == 0) break;
                     _ = Web.CoreWebView2.ExecuteScriptAsync($"window.splat.showProbe({lat.ToString(System.Globalization.CultureInfo.InvariantCulture)}, " +
                         $"{lon.ToString(System.Globalization.CultureInfo.InvariantCulture)}, {JsonSerializer.Serialize(text)})");

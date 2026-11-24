@@ -54,11 +54,11 @@ public partial class MainWindow
     {
         if (!Busy) return true;
         Status.Text = _covCts != null ? "A coverage map is being made. Wait for it, or click Cancel next to Run."
-                                      : "A path analysis is running. Wait for it, or click Cancel next to Analyse.";
+                                      : "A path analysis is running. Wait for it, or click Cancel next to Analyze.";
         return false;
     }
 
-    /// <summary>While a job runs: Run/Analyse off, Cancel shown, and no switching views.</summary>
+    /// <summary>While a job runs: Run/Analyze off, Cancel shown, and no switching views.</summary>
     void SetBusy(bool path, bool on)
     {
         if (path) { AnalyseButton.IsEnabled = !on; PathCancelButton.Visibility = on ? Visibility.Visible : Visibility.Collapsed; }

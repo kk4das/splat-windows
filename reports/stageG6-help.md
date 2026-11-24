@@ -158,4 +158,19 @@ In the open app:
 A zip or installer, and a clean-machine test (merges the original Stage 5). Stage 4's formal
 approval is still open.
 
+## Owner's review: passed (2026-11-24), with one change
+Owner: "change colour to color and any other british english spellings to american english.
+Everything else with help looks good. setup wizard seems helpful - I'll have others test it when we
+get the app packaged."
+
+- **Done:** 232 words, in the app's text, messages, help and setup, and in the tests that check that
+  text: color, analyze, meter, kilometer, license, center, gray, canceled, labeled, normalized,
+  recognize.
+- **Left alone:** code names, and the stored job files' `ColourKey` field, so earlier maps still open.
+  SPLAT!'s own output is untouched.
+- **Checks:** the help pictures were retaken, and all checks pass on the rebuilt app.
+- **From now on:** American English in everything you see.
+
+Stage G7 (packaging) waits for an explicit go-ahead.
+
 ## Halted for owner review.

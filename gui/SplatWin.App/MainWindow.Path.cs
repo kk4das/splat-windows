@@ -35,7 +35,7 @@ public partial class MainWindow
         ShowTerrain();
         PathError.Text = "";
         ShowView(View.Path);
-        Status.Text = "Choose the transmitter and the receiver, check the radio settings, then click Analyse.";
+        Status.Text = "Choose the transmitter and the receiver, check the radio settings, then click Analyze.";
     }
 
     void TxBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -61,8 +61,8 @@ public partial class MainWindow
     {
         var r = tx.Radio ?? new RadioSettings();
         RadioHint.Text = tx.Radio != null
-            ? $"Saved with {tx.Name}. Changes are saved with it when you click Analyse."
-            : $"Not set for {tx.Name} yet. Enter them (or load a .lrp file); they are saved with {tx.Name} when you click Analyse.";
+            ? $"Saved with {tx.Name}. Changes are saved with it when you click Analyze."
+            : $"Not set for {tx.Name} yet. Enter them (or load a .lrp file); they are saved with {tx.Name} when you click Analyze.";
         RadioHint.Text += tx.Pattern != null ? $" Antenna pattern: {tx.Pattern.Describe()}." : " Antenna: the same in all directions (add a pattern with Edit…).";
         FillRadio(r);
     }
@@ -127,7 +127,7 @@ public partial class MainWindow
         {
             FillRadio(LrpFile.Parse(File.ReadAllText(dlg.FileName)));
             PathError.Text = "";
-            Status.Text = $"Loaded the radio settings from {Path.GetFileName(dlg.FileName)}. They are saved with the transmitter when you click Analyse.";
+            Status.Text = $"Loaded the radio settings from {Path.GetFileName(dlg.FileName)}. They are saved with the transmitter when you click Analyze.";
         }
         catch (Exception ex) when (ex is FormatException or IOException or UnauthorizedAccessException)
         {
@@ -170,7 +170,7 @@ public partial class MainWindow
         SetBusy(path: true, on: true);
         string? terrainError;
         try { terrainError = await EnsureTerrainAsync(tiles, options.Hd, _pathCts.Token); }
-        catch (OperationCanceledException) { Status.Text = "Cancelled while fetching terrain; nothing was run."; terrainError = ""; }
+        catch (OperationCanceledException) { Status.Text = "Canceled while fetching terrain; nothing was run."; terrainError = ""; }
         finally { _pathCts.Dispose(); _pathCts = null; SetBusy(path: true, on: false); ShowTerrain(); }
         if (terrainError != null) { if (terrainError.Length > 0) PathError.Text = terrainError; return; }
         if (Terrain.Problem(App.TerrainFolder, tiles, options.Hd) is { } tp) { PathError.Text = tp; return; }
@@ -196,10 +196,10 @@ public partial class MainWindow
         {
             var r = await Task.Run(() => job.RunAsync(progress, _pathCts.Token));
             ShowPathResult(r);
-            Status.Text = $"Path analysed: {r.Summary.TxName} to {r.Summary.RxName}. Job folder: {r.Folder}" +
+            Status.Text = $"Path analyzed: {r.Summary.TxName} to {r.Summary.RxName}. Job folder: {r.Folder}" +
                           (r.GraphErrors.Count > 0 ? $" ({r.GraphErrors.Count} graph(s) couldn't be drawn; see their tabs)" : "");
         }
-        catch (OperationCanceledException) { Status.Text = "Cancelled. The unfinished job folder is " + job.Folder; }
+        catch (OperationCanceledException) { Status.Text = "Canceled. The unfinished job folder is " + job.Folder; }
         catch (Exception ex) { PathError.Text = ex.Message; Status.Text = "The path analysis didn't finish. Job folder: " + job.Folder; }
         finally
         {

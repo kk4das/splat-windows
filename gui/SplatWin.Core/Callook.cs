@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace SplatWin.Core;
 
-/// <summary>A callook.info answer. The position is a geocode of the licence's MAILING address.</summary>
+/// <summary>A callook.info answer. The position is a geocode of the license's MAILING address.</summary>
 public sealed record CallookResult(string Callsign, string Name, string LicenceType,
     double Lat, double Lon, string Grid, string Address);
 
@@ -12,7 +12,7 @@ public sealed record CallookResult(string Callsign, string Name, string LicenceT
 public sealed class LookupException(string message, Exception? inner = null) : Exception(message, inner);
 
 /// <summary>
-/// callook.info: free, no account, US (FCC) licences only. https://callook.info/&lt;call&gt;/json
+/// callook.info: free, no account, US (FCC) licenses only. https://callook.info/&lt;call&gt;/json
 /// Its status is VALID, INVALID (not an FCC call) or UPDATING (its database is being refreshed).
 /// </summary>
 public static partial class Callook
@@ -46,7 +46,7 @@ public static partial class Callook
             {
                 case "VALID": break;
                 case "INVALID":
-                    throw new LookupException($"{call} isn't in the FCC database. callook.info only knows US licences; for other calls use a grid square or the map.");
+                    throw new LookupException($"{call} isn't in the FCC database. callook.info only knows US licenses; for other calls use a grid square or the map.");
                 case "UPDATING":
                     throw new LookupException("callook.info is updating its copy of the FCC database. Try again in a few minutes.");
                 default:

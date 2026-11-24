@@ -169,7 +169,7 @@ public static class HelpTopics
     public const string Path = "path-analysis.html";
     public const string PathSummary = "path-analysis.html#summary";
     public const string Coverage = "coverage-maps.html";
-    public const string ColourKey = "coverage-maps.html#colour-key";
+    public const string ColourKey = "coverage-maps.html#color-key";
     public const string Terrain = "terrain.html";
     public const string Obstacles = "terrain.html#obstacles";
     public const string GoogleEarth = "google-earth.html";

@@ -2,7 +2,7 @@
 .SYNOPSIS
   Drives the real "SPLAT! for Windows" window through coverage maps (Stage G4) with Windows UI
   Automation: terrain fetched into an empty folder from a stand-in of the real sources, a line-of-
-  sight map, a signal map with its colour key, cancel, and the job history. Stage G5 adds: the click
+  sight map, a signal map with its color key, cancel, and the job history. Stage G5 adds: the click
   readout, the user's stations in the Google Earth file, a map without terrain shading (clear, not
   white), the Settings window (on its own settings file) and the Google Earth on the web steps.
 .DESCRIPTION
@@ -88,7 +88,7 @@ function Click-MapMiddle {
     [void][G5.Mouse]::SetCursorPos($old.X, $old.Y)
 }
 # What SPLAT!'s files say a point should read, worked out here independently of the app: the pixel in the
-# job's .ppm under the KML's box, and its colour's band in the job's .scf (SPLAT!'s band rule).
+# job's .ppm under the KML's box, and its color's band in the job's .scf (SPLAT!'s band rule).
 function Expected-Band([string]$job, [double]$lat, [double]$lon) {
     [xml]$k = Get-Content (Join-Path $job 'coverage.kml') -Raw
     $box = $k.GetElementsByTagName('LatLonBox')[0]
@@ -99,13 +99,13 @@ function Expected-Band([string]$job, [double]$lat, [double]$lon) {
     $i = $start + 3 * ($y * $wd + $x); $rgb = $b[$i], $b[$i + 1], $b[$i + 2]
     $bands = @(Get-Content (Get-ChildItem $job -Filter *.scf)[0].FullName | Where-Object { $_ -match '^\s*-?\d+\s*:' } |
         ForEach-Object { $lv, $c = $_ -split ':'; ,(@([int]$lv.Trim()) + [int[]](($c -split ';')[0] -split ',' | ForEach-Object { $_.Trim() })) })
-    if ($rgb[0] -eq $rgb[1] -and $rgb[1] -eq $rgb[2]) { return "no colour: below $($bands[-1][0]) dBµV/m" }
+    if ($rgb[0] -eq $rgb[1] -and $rgb[1] -eq $rgb[2]) { return "no color: below $($bands[-1][0]) dBµV/m" }
     for ($z = 0; $z -lt $bands.Count; $z++) {
         if ($bands[$z][1] -eq $rgb[0] -and $bands[$z][2] -eq $rgb[1] -and $bands[$z][3] -eq $rgb[2]) {
             if ($z -eq 0) { return "$($bands[0][0]) dBµV/m or more" } else { return "$($bands[$z][0]) to $($bands[$z - 1][0]) dBµV/m" }
         }
     }
-    return "colour $($rgb -join ',')"
+    return "color $($rgb -join ',')"
 }
 
 $fake = Start-Process powershell -WindowStyle Hidden -PassThru -ArgumentList @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
@@ -158,7 +158,7 @@ try {
     $k = (Get-Content $lib -Raw | ConvertFrom-Json).Stations | Where-Object Name -eq 'K4HTA'
     Check ($null -eq $k.Radio) 'line of sight saves no radio settings'
 
-    # 4. Signal strength, 20 mi: no new download; SPLAT!'s colour key; radio settings saved.
+    # 4. Signal strength, 20 mi: no new download; SPLAT!'s color key; radio settings saved.
     Choose 'CovKindBox' 'Signal strength (dBµV/m)'
     SetText 'CovRadiusBox' '20'
     Run-Map
@@ -166,7 +166,7 @@ try {
     Check ((Text 'Status') -like 'Coverage map shown: *K4HTA, 20 mi, signal strength, RX 6 ft*') 'signal map made' (Text 'Status')
     Check ((Requests).Count -eq 1) 'no new download (terrain kept)' "$((Requests).Count) request(s)"
     $key = ById 'CovKeyImage'
-    Check ($key.Current.BoundingRectangle.Width -ge 50 -and (Text 'CovKeyText') -eq "SPLAT!'s colour key for this map. Click the map to read the value at a point.") 'colour key shown' ("{0}x{1}" -f $key.Current.BoundingRectangle.Width, $key.Current.BoundingRectangle.Height)
+    Check ($key.Current.BoundingRectangle.Width -ge 50 -and (Text 'CovKeyText') -eq "SPLAT!'s color key for this map. Click the map to read the value at a point.") 'color key shown' ("{0}x{1}" -f $key.Current.BoundingRectangle.Width, $key.Current.BoundingRectangle.Height)
     $k = (Get-Content $lib -Raw | ConvertFrom-Json).Stations | Where-Object Name -eq 'K4HTA'
     Check ($k.Radio.FrequencyMHz -eq 146.685 -and $k.Radio.ErpWatts -eq 93) 'radio settings saved with K4HTA' ($k.Radio | ConvertTo-Json -Compress)
     $h = Wait-For { $x = Get-MapList; if ($x.Count -ge 2) { ,$x } } 10000
@@ -174,7 +174,7 @@ try {
     $kmz = Get-ChildItem (Join-Path $env:LOCALAPPDATA 'SPLATforWindows\map-cache') -Recurse -Filter coverage.kmz | Sort-Object LastWriteTime | Select-Object -Last 1
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     $z = [IO.Compression.ZipFile]::OpenRead($kmz.FullName); $names = @($z.Entries | ForEach-Object FullName); $z.Dispose()
-    Check ($names.Count -eq 3 -and $names -contains 'doc.kml' -and $names -contains 'coverage.png' -and $names -contains 'coverage-ck.png') 'Google Earth file carries the colour key' ($names -join ',')
+    Check ($names.Count -eq 3 -and $names -contains 'doc.kml' -and $names -contains 'coverage.png' -and $names -contains 'coverage-ck.png') 'Google Earth file carries the color key' ($names -join ',')
     # G5: the library's stations as pins (KK4DAS; K4HTA is already SPLAT!'s own placemark).
     $z = [IO.Compression.ZipFile]::OpenRead($kmz.FullName); $sr = New-Object IO.StreamReader($z.GetEntry('doc.kml').Open()); [xml]$doc = $sr.ReadToEnd(); $sr.Dispose(); $z.Dispose()
     $folder = @($doc.GetElementsByTagName('Folder') | Where-Object { $_.name -eq 'Stations' })
@@ -184,15 +184,15 @@ try {
     # G5: the click readout. One click in the middle of the map; the answer must be what SPLAT!'s own files say there.
     $statusBefore = Text 'Status'
     Click-MapMiddle
-    $said = Wait-For { $t = Text 'Status'; if ($t -ne $statusBefore -and $t -like '*(read from the map''s colour, so approximate)') { $t } } 10000
+    $said = Wait-For { $t = Text 'Status'; if ($t -ne $statusBefore -and $t -like '*(read from the map''s color, so approximate)') { $t } } 10000
     $job2 = Get-ChildItem $jobs -Directory | Sort-Object Name | Select-Object -Last 1
     if ($said -match '^(-?[\d.]+), (-?[\d.]+): (.*) \(read from') {
         $want = Expected-Band $job2.FullName ([double]$Matches[1]) ([double]$Matches[2]); $got = $Matches[3]
-        Check ($got.StartsWith($want)) 'G5: click readout matches SPLAT!''s map and colour file at that point' "app: $got / from the files: $want"
-    } else { Check $false 'G5: click readout matches SPLAT!''s map and colour file at that point' "status: $(Text 'Status')" }
+        Check ($got.StartsWith($want)) 'G5: click readout matches SPLAT!''s map and color file at that point' "app: $got / from the files: $want"
+    } else { Check $false 'G5: click readout matches SPLAT!''s map and color file at that point' "status: $(Text 'Status')" }
     Check ((ById 'Web').Current.ItemStatus -like 'Readout: *') 'G5: readout given to screen readers' ((ById 'Web').Current.ItemStatus)
 
-    # 5. Cancel: an HD map (slow), cancelled once SPLAT! is computing.
+    # 5. Cancel: an HD map (slow), canceled once SPLAT! is computing.
     (ById 'CovMoreBox').GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Expand()
     Tick 'CovHdBox' $true
     SetText 'CovRadiusBox' '30'
@@ -201,11 +201,11 @@ try {
     Check ([bool]$computing) 'HD terrain fetched, SPLAT! computing' (Text 'Status')
     Check (-not (Hidden 'CovCancelButton') -and -not (ById 'PathButton').Current.IsEnabled -and -not (ById 'BackButton').Current.IsEnabled) 'while running: Cancel shown, switching views waits' ''
     Click (ById 'CovCancelButton')
-    $null = Wait-For { (Text 'Status') -like 'Cancelled*' } 20000
-    Check ((Text 'Status') -like 'Cancelled. The unfinished job folder is *') 'cancelled' (Text 'Status')
+    $null = Wait-For { (Text 'Status') -like 'Canceled*' } 20000
+    Check ((Text 'Status') -like 'Canceled. The unfinished job folder is *') 'canceled' (Text 'Status')
     Check (-not (Get-Process splat-hd -ErrorAction SilentlyContinue)) 'SPLAT! HD stopped'
     Check ((ById 'CovRunButton').Current.IsEnabled -and (Hidden 'CovCancelButton') -and (ById 'PathButton').Current.IsEnabled) 'ready again'
-    Check ((Get-MapList).Count -eq 2) 'a cancelled map is not in the history'
+    Check ((Get-MapList).Count -eq 2) 'a canceled map is not in the history'
     Tick 'CovHdBox' $false
 
     # 6. History: show the first map again, without re-running.
@@ -283,7 +283,7 @@ try {
     # 7. Close.
     # Straight to path analysis and back, without the stations list in between; what was typed stays.
     Click (ById 'PathButton')
-    Check (-not (Hidden 'PathPanel') -and (Hidden 'CoveragePanel')) 'Analyse a path… switches straight from the coverage panel'
+    Check (-not (Hidden 'PathPanel') -and (Hidden 'CoveragePanel')) 'Analyze a path… switches straight from the coverage panel'
     Click (ById 'CoverageButton')
     $radius = (ById 'CovRadiusBox').GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value
     Check (-not (Hidden 'CoveragePanel') -and (Hidden 'PathPanel') -and $radius -eq '20') 'and back, with the radius still as typed' $radius

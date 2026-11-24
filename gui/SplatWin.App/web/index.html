@@ -70,7 +70,7 @@ window.splat = {
     overlay = L.imageOverlay(m.image, bounds, { opacity, interactive: false }).addTo(map);
     overlay.on("load", () => post({ type: "overlay-loaded" }));
     overlay.on("error", () => post({ type: "error", text: "map image failed to load" }));
-    // A placemark on one of the user's stations (same name, within ~100 m) is already labelled by the station dot.
+    // A placemark on one of the user's stations (same name, within ~100 m) is already labeled by the station dot.
     const near = p => stationList.some(s => s.name.toUpperCase() === (p.name || "").toUpperCase() && map.distance([s.lat, s.lon], [p.lat, p.lon]) < 100);
     for (const p of (m.placemarks || []).filter(p => !near(p)))
       L.marker([p.lat, p.lon], { title: p.name }).bindTooltip(p.name, { permanent: true, direction: "right" }).addTo(sites);

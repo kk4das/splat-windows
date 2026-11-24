@@ -17,17 +17,17 @@ public sealed class LoadedMap
     public required string MercatorPng { get; init; }   // for the in-app map
     public required string OriginalPng { get; init; }   // lat/lon grid, for Google Earth
     public required string Kmz { get; init; }
-    public string? ColourKeyPng { get; init; }           // SPLAT!'s colour key (signal maps), as PNG
+    public string? ColourKeyPng { get; init; }           // SPLAT!'s color key (signal maps), as PNG
     public int Width { get; init; }
     public int Height { get; init; }
     public bool ClearWhite { get; init; }                // -ngs map: white (no shading) shown as clear
     public required RgbImage Source { get; init; }       // SPLAT!'s pixels, for the click readout
-    public ColourKey? Key { get; init; }                 // the colour file SPLAT! painted with, if found
+    public ColourKey? Key { get; init; }                 // the color file SPLAT! painted with, if found
     public bool LineOfSight { get; init; }
 
     /// <summary>
-    /// What the map shows at a point, read from the colour SPLAT! painted there (so a band, not
-    /// SPLAT!'s exact number). Null outside the map, or when the map's colour file isn't known.
+    /// What the map shows at a point, read from the color SPLAT! painted there (so a band, not
+    /// SPLAT!'s exact number). Null outside the map, or when the map's color file isn't known.
     /// </summary>
     public string? Probe(double lat, double lon)
     {
@@ -78,7 +78,7 @@ public static class MapLoader
         }
         string merc = Path.Combine(outDir, stem + "-mercator.png");
         SavePng(MercatorWarp.ToMercator(src, kml.North, kml.South), merc, clearWhite);
-        // The colour key SPLAT! writes beside a signal map (<name>-ck.ppm), named in the KML's ScreenOverlay.
+        // The color key SPLAT! writes beside a signal map (<name>-ck.ppm), named in the KML's ScreenOverlay.
         string? keyPng = null;
         var ck = System.Text.RegularExpressions.Regex.Match(kmlText, @"<ScreenOverlay>.*?<href>([^<]*)</href>", System.Text.RegularExpressions.RegexOptions.Singleline);
         if (ck.Success && Path.GetFileName(ck.Groups[1].Value.Trim()) is { Length: > 0 } ckName && File.Exists(Path.Combine(dir, ckName)))
@@ -96,7 +96,7 @@ public static class MapLoader
                          .ToList();
         Kmz.Write(kmz, kmlText, originalPng, keyPng, onMap);
 
-        // Which colour file SPLAT! used: its overlay's name says what the map shows; the file is beside the KML.
+        // Which color file SPLAT! used: its overlay's name says what the map shows; the file is beside the KML.
         var name = System.Text.RegularExpressions.Regex.Match(kmlText, @"<GroundOverlay>.*?<name>([^<]*)</name>",
                                                               System.Text.RegularExpressions.RegexOptions.Singleline).Groups[1].Value;
         bool los = name.Contains("Line-of-Sight", StringComparison.OrdinalIgnoreCase);

@@ -6,7 +6,7 @@ namespace SplatWin.Core;
 /// <summary>
 /// A SPLAT! user-defined terrain file (.udt, the -udt option): buildings, towers or trees added on
 /// top of the ground. Each line is "latitude, longitude, height", with the longitude in degrees
-/// WEST as everywhere in SPLAT!, the height in feet, or metres when it ends in 'm' (LoadUDT). The
+/// WEST as everywhere in SPLAT!, the height in feet, or meters when it ends in 'm' (LoadUDT). The
 /// file is passed to SPLAT! unchanged; this only checks it, so a mistake doesn't go unnoticed.
 /// </summary>
 public sealed record UdtPoint(double Lat, double Lon, double HeightMetres, int Line);
@@ -32,15 +32,15 @@ public static class UserTerrain
             if (Bearing(f[0]) is not double lat || lat < -90 || lat > 90) return (points, $"Line {i + 1}: \"{f[0].Trim()}\" isn't a latitude.");
             if (Bearing(f[1]) is not double west || west < -360 || west > 360) return (points, $"Line {i + 1}: \"{f[1].Trim()}\" isn't a longitude.");
             string h = f[2].Trim();
-            bool metres = h.EndsWith("m", StringComparison.OrdinalIgnoreCase) || h.EndsWith("meters", StringComparison.OrdinalIgnoreCase)
-                          || h.EndsWith("metres", StringComparison.OrdinalIgnoreCase);
+            bool meters = h.EndsWith("m", StringComparison.OrdinalIgnoreCase) || h.EndsWith("meters", StringComparison.OrdinalIgnoreCase)
+                          || h.EndsWith("meters", StringComparison.OrdinalIgnoreCase);
             string num = new string(h.TakeWhile(c => char.IsDigit(c) || c is '.' or '-' or '+').ToArray());
             if (!double.TryParse(num, NumberStyles.Float, CultureInfo.InvariantCulture, out double height))
                 return (points, $"Line {i + 1}: \"{h}\" isn't a height.");
             if (height <= 0) return (points, $"Line {i + 1}: the height must be above zero (SPLAT! ignores it otherwise).");
             if (west < 0) west += 360;                       // as SPLAT! does
             double lon = west > 180 ? 360 - west : -west;     // to ordinary signs
-            points.Add(new UdtPoint(lat, lon, metres ? height : height * 0.3048, i + 1));
+            points.Add(new UdtPoint(lat, lon, meters ? height : height * 0.3048, i + 1));
         }
         return points.Count == 0 ? (points, "The file has no obstacles in it.") : (points, null);
     }

@@ -73,7 +73,7 @@
                             ToolTip="Add a station by call sign, address, grid square, coordinates or a click on the map"/>
                     <Button x:Name="ImportButton" Content="Import .qth…" Padding="10,5" Margin="4,0,0,4" HorizontalAlignment="Stretch" Click="Import_Click"
                             ToolTip="Add stations from SPLAT! .qth files (a .lrp, .az or .el file beside one comes too)"/>
-                    <Button x:Name="PathButton" Content="Analyse a path…" Padding="10,5" Margin="0,4,4,0" HorizontalAlignment="Stretch" Click="PathOpen_Click"
+                    <Button x:Name="PathButton" Content="Analyze a path…" Padding="10,5" Margin="0,4,4,0" HorizontalAlignment="Stretch" Click="PathOpen_Click"
                             ToolTip="Pick a transmitter and a receiver and run SPLAT!'s path analysis"/>
                     <Button x:Name="CoverageButton" Content="Coverage map…" Padding="10,5" Margin="4,4,0,0" HorizontalAlignment="Stretch" Click="CoverageOpen_Click"
                             ToolTip="Map a transmitter's coverage with SPLAT!, shown on the map in this window"/>
@@ -238,9 +238,9 @@
                                     <ComboBoxItem Content="ITWOM 3.0 (SPLAT!'s default)"/>
                                     <ComboBoxItem Content="Longley-Rice ITM (-olditm)"/>
                                 </ComboBox>
-                                <CheckBox x:Name="CovShadingBox" Content="Grey terrain shading (off: only the coverage colours, over the street map)" Margin="0,10,0,0" IsChecked="True"/>
-                                <CheckBox x:Name="CovSmoothBox" Content="Smooth colour bands (-sc)" Margin="0,8,0,0"/>
-                                <CheckBox x:Name="CovMetricBox" Content="Kilometres and metres (-metric)" Margin="0,8,0,0" Click="CovMetric_Click"/>
+                                <CheckBox x:Name="CovShadingBox" Content="Gray terrain shading (off: only the coverage colors, over the street map)" Margin="0,10,0,0" IsChecked="True"/>
+                                <CheckBox x:Name="CovSmoothBox" Content="Smooth color bands (-sc)" Margin="0,8,0,0"/>
+                                <CheckBox x:Name="CovMetricBox" Content="Kilometers and meters (-metric)" Margin="0,8,0,0" Click="CovMetric_Click"/>
                                 <CheckBox x:Name="CovHdBox" Content="High-definition terrain (1 arc-second, splat-hd; slower)" Margin="0,8,0,0"/>
                                 <TextBlock Text="Obstacles (SPLAT! user terrain, .udt)" Style="{StaticResource Caption}" Margin="0,10,0,3"/>
                                 <DockPanel>
@@ -249,7 +249,7 @@
                                     <TextBlock x:Name="CovUdtText" Text="None" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                 </DockPanel>
                                 <TextBlock Style="{StaticResource Caption}" Margin="0,8,0,0"
-                                           Text="Ground, climate and the other radio settings are the transmitter's, from Analyse a path."/>
+                                           Text="Ground, climate and the other radio settings are the transmitter's, from Analyze a path."/>
                             </StackPanel>
                         </Expander>
 
@@ -272,10 +272,10 @@
                                 <TextBlock x:Name="CovResultText" TextWrapping="Wrap" FontWeight="SemiBold"/>
                                 <TextBlock x:Name="CovResultNote" TextWrapping="Wrap" Margin="0,4,0,0" Style="{StaticResource Caption}"/>
                                 <Image x:Name="CovKeyImage" Margin="0,8,0,0" HorizontalAlignment="Left" Stretch="None"
-                                       AutomationProperties.Name="Colour key" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                                       AutomationProperties.Name="Color key" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                                 <TextBlock x:Name="CovKeyText" TextWrapping="Wrap" Margin="0,6,0,0" Style="{StaticResource Caption}"/>
                                 <Button x:Name="CovKeyHelpButton" Content="What does this mean?" Padding="10,4" Margin="0,8,0,0" HorizontalAlignment="Left"
-                                        Click="HelpLink_Click" Tag="coverage-maps.html#colour-key" ToolTip="How to read the colour key and the map"/>
+                                        Click="HelpLink_Click" Tag="coverage-maps.html#color-key" ToolTip="How to read the color key and the map"/>
                                 <Button x:Name="CovFolderButton" Content="Open the job folder" Padding="10,4" Margin="0,8,0,0" HorizontalAlignment="Left"
                                         Click="CovFolder_Click"/>
                             </StackPanel>
@@ -382,7 +382,7 @@
                                 <TextBlock Text="Units in the report" Style="{StaticResource Caption}" Margin="0,8,0,3"/>
                                 <ComboBox x:Name="UnitsBox" SelectedIndex="0" SelectionChanged="UnitsBox_SelectionChanged" AutomationProperties.Name="Units">
                                     <ComboBoxItem Content="Miles and feet"/>
-                                    <ComboBoxItem Content="Kilometres and metres (-metric)"/>
+                                    <ComboBoxItem Content="Kilometers and meters (-metric)"/>
                                 </ComboBox>
                                 <CheckBox x:Name="HdBox" Content="High-definition terrain (1 arc-second, splat-hd)" Margin="0,10,0,0"/>
                                 <TextBlock Text="Obstacles (SPLAT! user terrain, .udt)" Style="{StaticResource Caption}" Margin="0,10,0,3"/>
@@ -402,7 +402,7 @@
 
                         <TextBlock x:Name="PathError" Foreground="#D13438" TextWrapping="Wrap" Margin="0,12,0,0"/>
                         <StackPanel Orientation="Horizontal" Margin="0,12,0,8">
-                            <Button x:Name="AnalyseButton" Content="Analyse" Padding="18,6" Click="Analyse_Click"
+                            <Button x:Name="AnalyseButton" Content="Analyze" Padding="18,6" Click="Analyse_Click"
                                     Style="{DynamicResource AccentButtonStyle}"/>
                             <Button x:Name="PathCancelButton" Content="Cancel" Padding="14,6" Margin="8,0,0,0" Click="PathCancel_Click" Visibility="Collapsed"
                                     ToolTip="Stop this analysis"/>

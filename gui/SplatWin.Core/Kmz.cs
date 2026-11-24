@@ -10,7 +10,7 @@ namespace SplatWin.Core;
 /// web. SPLAT!'s placemark icon is 'root://icons/palette-5.png', which exists only inside Google
 /// Earth Pro; the web version rejects the whole file over it, so those Style blocks are dropped
 /// (the standard pin is used). Same rules as scripts\ppm2png.ps1. Other styles (the path lines'
-/// colours) are kept.
+/// colors) are kept.
 /// </summary>
 public sealed record KmlPin(string Name, double Lat, double Lon, string Description);
 
@@ -34,7 +34,7 @@ public static class Kmz
         string doc = Regex.Replace(kml, @"\s*<Style>(?:(?!</Style>).)*?root://(?:(?!</Style>).)*?</Style>", "", RegexOptions.Singleline);
         doc = Regex.Replace(doc, @"(<GroundOverlay>.*?<href>)[^<]*(</href>)", m => m.Groups[1].Value + imageName + m.Groups[2].Value,
                             RegexOptions.Singleline);
-        // SPLAT!'s colour key (signal maps): point it at the PNG inside the KMZ, or drop it if there is none.
+        // SPLAT!'s color key (signal maps): point it at the PNG inside the KMZ, or drop it if there is none.
         doc = keyName != null
             ? Regex.Replace(doc, @"(<ScreenOverlay>.*?<href>)[^<]*(</href>)", m => m.Groups[1].Value + keyName + m.Groups[2].Value, RegexOptions.Singleline)
             : Regex.Replace(doc, @"\s*<ScreenOverlay>.*?</ScreenOverlay>", "", RegexOptions.Singleline);

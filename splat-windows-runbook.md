@@ -276,7 +276,7 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G7 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 passed 2026-11-23; G5 passed 2026-11-23; G6 DONE 2026-11-24, awaiting owner's review; G7 next)
+### Stages G0–G7 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 passed 2026-11-23; G5 passed 2026-11-23; G6 passed 2026-11-24; G7 next)
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
@@ -428,6 +428,16 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-24 — Owner's G6 review passed, with one change: American spelling.** Owner: "change
+  colour to color and any other british english spellings to american english. Everything else
+  with help looks good. setup wizard seems helpful - I'll have others test it when we get the app
+  packaged." Done: 232 words in the app's text, messages, help and setup (color, analyze, meter,
+  kilometer, license, center, gray, canceled, labeled, normalized, recognize), and in the tests
+  that check that text. Whole words only, so code names (and job.json's stored ColourKey field)
+  are unchanged; SPLAT!'s own output is untouched. Help pictures retaken. Unit tests 319; window
+  tests help 30/30, coverage 52/52, path 41/41, stations 31/31, QRZ 24/24; gates EQUIVALENT;
+  preflight OK. **Standing convention: American English in everything the user sees.**
+  The owner will have club members test the setup once the app is packaged (G7).
 - **2026-11-24 — Stage G6 (help and getting started) complete. HALT for owner review.**
   - Started on the owner's words "Start G6". **Decision G9 → short first-run setup** (owner: "Short
     wizard (Recommended)").

@@ -10,9 +10,9 @@ namespace SplatWin.Core;
 public enum CoverageKind { FieldStrength, PowerDbm, PathLoss, LineOfSight }
 
 /// <summary>
-/// Options for a coverage map. Radius and receiver height are in miles and feet, or kilometres
-/// and metres when Metric is on (as SPLAT! reads -R, -c and -L). OutputName names the map files;
-/// CitiesFile (optional) labels towns, as -s does. NoShading leaves out SPLAT!'s grey terrain shading
+/// Options for a coverage map. Radius and receiver height are in miles and feet, or kilometers
+/// and meters when Metric is on (as SPLAT! reads -R, -c and -L). OutputName names the map files;
+/// CitiesFile (optional) labels towns, as -s does. NoShading leaves out SPLAT!'s gray terrain shading
 /// (-ngs: those areas are white, which the app shows as clear). UdtFile is a user-defined terrain
 /// file (-udt) copied into the job.
 /// </summary>
@@ -67,7 +67,7 @@ public sealed record CoverageResult(string Folder, string KmlPath, string? Colou
 /// <summary>
 /// A coverage map job: writes the transmitter's .qth/.lrp into a new job folder, runs the unchanged
 /// SPLAT! engine there once with -kml, and records the job in job.json. The map files are SPLAT!'s
-/// own (&lt;name&gt;.ppm, &lt;name&gt;.kml, and &lt;name&gt;-ck.ppm, its colour key, for signal maps).
+/// own (&lt;name&gt;.ppm, &lt;name&gt;.kml, and &lt;name&gt;-ck.ppm, its color key, for signal maps).
 /// </summary>
 public sealed class CoverageJob
 {
@@ -107,7 +107,7 @@ public sealed class CoverageJob
         if (!(o.Radius > 0)) return $"Enter the radius in {unit} (more than 0).";
         if (miles > max)
             return $"SPLAT!{(o.Hd ? " HD" : "")} can map at most about {(o.Metric ? Math.Floor(max * 1.609344) : max)} {unit} around {tx.Name} (it holds {(o.Hd ? Terrain.HdMaxTiles : Terrain.StandardMaxTiles)} terrain tiles); beyond that it cuts the map short. Use a smaller radius{(o.Hd ? " or standard terrain" : "")}.";
-        if (!(o.RxHeight > 0 && o.RxHeight <= 3000)) return $"Enter the receiver antenna height above ground in {(o.Metric ? "metres" : "feet")}.";
+        if (!(o.RxHeight > 0 && o.RxHeight <= 3000)) return $"Enter the receiver antenna height above ground in {(o.Metric ? "meters" : "feet")}.";
         if (o.Kind != CoverageKind.LineOfSight)
         {
             var r = radio.Clone();
@@ -208,7 +208,7 @@ public sealed class CoverageJob
             {
                 try { p.Kill(entireProcessTree: true); } catch { }
                 p.WaitForExit();
-                Record(false, null, null, "cancelled");
+                Record(false, null, null, "canceled");
                 throw;
             }
             p.WaitForExit();

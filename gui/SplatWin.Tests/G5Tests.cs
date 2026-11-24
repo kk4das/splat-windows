@@ -7,7 +7,7 @@ using SplatWin.Core;
 
 namespace SplatWin.Tests;
 
-/// <summary>Stage G5: antenna patterns, user terrain, no terrain shading, path KML/KMZ, station pins, colour readout.</summary>
+/// <summary>Stage G5: antenna patterns, user terrain, no terrain shading, path KML/KMZ, station pins, color readout.</summary>
 static class G5
 {
     public static string Golden(string rel) => Path.Combine(Repo.Root, "tests", "golden", "linux-g5", rel);
@@ -122,11 +122,11 @@ public class UserTerrainTests
     [InlineData("38.9, 77.2, 30m", 30.0)]
     [InlineData("38.9, 77.2, 30 meters", 30.0)]
     [InlineData("38 54 0, 77 12 0, 100", 30.48)]
-    public void Heights_and_bearings(string line, double metres)
+    public void Heights_and_bearings(string line, double meters)
     {
         var (pts, why) = UserTerrain.Parse(line);
         Assert.Null(why);
-        Assert.Equal(metres, pts[0].HeightMetres, 6);
+        Assert.Equal(meters, pts[0].HeightMetres, 6);
         Assert.Equal(38.9, pts[0].Lat, 6);
         Assert.Equal(-77.2, pts[0].Lon, 6);
     }
@@ -175,7 +175,7 @@ public class G5PathJobTests
             Assert.DoesNotContain("root://", doc);
             Assert.DoesNotContain("\uFFFD", doc);
             Assert.Contains("38° 55' 27\" North", doc);                       // SPLAT!'s Latin-1 degree sign, now UTF-8
-            Assert.Equal(2, Regex.Matches(doc, "<LineStyle>").Count);           // the path lines keep their colours
+            Assert.Equal(2, Regex.Matches(doc, "<LineStyle>").Count);           // the path lines keep their colors
             Assert.Contains("<name>Line-of-Sight Path</name>", doc);
             Assert.Equal(2, Regex.Matches(doc, "<Point>").Count);               // both stations
         }
@@ -259,7 +259,7 @@ public class G5CoverageTests
             Assert.Equal(File.ReadAllBytes(G5.GoldenBig("M09/pat.ppm")), File.ReadAllBytes(Path.Combine(r.Folder, "pat.ppm")));
             Assert.Equal(File.ReadAllBytes(G5.GoldenBig("M09/pat-ck.ppm")), File.ReadAllBytes(Path.Combine(r.Folder, "pat-ck.ppm")));
             Assert.Equal(G5.Lf(G5.Golden("M09/pat.kml")), G5.Lf(r.KmlPath));
-            // The colour file names its own file in its header; the app's site file is k4hta_pattern, the test's k4hta_pat.
+            // The color file names its own file in its header; the app's site file is k4hta_pattern, the test's k4hta_pat.
             Assert.Equal(G5.Lf(G5.Golden("M09/k4hta_pat.scf")).Replace("k4hta_pat.scf", "X"), G5.Lf(Path.Combine(r.Folder, "k4hta_pattern.scf")).Replace("k4hta_pattern.scf", "X"));
             var rec = JobRecord.Read(r.Folder)!;
             Assert.Equal("k4hta_pat.az and k4hta_pat.el", rec.Pattern);
@@ -323,15 +323,15 @@ public class ColourKeyTests
         Assert.Equal("128 dBµV/m or more", k.Describe(255, 0, 0, false));
         Assert.Equal("38 to 48 dBµV/m", k.Describe(80, 80, 255, false));
         Assert.Equal("8 to 18 dBµV/m", k.Describe(140, 0, 128, false));
-        Assert.StartsWith("no colour: below 8 dBµV/m", k.Describe(255, 255, 255, false));   // -ngs
-        Assert.StartsWith("no colour: below 8 dBµV/m", k.Describe(97, 97, 97, false));      // terrain shading
+        Assert.StartsWith("no color: below 8 dBµV/m", k.Describe(255, 255, 255, false));   // -ngs
+        Assert.StartsWith("no color: below 8 dBµV/m", k.Describe(97, 97, 97, false));      // terrain shading
         Assert.Null(k.Describe(1, 2, 3, false));
     }
 
     [Fact]
     public void Every_colour_in_a_real_SPLAT_map_is_understood()
     {
-        // M09 (signal, no shading): each pixel is a band colour or white, apart from SPLAT!'s own markings.
+        // M09 (signal, no shading): each pixel is a band color or white, apart from SPLAT!'s own markings.
         byte[] b = File.ReadAllBytes(G5.GoldenBig("M09/pat.ppm"));
         int start = 0;
         for (int nl = 0; nl < 3; start++) if (b[start] == '\n') nl++;
@@ -352,7 +352,7 @@ public class ColourKeyTests
     [InlineData(true)]
     public void Smooth_colours_give_an_estimate_within_two_units(bool loss)
     {
-        // Colours made with SPLAT!'s own interpolate() (ceil), for every level between the first and last band.
+        // Colors made with SPLAT!'s own interpolate() (ceil), for every level between the first and last band.
         var k = loss ? ColourKey.Parse("80: 255, 0, 0\n90: 255, 128, 0\n100: 255, 255, 0\n110: 0, 255, 0\n120: 0, 0, 255\n", ColourKey.Kinds.Loss) : Scf();
         static int Interp(int y0, int y1, int x0, int x1, int n) =>
             n <= x0 ? y0 : n >= x1 ? y1 : y0 == y1 || x0 == x1 ? y0 : y0 + (int)Math.Ceiling(((double)(y0 - y1) / (x0 - x1)) * (n - x0));
@@ -367,11 +367,11 @@ public class ColourKeyTests
                 string? d = k.Describe(r, g, bl, true);
                 Assert.NotNull(d);
                 var m = Regex.Match(d!, @"^about (-?\d+)");
-                if (!m.Success) continue;   // an exact band colour
+                if (!m.Success) continue;   // an exact band color
                 Assert.InRange(int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture), n - 2, n + 2);
                 tested++;
             }
         }
-        Assert.True(tested > (loss ? 30 : 100), $"only {tested} smooth colours tested");
+        Assert.True(tested > (loss ? 30 : 100), $"only {tested} smooth colors tested");
     }
 }

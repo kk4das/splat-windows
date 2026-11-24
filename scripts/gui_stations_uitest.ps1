@@ -122,8 +122,8 @@ try {
     Find-Place 'Grid' 'FM18jy'
     Check ((Text 'EditorError') -like '*letters from A to X*') 'bad grid refused' (Text 'EditorError')
     Find-Place 'Grid' 'fm18jw'
-    Check ((Text 'NoteText') -like 'FM18jw is a square about 2.9 × 4.5 mi. The pin is at its centre. That''s too coarse*') 'grid note' (Text 'NoteText')
-    Check ((Text 'PinText') -like '38.937500, -77.208333*Grid FM18jw*') 'pin at the square centre' ((Text 'PinText') -replace "`n", ' | ')
+    Check ((Text 'NoteText') -like 'FM18jw is a square about 2.9 × 4.5 mi. The pin is at its center. That''s too coarse*') 'grid note' (Text 'NoteText')
+    Check ((Text 'PinText') -like '38.937500, -77.208333*Grid FM18jw*') 'pin at the square center' ((Text 'PinText') -replace "`n", ' | ')
     SetText (ById $script:win 'NameBox') 'Post 180'
     SetText (ById $script:win 'HeightBox') '6'
     Click (ById $script:win 'SaveButton')
@@ -149,7 +149,7 @@ try {
     $null = Wait-For { (Text 'Status') -like 'Saved W1AW*' } 15000
     Check ((Text 'Status') -like 'Saved W1AW (FN31pr*') 'W1AW looked up and saved, name filled in' (Text 'Status')
 
-    # 2b. Street address (live US Census + OpenStreetMap, a public address only). Cancelled, not saved.
+    # 2b. Street address (live US Census + OpenStreetMap, a public address only). Canceled, not saved.
     Click (ById $script:win 'AddButton')
     Find-Place 'Address' 'P.O. Box 123, Vienna, VA 22183'
     Check ((Text 'EditorError') -like '*PO box is at the post office*') 'PO box refused before sending' (Text 'EditorError')
@@ -162,10 +162,10 @@ try {
     Check ((Text 'NoteText') -like '*the building or house itself*drag the pin to the antenna*') 'address note says how exact it is' (Text 'NoteText')
     Click (ById $script:win 'CancelButton')
 
-    # 3. Coordinates in deg-min-sec, metres, and a duplicate name.
+    # 3. Coordinates in deg-min-sec, meters, and a duplicate name.
     Add-Station 'Coordinates' '38°55''27.18"N 77°12''20.85"W' 'K4HTA' '73.15' 'm'
     $null = Wait-For { (Text 'Status') -like 'Saved K4HTA*' }
-    Check ((Text 'Status') -like 'Saved K4HTA (FM18jw51*antenna 73.15 m*') 'K4HTA from deg-min-sec, in metres' (Text 'Status')
+    Check ((Text 'Status') -like 'Saved K4HTA (FM18jw51*antenna 73.15 m*') 'K4HTA from deg-min-sec, in meters' (Text 'Status')
     Add-Station 'Grid' 'FM18jw' 'k4hta' '10'
     Check ((Text 'EditorError') -like '*already a station called k4hta*') 'duplicate name refused' (Text 'EditorError')
     Click (ById $script:win 'CancelButton')
@@ -203,7 +203,7 @@ try {
     $p = Library | Where-Object Name -eq 'Post 180'
     Check ($p.AntennaHeight -eq 25 -and $p.Source -eq 'Grid FM18jw' -and (Library).Count -eq 5) 'edit saved in place' "$($p.AntennaHeight) ft, $($p.Source)"
 
-    # 7. Export K4HTA as .qth: west-positive longitude, height in metres.
+    # 7. Export K4HTA as .qth: west-positive longitude, height in meters.
     SelectItem (ByName (ById $script:win 'StationList') 'K4HTA')
     Click (ById $script:win 'ExportButton')
     $dlg = Dialog 'Export K4HTA as a SPLAT! site file'

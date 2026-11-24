@@ -113,7 +113,7 @@ try {
     Check ($e -like "G1SRDD isn't on QRZ.com*") 'unknown call explained' $e
     Find-Call 'kz1zip'
     $null = Wait-For { (Text 'NoteText') -like '*KZ1ZIP*' }
-    Check ((Text 'NoteText') -like '*WARNING: this is only the centre of KZ1ZIP''s zip code*') 'zip-code position warned loudly' (Text 'NoteText')
+    Check ((Text 'NoteText') -like '*WARNING: this is only the center of KZ1ZIP''s zip code*') 'zip-code position warned loudly' (Text 'NoteText')
     SetText (ById $script:win 'NameBox') ''
     Find-Call 'aa7bq'
     $null = Wait-For { (Text 'NoteText') -like 'AA7BQ*' }

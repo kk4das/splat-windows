@@ -8,7 +8,7 @@
   project's cached downloads), converts it with the engine's srtm2sdf, and runs SPLAT! with -kml.
   The outputs are compared with data\golden-linux by scripts\compare_outputs.py.
     M01  line of sight, 30 mi, RX 6 ft, town names (standard terrain)
-    M07  signal strength, 30 mi, RX 6 ft (HD terrain; the 7200x7200 map and its colour key)
+    M07  signal strength, 30 mi, RX 6 ft (HD terrain; the 7200x7200 map and its color key)
     Stage G5 (golden run data\golden-linux-g5, cases tests\cases\cases-g5.json):
     M09  signal strength, 30 mi: antenna pattern (kept with the station), obstacles (-udt), no terrain shading (-ngs)
     M10  line of sight, 20 mi, no terrain shading (-ngs)
@@ -47,7 +47,7 @@ $cases = @(
     @{ Id = 'M09'; Kind = 'FieldStrength'; Hd = $false; Name = 'pat'; Cities = $null; Radius = 30; G5 = $true; Tx = $k4htaPat; Radio = $radioPat; NoShading = $true; Udt = (Join-Path $inputs 'obstacle.udt') },
     @{ Id = 'M10'; Kind = 'LineOfSight'; Hd = $false; Name = 'los_ngs'; Cities = $null; Radius = 20; G5 = $true; NoShading = $true }
 )
-# SPLAT!'s colour file names itself in its header: k4hta_pat.scf in the golden run (the test's file name), k4hta_pattern.scf in the
+# SPLAT!'s color file names itself in its header: k4hta_pat.scf in the golden run (the test's file name), k4hta_pattern.scf in the
 # app's (the station's name). Checked separately: identical apart from that name.
 $scfRenamed = @{ 'M09' = @('k4hta_pat.scf', 'k4hta_pattern.scf') }
 $notCompared = @{ 'stdout.txt' = 'console output: the app passes an absolute terrain path (-d)'; 'cmd.log' = 'the -log command record: the app keeps its own (splat-log.txt, run-again.cmd)' }

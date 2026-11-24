@@ -157,13 +157,13 @@ public class HelpTests
         var index = lib.Index();
         Assert.True(index.Count > 150, $"{index.Count} entries");
         Assert.All(index, e => Assert.True(lib.Resolves(e.Target), $"{e.Term} -> {e.Target}"));
-        Assert.Contains(index, e => e.Term == "Reading the colour key" && e.Target == "coverage-maps.html#colour-key");
+        Assert.Contains(index, e => e.Term == "Reading the color key" && e.Target == "coverage-maps.html#color-key");
         Assert.Contains(index, e => e.Term == "white circles" && e.Target == "path-analysis.html");
         Assert.Equal(index.OrderBy(e => e.Term, StringComparer.OrdinalIgnoreCase).ThenBy(e => e.Target, StringComparer.Ordinal).Select(e => e.Term), index.Select(e => e.Term));
     }
 
     [Theory]
-    [InlineData("colour key", "coverage-maps.html#colour-key")]
+    [InlineData("color key", "coverage-maps.html#color-key")]
     [InlineData("dbuv", "coverage-maps.html")]
     [InlineData("white circles", "path-analysis.html")]
     [InlineData("QRZ password", "settings.html")]
@@ -180,7 +180,7 @@ public class HelpTests
     [Fact]
     public void Search_needs_every_word()
     {
-        Assert.Empty(Lib().Search("colour zzqqxx"));
+        Assert.Empty(Lib().Search("color zzqqxx"));
         Assert.Empty(Lib().Search("   "));
     }
 

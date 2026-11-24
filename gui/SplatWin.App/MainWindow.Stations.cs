@@ -122,7 +122,7 @@ public partial class MainWindow
         {
             Method.CallSign => App.QrzSaved() is { } q
                 ? $"A call sign from anywhere, such as KK4DAS. Looked up on QRZ.com (signed in as {q.User})."
-                : "A US call sign, such as KK4DAS. Looked up on callook.info (free FCC licence data). Sign in to QRZ.com (top right) for calls worldwide.",
+                : "A US call sign, such as KK4DAS. Looked up on callook.info (free FCC license data). Sign in to QRZ.com (top right) for calls worldwide.",
             Method.Address => "The street address of the antenna site, such as 225 Main St, Newington, CT. Not a PO box. Searched on the US Census geocoder and OpenStreetMap (both free).",
             Method.Grid => "A Maidenhead grid square of 4 to 10 characters, such as FM18jw. The square is drawn on the map.",
             Method.Coordinates => "Decimal degrees as Google Maps shows them (38.9242, -77.2058), or degrees-minutes-seconds (38°55'27\"N 77°12'21\"W).",
@@ -166,7 +166,7 @@ public partial class MainWindow
                     finally { FindButton.IsEnabled = true; }
                     SetPin(r.Lat, r.Lon, null, $"callook.info: {r.Callsign} mailing address", zoom: true);
                     if (NameBox.Text.Trim().Length == 0) NameBox.Text = r.Callsign;
-                    ShowNote($"{r.Callsign}, {r.Name}. callook.info puts it at the licence's mailing address" +
+                    ShowNote($"{r.Callsign}, {r.Name}. callook.info puts it at the license's mailing address" +
                              (r.Address.Length > 0 ? $" ({r.Address})" : "") +
                              ". That is often not where the antenna is; for a club or repeater it is usually the trustee's address. Drag the pin to the antenna.");
                     Status.Text = $"Found {r.Callsign} on callook.info.";
@@ -195,7 +195,7 @@ public partial class MainWindow
                     SetPin(g.CenterLat, g.CenterLon, g, $"Grid {g.Locator}", zoom: true);
                     string advice = g.Locator.Length <= 6 ? " That's too coarse for a VHF path: drag the pin to the antenna."
                                   : g.Locator.Length == 8 ? " Check that the pin is on the antenna." : "";
-                    ShowNote($"{g.Locator} is a square {g.SizeText()}. The pin is at its centre.{advice}");
+                    ShowNote($"{g.Locator} is a square {g.SizeText()}. The pin is at its center.{advice}");
                     Status.Text = $"Grid square {g.Locator}.";
                     break;
                 }

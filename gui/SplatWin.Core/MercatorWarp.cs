@@ -7,7 +7,7 @@ namespace SplatWin.Core;
 /// 2-degree map about half a mile out at 39 N, so the rows are re-sampled first.
 ///
 /// Columns need no change: longitude is linear in both projections. Rows are re-sampled by
-/// nearest neighbour, so every output pixel is an exact SPLAT! colour (the colour key still
+/// nearest neighbor, so every output pixel is an exact SPLAT! color (the color key still
 /// reads correctly). Google Earth uses the latitude/longitude grid itself, so KMZ files keep the
 /// original image.
 /// </summary>
@@ -25,7 +25,7 @@ public static class MercatorWarp
     public static int SourceRow(int outRow, int outHeight, int srcHeight, double north, double south)
     {
         double yN = MercatorY(north), yS = MercatorY(south);
-        double y = yN - (outRow + 0.5) / outHeight * (yN - yS);       // centre of the output row
+        double y = yN - (outRow + 0.5) / outHeight * (yN - yS);       // center of the output row
         double lat = LatFromMercatorY(y);
         int r = (int)Math.Floor((north - lat) / (north - south) * srcHeight);
         return Math.Clamp(r, 0, srcHeight - 1);

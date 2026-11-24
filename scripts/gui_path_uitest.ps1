@@ -62,8 +62,8 @@ function Choose([string]$combo, [string]$item) {
 function Selected([string]$combo) { (ById $combo).GetCurrentPattern([System.Windows.Automation.SelectionPattern]::Pattern).Current.GetSelection() | ForEach-Object { $_.Current.Name } }
 function Tab([string]$name) { (ByName $name (ById 'ResultTabs')).GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select(); Start-Sleep -Milliseconds 300 }
 function ReportText { Tab 'Report'; Value 'ReportBox' }
-function Analyse { Click (ById 'AnalyseButton') }
-function Wait-Analysed { Wait-For { (Text 'Status') -like 'Path analysed*' -or (Text 'PathError') } 60000 | Out-Null }
+function Analyze { Click (ById 'AnalyseButton') }
+function Wait-Analyzed { Wait-For { (Text 'Status') -like 'Path analyzed*' -or (Text 'PathError') } 60000 | Out-Null }
 function Norm([string]$s) { $s -replace "`r`n", "`n" }
 function Golden([string]$rel) { Norm ([IO.File]::ReadAllText((Join-Path $golden $rel), [Text.Encoding]::GetEncoding(28591))) }
 function JobCount { @(Get-ChildItem $jobs -Directory -ErrorAction SilentlyContinue).Count }
@@ -98,20 +98,20 @@ try {
     Check ((Text 'TerrainText') -like '*\terrain (4 .sdf files). Missing tiles are downloaded automatically.') 'terrain folder shown with its tile count' (Text 'TerrainText')
 
     # 2. Refusals before anything runs.
-    Analyse
+    Analyze
     Check ((Text 'PathError') -eq 'Enter the frequency in MHz as a number.') 'blank frequency refused' (Text 'PathError')
     SetText 'FreqBox' '146.685'; SetText 'ErpBox' '93'
     Choose 'RxBox' 'Far North'
-    Analyse
+    Analyze
     $e = Wait-For { $t = Text 'PathError'; if ($t) { $t } } 30000
     Check ($e -like "Terrain couldn't be fetched, so nothing was run: Couldn't download http://localhost:9/dem3/K18.zip*") 'missing terrain fetched; a failed download stops the job' $e
     Check ((JobCount) -eq 0) 'no job folder made for a refused job' "$(JobCount)"
     Choose 'RxBox' 'KK4DAS'
 
     # 3. P01: K4HTA to KK4DAS, ITWOM. The app's numbers must be the Linux golden report's.
-    Analyse
-    Wait-Analysed
-    Check ((Text 'Status') -like 'Path analysed: K4HTA to KK4DAS*') 'path analysed' (Text 'Status')
+    Analyze
+    Wait-Analyzed
+    Check ((Text 'Status') -like 'Path analyzed: K4HTA to KK4DAS*') 'path analyzed' (Text 'Status')
     $rep = Norm (ReportText)
     Check ($rep -eq (Golden 'P01\K4HTA-to-KK4DAS.txt')) 'report tab = Linux golden P01, every character'
     $n = Text 'SumNumbers'
@@ -157,8 +157,8 @@ try {
     (ById 'MoreBox').GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern).Expand()
     Choose 'ModelBox' 'Longley-Rice ITM (-olditm)'
     SetText 'ErpBox' '50'
-    Analyse
-    Wait-Analysed
+    Analyze
+    Wait-Analyzed
     Check ((Norm (ReportText)) -eq (Golden 'P02\K4HTA-to-KK4DAS.txt')) 'Longley-Rice, 50 W: report = Linux golden P02'
     Check ((Text 'SumWarning') -like 'Longley-Rice error number 3. Warning: A combination of parameters is out of range*') 'model warning shown' (Text 'SumWarning')
 
@@ -166,8 +166,8 @@ try {
     Choose 'ModelBox' 'ITWOM 3.0 (SPLAT!''s default)'
     SetText 'ErpBox' '93'; SetText 'FzBox' '80'; SetText 'ClutterBox' '30'
     Choose 'RxBox' 'Legion_Hall'
-    Analyse
-    Wait-Analysed
+    Analyze
+    Wait-Analyzed
     Check ((Norm (ReportText)) -eq (Golden 'P04\K4HTA-to-Legion_Hall.txt')) 'Fresnel 80%, clutter 30 ft: report = Linux golden P04'
     Check ((Text 'SumClearance') -like 'Terrain has been raised by 30.00 feet*80% of the first Fresnel zone.') 'clutter and 80% shown' (Text 'SumClearance')
     Check ((ById 'Web').Current.HelpText -eq 'Map shows the path with 6 obstruction mark(s).') 'map updated: 6 obstructions' (ById 'Web').Current.HelpText
@@ -175,10 +175,10 @@ try {
     # 8. Metric (P05).
     SetText 'FzBox' '60'; SetText 'ClutterBox' '0'
     Choose 'RxBox' 'KK4DAS'
-    Choose 'UnitsBox' 'Kilometres and metres (-metric)'
+    Choose 'UnitsBox' 'Kilometers and meters (-metric)'
     Check ((Text 'ClutterLabel') -eq 'Ground clutter (m)') 'clutter label follows the units'
-    Analyse
-    Wait-Analysed
+    Analyze
+    Wait-Analyzed
     Check ((Norm (ReportText)) -eq (Golden 'P05\K4HTA-to-KK4DAS.txt')) 'metric: report = Linux golden P05'
     Choose 'UnitsBox' 'Miles and feet'
 

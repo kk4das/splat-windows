@@ -62,9 +62,9 @@ public class QrzTests
     [InlineData("user", false, "set this position on QRZ.com themselves")]
     [InlineData("geocode", false, "mailing address")]
     [InlineData("grid", false, "only has a grid square")]
-    [InlineData("zip", true, "WARNING: this is only the centre of AA7BQ's zip code")]
-    [InlineData("state", true, "WARNING: this is only the centre of AA7BQ's state")]
-    [InlineData("dxcc", true, "WARNING: this is only the centre of AA7BQ's country")]
+    [InlineData("zip", true, "WARNING: this is only the center of AA7BQ's zip code")]
+    [InlineData("state", true, "WARNING: this is only the center of AA7BQ's state")]
+    [InlineData("dxcc", true, "WARNING: this is only the center of AA7BQ's country")]
     [InlineData("", true, "doesn't say where")]
     [InlineData("martian", false, "doesn't say where")]
     public void Every_geoloc_gets_its_note(string geoloc, bool rough, string note)

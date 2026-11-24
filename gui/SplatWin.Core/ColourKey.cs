@@ -4,9 +4,9 @@ using System.Text;
 namespace SplatWin.Core;
 
 /// <summary>
-/// Reads back what a map pixel means from SPLAT!'s colour file (.scf signal strength, .dcf received
+/// Reads back what a map pixel means from SPLAT!'s color file (.scf signal strength, .dcf received
 /// power, .lcf path loss), using the same band rules SPLAT! used to paint it (WritePPMSS, WritePPMDBM,
-/// WritePPMLR). It works from the colour only, so the answer is a band (or, with smooth colours, an
+/// WritePPMLR). It works from the color only, so the answer is a band (or, with smooth colors, an
 /// estimate), never SPLAT!'s exact number: the app labels it as approximate.
 /// </summary>
 public sealed class ColourKey
@@ -19,7 +19,7 @@ public sealed class ColourKey
 
     ColourKey(Kinds kind, List<(int, byte, byte, byte)> bands) { Kind = kind; Bands = bands; }
 
-    /// <summary>The colour file's kind from its extension (.scf, .dcf, .lcf), or null.</summary>
+    /// <summary>The color file's kind from its extension (.scf, .dcf, .lcf), or null.</summary>
     public static Kinds? KindOf(string path) => Path.GetExtension(path).ToLowerInvariant() switch
     {
         ".scf" => Kinds.Signal,
@@ -45,12 +45,12 @@ public sealed class ColourKey
             bands.Add((level, C(rgb[0]), C(rgb[1]), C(rgb[2])));
             if (bands.Count == 32) break;   // SPLAT! reads at most 32 regions
         }
-        if (bands.Count == 0) throw new InvalidDataException("the colour file has no colour levels");
+        if (bands.Count == 0) throw new InvalidDataException("the color file has no color levels");
         return new ColourKey(kind, bands);
     }
 
     public static ColourKey Load(string path) =>
-        Parse(File.ReadAllText(path, Encoding.Latin1), KindOf(path) ?? throw new InvalidDataException($"{Path.GetFileName(path)} isn't a SPLAT! colour file"));
+        Parse(File.ReadAllText(path, Encoding.Latin1), KindOf(path) ?? throw new InvalidDataException($"{Path.GetFileName(path)} isn't a SPLAT! color file"));
 
     string Band(int z)
     {
@@ -62,24 +62,24 @@ public sealed class ColourKey
     }
 
     string Below() => Kind == Kinds.Loss
-        ? $"no colour: more than {Bands[^1].Level} dB of path loss"
-        : $"no colour: below {Bands[^1].Level} {Unit}, the lowest level in the key";
+        ? $"no color: more than {Bands[^1].Level} dB of path loss"
+        : $"no color: below {Bands[^1].Level} {Unit}, the lowest level in the key";
 
-    /// <summary>What a pixel of this colour means on the map. Null when the colour isn't one SPLAT! paints for a value.</summary>
+    /// <summary>What a pixel of this color means on the map. Null when the color isn't one SPLAT! paints for a value.</summary>
     public string? Describe(byte r, byte g, byte b, bool smooth)
     {
-        if (r == g && g == b) return Below();                      // terrain shading (grey) or no shading (white)
+        if (r == g && g == b) return Below();                      // terrain shading (gray) or no shading (white)
         if (r == 0 && g == 0 && b == 170) return Below() + " (sea level)";
         for (int z = 0; z < Bands.Count; z++)
             if (Bands[z].R == r && Bands[z].G == g && Bands[z].B == b) return Band(z);
         if (smooth)
         {
-            // SPLAT! blends linearly between a band's colour (at its level) and the next band up's.
+            // SPLAT! blends linearly between a band's color (at its level) and the next band up's.
             for (int z = 1; z < Bands.Count; z++)
             {
                 var lo = Bands[z]; var hi = Bands[z - 1];
                 var ch = new (int C, int C0, int C1)[] { (r, lo.R, hi.R), (g, lo.G, hi.G), (b, lo.B, hi.B) };
-                // The estimate comes from the channel that changes most between the two colours (the finest steps);
+                // The estimate comes from the channel that changes most between the two colors (the finest steps);
                 // every channel must then sit on the blend at that point, within SPLAT!'s rounding (it rounds up).
                 var best = ch.MaxBy(x => Math.Abs(x.C1 - x.C0));
                 if (best.C1 == best.C0) continue;

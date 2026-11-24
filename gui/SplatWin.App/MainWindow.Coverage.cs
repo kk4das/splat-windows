@@ -59,7 +59,7 @@ public partial class MainWindow
         CovErpBox.Text = r is { ErpWatts: > 0 } ? N(r.ErpWatts) : "";
         CovRadioHint.Text = r != null
             ? $"{tx.Name}'s radio settings (saved with it). Changes are saved when you click Run."
-            : $"No radio settings for {tx.Name} yet: enter the frequency and ERP (the rest are SPLAT!'s documented defaults; change them in Analyse a path).";
+            : $"No radio settings for {tx.Name} yet: enter the frequency and ERP (the rest are SPLAT!'s documented defaults; change them in Analyze a path).";
         CovRadioHint.Text += tx.Pattern != null ? $" Antenna pattern: {tx.Pattern.Describe()}." : "";
     }
 
@@ -68,8 +68,8 @@ public partial class MainWindow
         if (CovKindHint == null) return;
         CovKindHint.Text = (CoverageKind)Math.Max(0, CovKindBox.SelectedIndex) switch
         {
-            CoverageKind.FieldStrength => "The signal a receiver would get, in dBµV/m, from the transmitter's ERP. SPLAT!'s colour key comes with the map.",
-            CoverageKind.PowerDbm => "The power a receiver's antenna would deliver, in dBm (into a dipole). SPLAT!'s colour key comes with the map.",
+            CoverageKind.FieldStrength => "The signal a receiver would get, in dBµV/m, from the transmitter's ERP. SPLAT!'s color key comes with the map.",
+            CoverageKind.PowerDbm => "The power a receiver's antenna would deliver, in dBm (into a dipole). SPLAT!'s color key comes with the map.",
             CoverageKind.PathLoss => "The loss between the antennas, in dB. The ERP isn't used.",
             _ => "Where a receiver antenna at this height can see the transmitter's antenna, in green. No radio settings needed.",
         };
@@ -149,7 +149,7 @@ public partial class MainWindow
         }
         catch (OperationCanceledException)
         {
-            Status.Text = job != null ? "Cancelled. The unfinished job folder is " + job.Folder : "Cancelled.";
+            Status.Text = job != null ? "Canceled. The unfinished job folder is " + job.Folder : "Canceled.";
         }
         catch (Exception ex) when (ex is InvalidOperationException or IOException or UnauthorizedAccessException or InvalidDataException)
         {
@@ -173,7 +173,7 @@ public partial class MainWindow
             var bmp = new BitmapImage();
             bmp.BeginInit(); bmp.CacheOption = BitmapCacheOption.OnLoad; bmp.UriSource = new Uri(key); bmp.EndInit();
             CovKeyImage.Source = bmp;
-            CovKeyText.Text = "SPLAT!'s colour key for this map. Click the map to read the value at a point.";
+            CovKeyText.Text = "SPLAT!'s color key for this map. Click the map to read the value at a point.";
         }
         else CovKeyText.Text = rec?.Coverage?.Kind == CoverageKind.LineOfSight
             ? $"Green: a receiver antenna at {rec.Coverage.RxHeight:0.##} {(rec.Coverage.Metric ? "m" : "ft")} has line of sight to {rec.Transmitter}."

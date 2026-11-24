@@ -18,7 +18,7 @@ public sealed record QrzSession(string Key, string Count, string SubExp, string 
 public sealed record QrzResult(string Callsign, string Name, string Address, double Lat, double Lon,
     string Grid, string GeoLoc, string Message)
 {
-    /// <summary>True when the position is only a zip code, state or country centre: no use for a path.</summary>
+    /// <summary>True when the position is only a zip code, state or country center: no use for a path.</summary>
     public bool IsRough => Qrz.IsRough(GeoLoc);
 }
 
@@ -114,11 +114,11 @@ public static class Qrz
     public static string PositionNote(QrzResult r) => r.GeoLoc switch
     {
         "user" => $"{r.Callsign} set this position on QRZ.com themselves. It's usually their home station; for a repeater or a club call it may not be the antenna. Check the pin.",
-        "geocode" => $"QRZ.com placed {r.Callsign} from the licence's mailing address ({r.Address}). That is often not the antenna; for a club or repeater it is usually the trustee's address, or a PO box. Drag the pin to the antenna.",
-        "grid" => $"QRZ.com only has a grid square for {r.Callsign} ({r.Grid}); the pin is at its centre. Drag it to the antenna.",
-        "zip" => $"WARNING: this is only the centre of {r.Callsign}'s zip code, possibly miles from the antenna. Useless for a VHF path as it is: find the antenna on the map, or use the Address tab.",
-        "state" => $"WARNING: this is only the centre of {r.Callsign}'s state. Find the antenna on the map, or use the Address tab.",
-        "dxcc" => $"WARNING: this is only the centre of {r.Callsign}'s country. Find the antenna on the map, or use the Address tab.",
+        "geocode" => $"QRZ.com placed {r.Callsign} from the license's mailing address ({r.Address}). That is often not the antenna; for a club or repeater it is usually the trustee's address, or a PO box. Drag the pin to the antenna.",
+        "grid" => $"QRZ.com only has a grid square for {r.Callsign} ({r.Grid}); the pin is at its center. Drag it to the antenna.",
+        "zip" => $"WARNING: this is only the center of {r.Callsign}'s zip code, possibly miles from the antenna. Useless for a VHF path as it is: find the antenna on the map, or use the Address tab.",
+        "state" => $"WARNING: this is only the center of {r.Callsign}'s state. Find the antenna on the map, or use the Address tab.",
+        "dxcc" => $"WARNING: this is only the center of {r.Callsign}'s country. Find the antenna on the map, or use the Address tab.",
         _ => $"WARNING: QRZ.com doesn't say where this position for {r.Callsign} came from (\"{r.GeoLoc}\"). Check the pin carefully.",
     };
 

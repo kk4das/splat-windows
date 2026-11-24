@@ -40,7 +40,7 @@
                 <TextBlock Text="Units" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
                 <ComboBox x:Name="UnitsBox" SelectedIndex="0" AutomationProperties.Name="Default units" SelectionChanged="Units_Changed">
                     <ComboBoxItem Content="Miles and feet"/>
-                    <ComboBoxItem Content="Kilometres and metres"/>
+                    <ComboBoxItem Content="Kilometers and meters"/>
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Column="2">
@@ -52,7 +52,7 @@
                 <TextBox x:Name="RxBox" AutomationProperties.Name="Default receiver antenna height"/>
             </StackPanel>
         </Grid>
-        <CheckBox x:Name="ShadingBox" Content="Grey terrain shading" Margin="0,10,0,0" AutomationProperties.Name="Default terrain shading"/>
+        <CheckBox x:Name="ShadingBox" Content="Gray terrain shading" Margin="0,10,0,0" AutomationProperties.Name="Default terrain shading"/>
 
         <TextBlock Style="{StaticResource Heading}" Text="Map"/>
         <DockPanel>

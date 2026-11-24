@@ -93,7 +93,7 @@ try {
     Choose 'TxBox' 'K4HTA'; Choose 'RxBox' 'KK4DAS'
     SetText 'FreqBox' '146.685'; SetText 'ErpBox' '93'
     Click (ById 'AnalyseButton')
-    $null = Wait-For { (ById 'Status').Current.Name -like 'Path analysed*' } 60000
+    $null = Wait-For { (ById 'Status').Current.Name -like 'Path analyzed*' } 60000
     Start-Sleep -Seconds 5
     Capture $script:win 'gs-path.jpg'
     # 4. A coverage map.

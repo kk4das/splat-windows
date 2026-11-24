@@ -229,7 +229,7 @@ public class CoverageJobTests
             string golden = Path.Combine(Repo.Root, "data", "golden-linux", "M01");
             Assert.Equal(File.ReadAllBytes(Path.Combine(golden, "los.ppm")), File.ReadAllBytes(Path.Combine(r.Folder, "los.ppm")));
             Assert.Equal(File.ReadAllText(Path.Combine(golden, "los.kml")).Replace("\r\n", "\n"), File.ReadAllText(r.KmlPath).Replace("\r\n", "\n"));
-            Assert.Null(r.ColourKeyPath);   // a line-of-sight map has no colour key
+            Assert.Null(r.ColourKeyPath);   // a line-of-sight map has no color key
             var rec = JobRecord.Read(r.Folder)!;
             Assert.True(rec.Finished);
             Assert.Equal("los.kml", rec.MapKml);
@@ -299,7 +299,7 @@ public class CoverageJobTests
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() => run);
             var rec = JobRecord.Read(job.Folder)!;
             Assert.False(rec.Finished);
-            Assert.Equal("cancelled", rec.Note);
+            Assert.Equal("canceled", rec.Note);
             Assert.False(File.Exists(Path.Combine(job.Folder, "coverage.kml")));
             Assert.Empty(JobRecord.History(jobs));
         }

@@ -189,11 +189,11 @@ try {
 
     # 8. Search.
     Select-It (ById 'SearchTab' $hw)
-    SetText (ById 'SearchBox' $hw) 'colour key'
+    SetText (ById 'SearchBox' $hw) 'color key'
     Click (ById 'SearchButton' $hw)
     $first = Wait-For { (ById 'SearchResults' $hw).FindFirst($TS::Children, (New-Object $PC($AE::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem))) } 5000
-    Check ($first -and $first.Current.Name -eq 'Coverage maps') 'search "colour key": Coverage maps first' $(if ($first) { $first.Current.Name })
-    Check ([bool](Wait-Help 'Help shows coverage-maps.html#colour-key*')) 'and it opens at "Reading the colour key"' "$(HelpShows)"
+    Check ($first -and $first.Current.Name -eq 'Coverage maps') 'search "color key": Coverage maps first' $(if ($first) { $first.Current.Name })
+    Check ([bool](Wait-Help 'Help shows coverage-maps.html#color-key*')) 'and it opens at "Reading the color key"' "$(HelpShows)"
     SetText (ById 'SearchBox' $hw) 'zzqqxx'
     Click (ById 'SearchButton' $hw)
     Check ((ById 'SearchHint' $hw).Current.Name -like 'No page has all of: zzqqxx*') 'a search with no answer says so' (ById 'SearchHint' $hw).Current.Name

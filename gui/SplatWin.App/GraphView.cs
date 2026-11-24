@@ -14,7 +14,7 @@ namespace SplatWin.App;
 /// </summary>
 public sealed class GraphView : FrameworkElement
 {
-    // gnuplot 6's default line colours, in order.
+    // gnuplot 6's default line colors, in order.
     static readonly Color[] Palette =
     {
         Color.FromRgb(0x94, 0x00, 0xD3), Color.FromRgb(0x00, 0x9E, 0x73), Color.FromRgb(0x56, 0xB4, 0xE9),
