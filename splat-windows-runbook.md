@@ -259,7 +259,7 @@ make plots.
   add a post-step that converts PPM to PNG.
 - **Gate:** owner runs one real job end to end from the README instructions alone.
 
-### Stage 5 — Packaging & hand-off (needs D10; the GUI plan proposes folding it into G6)
+### Stage 5 — Packaging & hand-off (needs D10; the GUI plan proposes folding it into G7, formerly G6)
 *Plain language:* produce a zip someone else can unpack and use.
 - `dist\splat-1.4.2-win64.zip`: all `.exe`s, the English docs (text and PDF), sample data,
   `COPYING`, a Windows `README`, and the port's source (GPL).
@@ -276,14 +276,14 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G6 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 passed 2026-11-23; G5 next)
+### Stages G0–G7 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 passed 2026-11-23; G5 next)
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
 - **Full plan, research and decisions: `reference/gui-plan.md`.** The GUI drives the verified
   `splat.exe` unchanged, so equivalence with Linux still holds.
 - G0 spike (map overlay) → G1 stations → G2 QRZ → G3 path → G4 coverage → G5 Google Earth and polish
-  → G6 packaging (absorbs Stage 5).
+  → G6 help and getting started (added 2026-11-23) → G7 packaging (absorbs Stage 5; was G6).
 - **Decided 2026-11-22:** G1 C#/.NET 10 WPF · G2 streets + terrain, no satellite · G3 QRZ subscriber
   · G4 app draws graphs · G5 club members too (settles **D10**) · G6 GUI first, Stage 5 → G6 · G7 GPLv2
   · G8 "SPLAT! for Windows".
@@ -416,6 +416,10 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-23 — New stage G6, help and getting started,** at the owner's request: a Help menu
+  with indexed, searchable offline help (including how to read the coverage colour key),
+  step-by-step getting started, and decision **G9** (first-run wizard; open, recommended yes,
+  decided at the start of G6). Packaging is renumbered G7. Details: `reference/gui-plan.md`.
 - **2026-11-23 — Owner's G4 check passed.** Owner: "map looks good in the app - google earth
   opens and looks good." Noted: Google Earth shows only the transmitter (K4HTA), not the other
   stations. That is SPLAT!'s coverage KML as made; adding the library's stations to the KMZ is a

@@ -155,8 +155,44 @@ antenna.**
 | **G2 QRZ** | QRZ sign-in (the owner types the password), lookup, `geoloc` warnings, Credential Manager. | The owner looks up three calls. |
 | **G3 Path** | Path analysis: run SPLAT!, a report summary panel, graphs drawn in the app, path on the map. | Same numbers as the CLI reports, and the equivalence test passes. |
 | **G4 Coverage** | Coverage jobs, automatic terrain, overlay, opacity, cancel, job history. | The owner runs the 30-mile K4HTA map from the GUI alone. |
-| **G5 Google Earth + polish** | Pro and web KMZ, the point-to-point KML test, settings, help, icons. | The owner's review. |
-| **G6 Packaging** | Merges with Stage 5: a zip or installer, a clean-machine test, D10. | A clean-PC report. |
+| **G5 Google Earth + polish** | Pro and web KMZ, the point-to-point KML test, settings, icons. (Help moved to G6.) | The owner's review. |
+| **G6 Help + getting started** | A Help menu with indexed, searchable help (offline); step-by-step getting started; a first-run wizard if decision G9 says so. See below. | A new user gets from a fresh start to a first coverage map using only the help (and wizard); the owner's review. |
+| **G7 Packaging** | Merges with Stage 5: a zip or installer, a clean-machine test, D10. Was G6 until 2026-11-23. | A clean-PC report. |
+
+## Stage G6: help and getting started (added 2026-11-23 at the owner's request)
+The owner: add a stage after G5 for "a help menu with an indexed searchable help documents",
+"step-by-step getting started instructions", and to "consider whether a 'first run' wizard that
+prompts the user for the necessary information would be helpful". Club members on their own PCs
+(decision G5) are the readers, so the help assumes no SPLAT! or command-line knowledge.
+
+- **Help menu:** Contents, Index, Search, Getting started, About (version, GPLv2 licence, credits to
+  SPLAT!'s authors). **F1** opens the topic for the panel in use.
+- **Help documents:** plain HTML pages shipped with the app and shown in its own window (WebView2,
+  already used for the map), so they work offline and can be read in a browser too. A keyword
+  index and full-text search, both built from the pages, not kept by hand.
+- **Topics (first list):**
+  - getting started (below);
+  - stations: call-sign lookup (QRZ, callook.info), grid, coordinates, map click, `.qth` import;
+  - radio settings, each value in plain words, with SPLAT!'s documented defaults;
+  - path analysis: reading the report summary and each graph;
+  - **coverage maps: reading the colour key** (dBµV/m and dBm bands, a rough guide to what each
+    band means on the air, the 50 %/90 % assumptions, receiver height, "you hear the repeater" vs
+    "it hears you", grey terrain shading, opacity). Rough guides are labelled as rules of thumb,
+    not SPLAT! output;
+  - terrain: where it comes from, the folder, downloads, open water;
+  - Google Earth; job folders and `run-again.cmd`;
+  - troubleshooting (each error message the app can show, and what to do);
+  - glossary (ERP, dBµV/m, dBm, ITWOM, Longley-Rice, Fresnel zone, line of sight).
+- **"What does this mean?" links** beside the colour key, the report summary and the radio settings.
+- **Getting started, step by step:** install → (optional) QRZ sign-in → add your first station →
+  run a path → run a coverage map → open it in Google Earth. Each step with a picture of the
+  app's own window (captured with PrintWindow).
+- **First-run wizard:** decision G9 below.
+- **Checks:** every link and index entry resolves; search finds each glossary term; F1 opens the
+  right topic on every panel; each error message in the code has a troubleshooting entry (a test
+  fails if one is added without); screen-reader names on the help window; the wizard (if built)
+  driven end to end by a UI test with a throwaway QRZ credential and the stand-in terrain server.
+  Shown to fire, as always.
 
 ## Decisions for the owner
 | # | Decision | Recommendation |
@@ -166,6 +202,7 @@ antenna.**
 | **G3** | **Do you have a QRZ XML Logbook Data subscription?** Without one, QRZ lookups won't give usable positions. | **DECIDED 2026-11-22: the owner subscribes** ("Yes, I subscribe"). QRZ is the primary lookup. callook.info stays as the free US fallback for users without a subscription. |
 | **G4** | **Draw graphs in the app instead of gnuplot** (removes the ~1 GB dependency) | **DECIDED 2026-11-22:** the app draws the graphs. gnuplot stays available for the command line. |
 | **G5** | **Who uses it (this is D10)**: just you, or club members too? This decides the installer, per-user QRZ sign-in and help text. | **DECIDED 2026-11-22:** club members too. Build for "club members on their own PCs" from the start; it costs little. |
-| **G6** | **Order: GUI before Stage 5 packaging**, so one package holds both | **DECIDED 2026-11-22:** GUI first. Stage 5 becomes G6. |
+| **G6** | **Order: GUI before Stage 5 packaging**, so one package holds both | **DECIDED 2026-11-22:** GUI first. Stage 5 becomes G6 (renumbered G7 on 2026-11-23, when the help stage was added as G6). |
 | **G7** | **Licence for the GUI.** It ships with GPLv2 SPLAT!. | **DECIDED 2026-11-22:** GPLv2 as well (simplest, matches SPLAT!). |
 | **G8** | **App name** shown in the window and Start menu | **DECIDED 2026-11-22:** "SPLAT! for Windows". |
+| **G9** | **First-run wizard?** (stage G6) | **OPEN, decide at the start of G6.** Recommended: a short wizard that opens once on first run, can be skipped, and can be reopened from Help: (1) welcome and what the app does; (2) terrain folder (the default is fine for most); (3) call-sign lookup: QRZ sign-in (the user types the password) or the free callook.info; (4) add your first station; (5) offer to run a first coverage map. Alternative: no wizard; the Getting started page opens on first run, and empty panels show what to do next. |
