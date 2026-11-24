@@ -276,7 +276,7 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G6 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 DONE 2026-11-23, awaiting owner's check; G5 next)
+### Stages G0–G6 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 passed 2026-11-23; G5 next)
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
@@ -416,6 +416,10 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-23 — Owner's G4 check passed.** Owner: "map looks good in the app - google earth
+  opens and looks good." Noted: Google Earth shows only the transmitter (K4HTA), not the other
+  stations. That is SPLAT!'s coverage KML as made; adding the library's stations to the KMZ is a
+  G5 candidate, for the owner to decide. G5 waits for an explicit go-ahead.
 - **2026-11-23 — Stage G4 (coverage) complete. HALT for owner review.**
   - Started on the owner's words "Start G4".
   - "Coverage map…": signal strength, received power, path loss or line of sight, with radius and

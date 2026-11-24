@@ -190,4 +190,13 @@ new area would download its terrain first.
 - Settings, help, and an icon.
 - Candidates from G3/G4: town names, antenna patterns, terrain shading off.
 
+## Owner's check: passed (2026-11-23)
+Owner: "map looks good in the app - google earth opens and looks good."
+
+Noted by the owner: **Google Earth shows only the transmitter (K4HTA), not the station receivers.**
+SPLAT!'s coverage KML holds only the transmitter (and town names with `-s`); a coverage run has no
+receivers. The stations seen in the app's map come from your library, not from SPLAT!. Adding your
+stations as placemarks to the Google Earth file is a G5 candidate, for you to decide.
+Stage G5 waits for an explicit go-ahead.
+
 ## Halted for owner review.
