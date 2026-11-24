@@ -58,4 +58,7 @@ In the open app:
 2. Scroll down in either panel: the four buttons and **Back to stations** stay put.
 3. Optionally, start a coverage map and try **Cancel**.
 
+## Owner's check: passed (2026-11-23)
+Owner: "switching works well and is easy enough." Stage G6 waits for an explicit go-ahead.
+
 ## Halted for owner review.

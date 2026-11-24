@@ -425,6 +425,7 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-23 — Owner's G5b check passed.** Owner: "switching works well and is easy enough." G6 waits for an explicit go-ahead.
 - **2026-11-23 — Stage G5b (switching between panels) done. HALT for owner review.** At the
   owner's request before G6: the four buttons (Add station…, Import .qth…, Analyse a path…,
   Coverage map…) are fixed at the top of the left panel and switch views directly; the current
