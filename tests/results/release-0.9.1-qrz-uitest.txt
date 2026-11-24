@@ -1,0 +1,25 @@
+﻿[PASS] stand-in QRZ service started  
+[PASS] starts signed out  QRZ.com: sign in…
+[PASS] no test sign-in saved yet  
+[PASS] signed out: hint says callook.info  A US call sign, such as KK4DAS. Looked up on callook.info (free FCC license data). Sign in to QRZ.com (top right) for calls worldwide.
+[PASS] wrong password refused with QRZ's reason  QRZ.com: Username/password incorrect
+[PASS] wrong password not saved  
+[PASS] signed in, subscription shown  Signed in to QRZ.com as test-user. XML Logbook Data subscription until Wed Jan 1 12:34:03 2013.
+[PASS] toolbar shows the QRZ user  QRZ.com: test-user
+[PASS] sign-in saved in Credential Manager  
+[PASS] signed in: hint says QRZ.com  A call sign from anywhere, such as KK4DAS. Looked up on QRZ.com (signed in as test-user).
+[PASS] unknown call explained  G1SRDD isn't on QRZ.com. Check the call, or use the address, a grid square or the map.
+[PASS] zip-code position warned loudly  KZ1ZIP, FRED "The Boss" LLOYD. WARNING: this is only the center of KZ1ZIP's zip code, possibly miles from the antenna. Useless for a VHF path as it is: find the antenna on the map, or use the Address tab.
+[PASS] user-set position noted  AA7BQ, FRED "The Boss" LLOYD. AA7BQ set this position on QRZ.com themselves. It's usually their home station; for a repeater or a club call it may not be the antenna. Check the pin.
+[PASS] pin at QRZ's position  34.234560, -112.343560 | Grid DM34tf86
+[PASS] name filled in  
+[PASS] saved with QRZ position and source  34.23456, -112.34356, QRZ.com: AA7BQ (user)
+[PASS] sign-in window shows who is signed in  Signed in as test-user.
+[PASS] sign out removed it from Credential Manager  
+[PASS] toolbar back to signed out  
+[PASS] every request was a POST  POST http://localhost:18731/xml/current/ fields=agent,password,username / POST http://localhost:18731/xml/current/ fields=agent,password,username / POST http://localhost:18731/xml/current/ fields=callsign,s / POST http://localhost:18731/xml/current/ fields=callsign,s / POST http://localhost:18731/xml/current/ fields=callsign,s
+[PASS] password never in a URL  
+[PASS] two sign-ins, each with the agent name  
+[PASS] password in no file in the work folder  
+[PASS] password not shown in the window  
+24 checks, 0 failed

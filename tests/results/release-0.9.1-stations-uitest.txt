@@ -1,0 +1,33 @@
+﻿[PASS] window opens  
+[PASS] map page ready  Ready. 0 station(s) in D:\ClaudeAI\projects\SPLATWIN\work\pkg091-stations-uitest\stations.json.
+[PASS] uses the test stations file, empty  
+[PASS] bad grid refused  Characters 5 and 6 must be letters from A to X, as in FM18jw.
+[PASS] grid note  FM18jw is a square about 2.9 × 4.5 mi. The pin is at its center. That's too coarse for a VHF path: drag the pin to the antenna.
+[PASS] pin at the square center  38.937500, -77.208333 | Grid FM18jw55
+[PASS] save refused until the pin is confirmed  Check that the pin is on the antenna (drag it if not), then tick "The pin is on the antenna site".
+[PASS] height must be a number  Enter the antenna height above ground as a number, such as 30.
+[PASS] Post 180 saved  Saved Post 180 (FM18jw55, antenna 6 ft) to D:\ClaudeAI\projects\SPLATWIN\work\pkg091-stations-uitest\stations.json.
+[PASS] unknown call refused (live)  ZZ9ZZZ isn't in the FCC database. callook.info only knows US licenses; for other calls use a grid square or the map.
+[PASS] portable suffix refused before sending  Look up the call sign without /P, /M or a prefix, such as KK4DAS.
+[PASS] W1AW looked up and saved, name filled in  Saved W1AW (FN31pr21, antenna 30 ft) to D:\ClaudeAI\projects\SPLATWIN\work\pkg091-stations-uitest\stations.json.
+[PASS] PO box refused before sending  A PO box is at the post office, not at the antenna. Type the street address of the site, or use the map.
+[PASS] several address matches, both services answered  Found 4 matches; the best is selected. Pick another if it's wrong. 
+[PASS] pin on the ARRL building (live)  41.714691, -72.728518 | Grid FN31pr21
+[PASS] address note says how exact it is  American Radio Relay League, 225, Main Street, Newington, Capitol Planning Region, Connecticut, 06111, United States
+OpenStreetMap: the building or house itself. OpenStreetMap has this building, so the pin should be on it. An address is still the building, not necessarily the tower: drag the pin to the antenna.
+[PASS] K4HTA from deg-min-sec, in meters  Saved K4HTA (FM18jw51, antenna 73.15 m) to D:\ClaudeAI\projects\SPLATWIN\work\pkg091-stations-uitest\stations.json.
+[PASS] duplicate name refused  There is already a station called k4hta.
+[PASS] import dialog opens  
+[PASS] asks before replacing K4HTA  
+[PASS] imported two, heights shown  Imported KK4DAS (30 ft), Legion_Hall (6 ft). A .qth height is in feet unless the file says meters; check them.
+[PASS] five stations in the file  K4HTA, KK4DAS, Legion_Hall, Post 180, W1AW
+[PASS] K4HTA kept ours, not the import  38.924216666666666, -77.20579166666667, 73.15 Meters, Typed coordinates
+[PASS] W1AW position and source  41.714707, -72.728411, callook.info: W1AW mailing address
+[PASS] Post 180 source  Grid FM18jw
+[PASS] import source recorded  
+[PASS] edit opens with the saved pin  
+[PASS] edit saved in place  25 ft, Grid FM18jw
+[PASS] exported .qth is what SPLAT! expects  K4HTA | 38.924217 | 77.205792 | 73.15 meters | 
+[PASS] deleted  
+[PASS] previous list kept as .bak  
+31 checks, 0 failed

@@ -428,6 +428,14 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-24 — 0.9.1 released** (owner: "Yes, make 0.9.1"): G8 3D view + the map-image fix, from
+  main. Zip SHA-256 6e2b19a0...a23f5. On the unzipped package: help 30, stations 31, QRZ 24, path 41,
+  3D view 25, coverage 52 (first run 2 failed on the mouse-click readout while the owner was using the
+  PC; rerun 52/52), path and coverage equivalence EQUIVALENT; Windows Sandbox clean-PC test all passed.
+  Tagged v0.9.1; GitHub pre-release with the zip. Club e-mail drafted for the owner to send.
+- **2026-11-24 — Stage G8 approved** (owner: "map review complete - 3d view looks good"). Owner said
+  "Yes, make 0.9.1" to a fix release; with G8 approved, 0.9.1 is built from main (3D view + map-image
+  fix) rather than a fix-only branch (that branch was made locally, never pushed, and removed).
 - **2026-11-24 — Stage G8 (3D path view) built; halted for owner review.** Started on "Yes, start G8"
   (decisions G10–G12 accepted as recommended: own window, topo map, 1 mi strip). The view's numbers are
   SPLAT!'s own arithmetic (new SplatGeo/SdfTerrain/PathScene), checked against each job's SPLAT! files

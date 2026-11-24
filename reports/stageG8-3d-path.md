@@ -136,4 +136,6 @@ The counts are reported:
   - `App.xaml.cs`: the `--path3d-check` and `--view3d` test hooks;
   - help pages; `G5Tests.cs` (the P09 file test); README.
 
-## Halted for owner review.
+## Owner's review: passed (2026-11-24)
+"map review complete - 3d view looks good". G8 approved. 0.9.1 for club members is built from this
+code (the 3D view and the map-image fix), on the owner's "Yes, make 0.9.1".
