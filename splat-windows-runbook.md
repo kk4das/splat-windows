@@ -428,6 +428,14 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-24 — 0.9.0 published.** Public repository https://github.com/kk4das/splat-windows
+  (full history, 49 commits) and pre-release v0.9.0 with SPLATforWindows-0.9.0-win64.zip
+  (SHA-256 817ca369…0e999, re-downloaded and checked) and its .sha256. Clean-PC test in Windows
+  Sandbox (Windows 11 Enterprise, no .NET, no MSYS2): path report and LOS map identical to Linux,
+  Start-menu scripts work; one FAIL was a fault in the check ("Usage" vs SPLAT!'s "Available
+  Options"), corrected (tests/results/stageG7-sandbox-clean-pc.txt). Git pushes use gh's sign-in
+  through this repository's own credential setting (global Git config untouched). Next: club
+  members try it; their feedback decides 1.0.
 - **2026-11-24 — Stage G7 (packaging) started** on the owner's words "Start G7". Owner's decisions:
   **a zip** (no installer; optional Start-menu shortcut script); **clean-PC test in Windows
   Sandbox** (the owner turns it on: admin and a restart); **version 0.9.0, still "(preview)"**
