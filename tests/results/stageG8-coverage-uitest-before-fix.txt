@@ -1,0 +1,53 @@
+﻿[PASS] stand-in terrain server started  
+[PASS] app started on the test library  Ready. 2 station(s) in D:\ClaudeAI\projects\SPLATWIN\work\g8-coverage-uitest\20261124-142107\stations.json.
+[PASS] coverage panel opens  
+[PASS] the four buttons stay at the top, and Back to stations is shown  
+[PASS] no radio settings yet, and it says so  No radio settings for K4HTA yet: enter the frequency and ERP (the rest are SPLAT!'s documented defaults; change them in Analyze a path).
+[PASS] empty terrain folder shown  D:\ClaudeAI\projects\SPLATWIN\work\g8-coverage-uitest\20261124-142107\terrain (0 .sdf files). Missing tiles are downloaded automatically.
+[PASS] no earlier maps yet  None yet. Each map you run is kept in its own job folder and listed here.
+[PASS] blank frequency refused  Enter the frequency in MHz as a number.
+[PASS] too large a radius refused, with the limit  SPLAT! can map at most about 155 miles around K4HTA (it holds 64 terrain tiles); beyond that it cuts the map short. Use a smaller radius.
+[PASS] nothing downloaded, no job folder  0 request(s)
+[PASS] line-of-sight hint  Where a receiver antenna at this height can see the transmitter's antenna, in green. No radio settings needed.
+[PASS] line-of-sight map made  Coverage map shown: 2026-11-24 14:21  K4HTA, 30 mi, line of sight, RX 6 ft. Job folder: D:\ClaudeAI\projects\SPLATWIN\work\g8-coverage-uitest\20261124-142107\jobs\2026-11-24 142119 K4HTA coverage
+[PASS] the 4 terrain tiles were fetched and converted  4 .sdf
+[PASS] one download (J18.zip), from the stand-in only  GET /dem3/J18.zip 200
+[PASS] the result says what was fetched  Made in 3 s. Terrain fetched: 38_39_77_78.sdf: downloaded and converted; 38_39_76_77.sdf: converted from the saved download; 39_40_76_77.sdf: converted from the saved download; 39_40_77_78.sdf: converted from the saved download.
+[PASS] line-of-sight key explained  Green: a receiver antenna at 6 ft has line of sight to K4HTA.
+[FAIL] overlay shown on the map, with its extent (SPLAT!'s box)  
+[PASS] Google Earth and opacity enabled  
+[PASS] job folder with the map and run-again.cmd  2026-11-24 142119 K4HTA coverage
+[PASS] line of sight saves no radio settings  
+[PASS] signal map made  Coverage map shown: 2026-11-24 14:21  K4HTA, 20 mi, signal strength, RX 6 ft. Job folder: D:\ClaudeAI\projects\SPLATWIN\work\g8-coverage-uitest\20261124-142107\jobs\2026-11-24 142142 K4HTA coverage
+[PASS] no new download (terrain kept)  1 request(s)
+[PASS] color key shown  150x585
+[PASS] radio settings saved with K4HTA  {"Dielectric":15,"Conductivity":0.005,"Bending":301,"FrequencyMHz":146.685,"Climate":5,"Polarization":1,"Situations":0.5,"Time":0.9,"ErpWatts":93}
+[PASS] history: two maps, newest first  2026-11-24 14:21  K4HTA, 20 mi, signal strength, RX 6 ft / 2026-11-24 14:21  K4HTA, 30 mi, line of sight, RX 6 ft
+[PASS] Google Earth file carries the color key  doc.kml,coverage.png,coverage-ck.png
+[PASS] G5: Google Earth file has the stations (KK4DAS; K4HTA once, as SPLAT!'s)  KK4DAS
+[PASS] G5: click readout matches SPLAT!'s map and color file at that point  app: 58 to 68 dBµV/m / from the files: 58 to 68 dBµV/m
+[PASS] G5: readout given to screen readers  Readout: 58 to 68 dBµV/m (read from the map's color, so approximate)
+[PASS] HD terrain fetched, SPLAT! computing  K4HTA coverage: 0% to  25% .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo
+[PASS] while running: Cancel shown, switching views waits  
+[PASS] canceled  Canceled. The unfinished job folder is D:\ClaudeAI\projects\SPLATWIN\work\g8-coverage-uitest\20261124-142107\jobs\2026-11-24 142254 K4HTA coverage
+[PASS] SPLAT! HD stopped  
+[PASS] ready again  
+[PASS] a canceled map is not in the history  
+[PASS] history item shown again  2026-11-24 14:21  K4HTA, 30 mi, line of sight, RX 6 ft
+[PASS] nothing re-run  
+[PASS] G5: map without terrain shading made  Coverage map shown: 2026-11-24 14:23  K4HTA, 20 mi, line of sight, RX 6 ft. Job folder: D:\ClaudeAI\projects\SPLATWIN\work\g8-coverage-uitest\20261124-142107\jobs\2026-11-24 142325 K4HTA coverage
+[PASS] G5: SPLAT! asked for no shading (-ngs), recorded in job.json  
+[PASS] G5: the map shown has clear areas (no white) and solid green  9787 clear, 213 solid (213 green) of the sampled pixels
+[PASS] G5: SPLAT!'s own map file in the job folder still has its white areas  2817 white of the sampled pixels
+[PASS] G5: Settings window opens  
+[PASS] G5: Settings shows the terrain folder in use  D:\ClaudeAI\projects\SPLATWIN\work\g8-coverage-uitest\20261124-142107\terrain: 8 .sdf files.
+[PASS] G5: Settings says where Google Earth Pro stands  Google Earth Pro is installed (C:\Program Files\Google\Google Earth Pro\client\googleearth.exe). Open in Google Earth Pro uses it.
+[PASS] G5: a bad default is refused  The coverage radius should be more than 0 (and at most 1000).
+[PASS] G5: Settings saved to the test's own file  CoverageRadius 25
+[PASS] G5: the real settings file is untouched  
+[PASS] G5: web steps name the Google Earth file to import  C:\Users\dsoul\AppData\Local\SPLATforWindows\map-cache\20261124-142327-200\coverage.kmz
+[PASS] Analyze a path… switches straight from the coverage panel  
+[PASS] and back, with the radius still as typed  20
+[PASS] Back to stations returns to the stations list  
+[PASS] only the stand-in terrain server was asked  GET /dem3/J18.zip 200 / GET /skadi/N38/N38W078.hgt.gz 200 / GET /skadi/N38/N38W077.hgt.gz 200 / GET /skadi/N39/N39W077.hgt.gz 200 / GET /skadi/N39/N39W078.hgt.gz 200
+52 checks, 1 failed (run folder D:\ClaudeAI\projects\SPLATWIN\work\g8-coverage-uitest\20261124-142107)

@@ -35,6 +35,11 @@ repository** unless you want to change the code.
   or makes a file for Google Earth on the web.
 - **Path analysis** between two stations: SPLAT!'s full report, with the terrain profile, height and
   Fresnel zone, path loss and elevation angle graphs.
+- **3D path view:** the terrain along a path in 3D, seen from either antenna or from the side, with
+  the line of sight, the Fresnel zone and the points where SPLAT! finds terrain in the way. From the
+  receiver's antenna you see the hill that hides the transmitter. Its numbers are SPLAT!'s own,
+  checked against SPLAT!'s files. The path's Google Earth file gets the line of sight at its true
+  height and a view from each antenna.
 - **Terrain is downloaded automatically** the first time an area is used (free public sources, no
   login). After that, areas already downloaded work offline.
 - **Help built in:** press F1. A first-run setup and a Getting started guide take you to your first

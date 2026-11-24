@@ -1,0 +1,42 @@
+﻿[PASS] app started on the test library  Ready. 4 station(s) in D:\ClaudeAI\projects\SPLATWIN\work\g8-path-uitest\20261124-143627\stations.json.
+[PASS] no Back button on the stations list  
+[PASS] the editor shows Back to stations (nothing saved)  Back to stations (nothing saved)
+[PASS] Back leaves the editor without saving  Nothing was changed.
+[PASS] path panel opens; the four buttons and Back to stations are shown  
+[PASS] a transmitter is chosen  Far North
+[PASS] no radio settings yet, and it says so  Not set for K4HTA yet. Enter them (or load a .lrp file); they are saved with K4HTA when you click Analyze. Antenna: the same in all directions (add a pattern with Edit…).
+[PASS] terrain folder shown with its tile count  D:\ClaudeAI\projects\SPLATWIN\work\g8-path-uitest\20261124-143627\terrain (4 .sdf files). Missing tiles are downloaded automatically.
+[PASS] blank frequency refused  Enter the frequency in MHz as a number.
+[PASS] missing terrain fetched; a failed download stops the job  Terrain couldn't be fetched, so nothing was run: Couldn't download http://localhost:9/dem3/K18.zip: No connection could be made because the target machine actively refused it. (localhost:9) Check the internet connection.
+[PASS] no job folder made for a refused job  0
+[PASS] path analyzed  Path analyzed: K4HTA to KK4DAS. Job folder: D:\ClaudeAI\projects\SPLATWIN\work\g8-path-uitest\20261124-143627\jobs\2026-11-24 143636 K4HTA to KK4DAS
+[PASS] report tab = Linux golden P01, every character  
+[PASS] summary shows the golden numbers  Signal at KK4DAS:-64.86 dBm | Field strength:  55.73 dBuV/meter | Path loss:       116.68 dB (ITWOM Version 3.0) | Free-space loss: 93.36 dB | Terrain loss:    23.33 dB | Mode:            Double Horizon Diffraction Dominant | Frequency:       146.685 MHz | TX ERP:          93 Watts (+49.68 dBm)
+[PASS] distance and azimuth  K4HTA to KK4DAS: 4.69 miles, azimuth 301.82 degrees
+[PASS] line of sight blocked, 3 obstructions  Line of sight: blocked by terrain at 3 point(s), marked red on the map.
+[PASS] clearance sentences  Antenna at KK4DAS must be raised to at least 39.00 feet AGL to clear all obstructions detected by SPLAT!. | Antenna at KK4DAS must be raised to at least 328.00 feet AGL to clear the first Fresnel zone. | Antenna at KK4DAS must be raised to at least 183.00 feet AGL to clear 60% of the first Fresnel zone.
+[PASS] map drew the path and 3 obstructions  Map shows the path with 3 obstruction mark(s).
+[PASS] graph drawn: Path loss  SPLAT! Loss Profile Along Path Between KK4DAS and K4HTA (121.78° azimuth): 1 line(s), 97 points
+[PASS] graph drawn: Terrain profile  SPLAT! Terrain Profile Between KK4DAS and K4HTA (121.78° Azimuth): 1 line(s), 100 points
+[PASS] graph drawn: Height and Fresnel zone  SPLAT! Path Profile Between KK4DAS and K4HTA (121.78° azimuth) With First Fresnel Zone: 5 line(s), 499 points
+[PASS] graph drawn: Elevation angle  SPLAT! Elevation Profile Between KK4DAS and K4HTA (121.78° azimuth): 2 line(s), 198 points
+[PASS] radio settings saved with K4HTA  {"Dielectric":15,"Conductivity":0.005,"Bending":301,"FrequencyMHz":146.685,"Climate":5,"Polarization":1,"Situations":0.5,"Time":0.9,"ErpWatts":93}
+[PASS] one job folder, named by date and stations  2026-11-24 143636 K4HTA to KK4DAS
+[PASS] G5: path Google Earth file made; Google Earth buttons on  Open in Google Earth Pro (top of the window) shows both stations, the path and its line-of-sight part.
+[PASS] G5: its descriptions show the degree sign, and it opens on the web (no Pro-only icon)  
+[PASS] G5: the transmitter's antenna (no pattern) is stated  Not set for K4HTA yet. Enter them (or load a .lrp file); they are saved with K4HTA when you click Analyze. Antenna: the same in all directions (add a pattern with Edit…).
+[PASS] run-again.cmd from the command line gives the same report  
+[PASS] run-again.cmd also makes the graph data  
+[PASS] Longley-Rice, 50 W: report = Linux golden P02  
+[PASS] model warning shown  Longley-Rice error number 3. Warning: A combination of parameters is out of range. Results are probably invalid.
+[PASS] Fresnel 80%, clutter 30 ft: report = Linux golden P04  
+[PASS] clutter and 80% shown  Terrain has been raised by 30.00 feet to account for ground clutter. | Antenna at Legion_Hall must be raised to at least 92.00 feet AGL to clear all obstructions detected by SPLAT!. | Antenna at Legion_Hall must be raised to at least 586.00 feet AGL to clear the first Fresnel zone. | Antenna at Legion_Hall must be raised to at least 480.00 feet AGL to clear 80% of the first Fresnel zone.
+[PASS] map updated: 6 obstructions  Map shows the path with 6 obstruction mark(s).
+[PASS] clutter label follows the units  
+[PASS] metric: report = Linux golden P05  
+[PASS] Coverage map… switches straight from path analysis, clearing its results  
+[PASS] and back to path analysis  
+[PASS] Back to stations returns to the stations list  
+[PASS] results hidden  
+[PASS] four job folders, one per analysis  4
+41 checks, 0 failed (run folder D:\ClaudeAI\projects\SPLATWIN\work\g8-path-uitest\20261124-143627)

@@ -23,7 +23,7 @@ public sealed record HitItem(string Title, string Snippet, string Target) { publ
 /// </summary>
 public partial class HelpWindow : Window
 {
-    const string HelpHost = "help.splat.local";
+    const string HelpHost = "help.splatwin.example";
     public static string Folder => Path.Combine(AppContext.BaseDirectory, "help");
 
     readonly HelpLibrary _lib;

@@ -197,7 +197,8 @@ public partial class MainWindow
             var r = await Task.Run(() => job.RunAsync(progress, _pathCts.Token));
             ShowPathResult(r);
             Status.Text = $"Path analyzed: {r.Summary.TxName} to {r.Summary.RxName}. Job folder: {r.Folder}" +
-                          (r.GraphErrors.Count > 0 ? $" ({r.GraphErrors.Count} graph(s) couldn't be drawn; see their tabs)" : "");
+                          (r.GraphErrors.Count > 0 ? $" ({r.GraphErrors.Count} graph(s) couldn't be drawn; see their tabs)" : "") +
+                          (job.KmzNote != null ? ". " + job.KmzNote : "");
         }
         catch (OperationCanceledException) { Status.Text = "Canceled. The unfinished job folder is " + job.Folder; }
         catch (Exception ex) { PathError.Text = ex.Message; Status.Text = "The path analysis didn't finish. Job folder: " + job.Folder; }
@@ -316,6 +317,14 @@ public partial class MainWindow
     }
 
     static string Short(string name) => name.Length > 8 ? name[..8] + "…" : name;
+
+    /// <summary>Stage G8: the 3D view of the path shown, in its own window (decision G10), beside this one.</summary>
+    void View3D_Click(object sender, RoutedEventArgs e)
+    {
+        if (_pathResult is not { } r || !Directory.Exists(r.Folder)) { Status.Text = "Analyze a path first; the 3D view shows the path you analyzed."; return; }
+        var w = new View3DWindow(r.Folder);
+        w.Show();
+    }
 
     void JobFolder_Click(object sender, RoutedEventArgs e)
     {

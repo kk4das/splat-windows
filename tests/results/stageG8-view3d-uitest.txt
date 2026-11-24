@@ -1,0 +1,35 @@
+﻿[PASS] path job K4HTA to Legion_Hall ran  exit 0
+[PASS] the path has obstructions in its report  4
+      [PASS] terrain along the path (graph-profile\profile.gp): 83 points: 83 identical, 0 differ in the last printed digit
+      [PASS] height graph profile.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+      [PASS] height graph reference.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+      [PASS] height graph curvature.gp (curvature, line of sight, Fresnel): 82 points: 82 identical, 0 differ in the last printed digit
+      [PASS] height graph fresnel.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+      [PASS] height graph fresnel_pt_6.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+      [PASS] obstruction list (the report's lines, character for character): 4 point(s), identical
+      [PASS] K4HTA antenna top (584.49 feet AMSL) as in the report: 584.49 feet AMSL
+      [PASS] Legion_Hall antenna top (376.73 feet AMSL) as in the report: 376.73 feet AMSL
+[PASS] --path3d-check: terrain, curvature, Fresnel zones and obstruction list match SPLAT!  exit 0
+[PASS] 3D view window opens  3D view: Legion_Hall to K4HTA - SPLAT! for Windows
+[PASS] window title names the path, receiver first  3D view: Legion_Hall to K4HTA - SPLAT! for Windows
+[PASS] the page drew the path  3D view: Legion_Hall to K4HTA; rows=83; cols=45; obstructions=4; view=rx; ground=none; exaggeration=3; fresnel=fz; width=1; selfcheck=ok; summary=Blocked: SPLAT! finds terrain in the way 0.47 mi to 1.80 mi from Legion_Hall. Along the path the ground rises up to 15 ft above the line of sight.
+[PASS] exaggeration self-check: every point stays on its side of the line of sight at 1x to 20x  selfcheck=ok
+[PASS] all 4 of SPLAT!'s obstruction points are drawn  3D view: Legion_Hall to K4HTA; rows=83; cols=45; obstructions=4; view=rx; ground=none; exaggeration=3; fresnel=fz; width=1; selfcheck=ok; summary=Blocked: SPLAT! finds terrain in the way 0.47 mi to 1.80 mi from Legion_Hall. Along the path the ground rises up to 15 ft above the line of sight.
+[PASS] a strip of terrain, rows x columns  83 x 45
+[PASS] summary says blocked, as the report does  Blocked: SPLAT! finds terrain in the way 0.47 mi to 1.80 mi from Legion_Hall. Along the path the ground rises up to 15 ft above the line of sight.
+[PASS] opens looking from the receiver's antenna  
+[PASS] topographic map loaded onto the ground (decision G11)  ground=topo
+[PASS] picture: from Legion_Hall's antenna  269 colors, D:\ClaudeAI\projects\SPLATWIN\work\g8-view3d-uitest\20261124-143848\view-from-rx.png
+[PASS] viewpoint button 'From K4HTA'  
+[PASS] picture: view-from-tx  314 colors
+[PASS] viewpoint button 'Side'  
+[PASS] picture: view-side  60 colors
+[PASS] viewpoint button 'Overview'  
+[PASS] picture: view-overview  301 colors
+[PASS] height exaggeration up to 20x (key +, stops at 20) redraws  selfcheck=ok
+[PASS] self-check ok at 20x  
+[PASS] picture: overview at 20x  418 colors
+[PASS] picture: side view at 20x  176 colors
+[PASS] closing the 3D view closes it  
+[PASS] missing terrain: a plain message, "Run the path again"  Problem: The 3D view couldn't be made: The terrain this path was analyzed with is no longer in D:\ClaudeAI\projects\SPLATWIN\work\g8-view3d-uitest\20261124-143848\no-such-terrain (38_39_77_78.sdf). Run the path again.
+3D view window test: 25 checks, 0 failed (run folder D:\ClaudeAI\projects\SPLATWIN\work\g8-view3d-uitest\20261124-143848)

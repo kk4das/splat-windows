@@ -428,6 +428,17 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-24 — Stage G8 (3D path view) built; halted for owner review.** Started on "Yes, start G8"
+  (decisions G10–G12 accepted as recommended: own window, topo map, 1 mi strip). The view's numbers are
+  SPLAT!'s own arithmetic (new SplatGeo/SdfTerrain/PathScene), checked against each job's SPLAT! files
+  (`--path3d-check`): 90/90 on all ten path cases, obstruction lists identical; graph data to 0.001 ft
+  (one HD value differs by 0.000003 ft: acos near 1). Unit tests 326/326; all window tests incl. the new
+  3D test (25/25); path and coverage equivalence EQUIVALENT. Exaggeration 1–20x (plan said 10x; 20x
+  needed for long paths from the side). Google Earth path file gains the true-height line of sight,
+  masts, obstruction pins and antenna views. **Found and fixed:** after the 08:41 restart (WebView2
+  158) coverage maps no longer loaded in the app (also in the published 0.9.0): images now handed over
+  by the app (WebResourceRequested), internal hosts renamed .local -> .example. Recommended: a 0.9.1
+  for club members (owner's call). Report: reports/stageG8-3d-path.md.
 - **2026-11-24 — Stage G8 (3D path view) planned** at the owner's request ("is it possible to
   produce a 3D view from transmitter to receiver or reverse to make it easier to see what might be
   blocking the signal"; owner: "Yes, plan it"). Plan and decisions G10-G12 in reference/gui-plan.md.

@@ -1,0 +1,26 @@
+﻿[ OK ] M01: app job finished in 10 s; terrain: 38_39_77_78.sdf	downloaded and converted; 38_39_76_77.sdf	converted from the saved download; 39_40_76_77.sdf	converted from the saved download; 39_40_77_78.sdf	converted from the saved download
+  M01  cmd.log: not compared - the -log command record: the app keeps its own (splat-log.txt, run-again.cmd)
+  M01  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d)
+  M01  terrain folder now holds 4 .sdf file(s), all made by the app from the stand-in downloads
+[ OK ] M07: app job finished in 210 s; terrain: 38_39_77_78-hd.sdf	downloaded and converted; 38_39_76_77-hd.sdf	downloaded and converted; 39_40_76_77-hd.sdf	downloaded and converted; 39_40_77_78-hd.sdf	downloaded and converted
+  M07  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d)
+  M07  terrain folder now holds 4 .sdf file(s), all made by the app from the stand-in downloads
+[ OK ] M09: app job finished in 17 s; terrain: 38_39_77_78.sdf	downloaded and converted; 38_39_76_77.sdf	converted from the saved download; 39_40_76_77.sdf	converted from the saved download; 39_40_77_78.sdf	converted from the saved download
+[PASS] M09  k4hta_pat.scf identical to the app's k4hta_pattern.scf apart from the file name in its header
+  M09  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d)
+  M09  terrain folder now holds 4 .sdf file(s), all made by the app from the stand-in downloads
+[ OK ] M10: app job finished in 10 s; terrain: 38_39_77_78.sdf	downloaded and converted; 38_39_76_77.sdf	converted from the saved download; 39_40_76_77.sdf	converted from the saved download; 39_40_77_78.sdf	converted from the saved download
+  M10  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d)
+  M10  terrain folder now holds 4 .sdf file(s), all made by the app from the stand-in downloads
+  stand-in terrain server requests: GET /dem3/J18.zip 200 / GET /skadi/N38/N38W078.hgt.gz 200 / GET /skadi/N38/N38W077.hgt.gz 200 / GET /skadi/N39/N39W077.hgt.gz 200 / GET /skadi/N39/N39W078.hgt.gz 200 / GET /dem3/J18.zip 200 / GET /dem3/J18.zip 200
+--- compare_outputs.py (Stage 3/4 comparer) ---
+M09  K4HTA_pattern-site_report.txt      SAME*    
+M01  K4HTA-site_report.txt              SAME*    
+M10  K4HTA-site_report.txt              SAME*    
+M07  k4hta.scf                          SAME*    
+M07  K4HTA-site_report.txt              SAME*    
+------------------------------------------------------------------------------
+files: SAME=10, SAME*=5
+expected difference 'crlf' applied to 5 file(s): text files end lines with CR-LF on Windows (upstream text mode; owner decision D11)
+RESULT: EQUIVALENT
+GUI coverage equivalence: EQUIVALENT (comparer exit 0, 0 other problem(s)); run folder D:\ClaudeAI\projects\SPLATWIN\work\g8-cov-equiv\20261124-143919

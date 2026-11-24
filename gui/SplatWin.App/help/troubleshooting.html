@@ -247,6 +247,46 @@ because SPLAT! itself would quietly misread them.</p>
   <dd>The app draws the graphs from SPLAT!'s graph data and refuses anything it doesn't recognize. The report and the other graphs are still right. The data is in the job folder's graph folders.</dd>
 </dl>
 
+<h2 id="path3d">The 3D path view</h2>
+<p>See <a href="path-3d.html">The 3D path view</a>. The sentence at the bottom of the view:</p>
+<dl class="msgs">
+  <dt>Blocked: SPLAT! finds terrain in the way <i>distance</i> from <i>receiver</i>. Along the path the ground rises up to <i>height</i> above the line of sight.</dt>
+  <dd>SPLAT!'s report lists obstructions: the line of sight runs into the ground. The red dots show where. Look from the receiver's antenna to see the hill.</dd>
+  <dt>Line of sight clear, but the ground reaches into the <i>60 %</i> Fresnel zone <i>distance</i> from <i>receiver</i> (by up to <i>height</i>).</dt>
+  <dd>Nothing blocks the line of sight, but terrain enters the Fresnel zone there, which weakens the signal. Raising an antenna helps; the report says by how much.</dd>
+  <dt>Clear: the line of sight and the <i>60 %</i> Fresnel zone are clear of the terrain.</dt>
+  <dd>As far as the bare terrain goes, the path is open. Trees and buildings aren't in SPLAT!'s terrain.</dd>
+</dl>
+<p>When the view can't be shown:</p>
+<dl class="msgs">
+  <dt>Analyze a path first; the 3D view shows the path you analyzed.</dt>
+  <dd>Click <span class="ui">Analyze</span>, then <span class="ui">3D view…</span>.</dd>
+  <dt>The terrain this path was analyzed with is no longer in <i>folder</i> (<i>tiles</i>). Run the path again.</dt>
+  <dd>The terrain files were moved or deleted, or the terrain folder changed. Analyzing the path again fetches what it needs.</dd>
+  <dt>This job folder has no run-again.cmd, so it isn't known how SPLAT! was run.</dt>
+  <dd>The job folder is incomplete (a file was deleted). Analyze the path again.</dd>
+  <dt>run-again.cmd has no SPLAT! command in it.</dt>
+  <dt>run-again.cmd doesn't name the transmitter (-t).</dt>
+  <dt>run-again.cmd doesn't name the receiver (-r).</dt>
+  <dt>run-again.cmd doesn't name the terrain folder (-d).</dt>
+  <dd>The view reads run-again.cmd to know exactly how SPLAT! was run, and the file was changed. Analyze the path again.</dd>
+  <dt>"<i>name</i>" isn't a SPLAT! terrain file name.</dt>
+  <dt><i>tile</i> ends early: it isn't a complete SPLAT! terrain file.</dt>
+  <dt><i>tile</i> has something other than a number in it.</dt>
+  <dd>A terrain file is damaged (a download or copy stopped partway). Delete it from the terrain folder; analyzing the path again fetches it afresh. See <a href="terrain.html">Terrain</a>.</dd>
+  <dt>The 3D view couldn't be made: <i>reason</i></dt>
+  <dd>One of the messages above, or a file problem; the reason says which.</dd>
+  <dt>The 3D view couldn't start (<i>reason</i>). It needs the Microsoft Edge WebView2 Runtime, which Windows 11 includes.</dt>
+  <dd>As for the map: see <a href="#maps-earth">Maps, Google Earth and the window</a>.</dd>
+  <dt>No terrain was available for part of the strip (<i>tiles</i>); that part is left out.</dt>
+  <dd>The sides of the strip needed terrain tiles that couldn't be downloaded (no internet?). The path itself is complete; try again when online, or make the strip narrower.</dd>
+  <dt>The map for the ground couldn't be loaded (no internet?), so the ground is colored by height.</dt>
+  <dd>The map tiles come from the internet. The terrain and everything SPLAT! computed are still shown.</dd>
+  <dt>The Google Earth file has SPLAT!'s path only (the 3D additions couldn't be made: <i>reason</i>)</dt>
+  <dt>the path KML has no folder</dt>
+  <dd>The path was analyzed and its Google Earth file made, but without the line of sight at true height, masts and antenna views. The reason says why; analyzing the path again usually fixes it.</dd>
+</dl>
+
 <h2 id="coverage">Coverage maps</h2>
 <dl class="msgs">
   <dt>Choose the transmitter.</dt>

@@ -205,6 +205,29 @@ public partial class App : Application
             Shutdown(HeadlessPathJob(spec));
             return;
         }
+        // Stage G8 test hook: "--path3d-check <job folder> <out.txt>" recomputes SPLAT!'s terrain, height-graph
+        // data and obstruction list with the 3D view's code and compares them with the job's own files.
+        if (Arg(e.Args, "--path3d-check") is { } chk && e.Args.Length > Array.IndexOf(e.Args, chk) + 1)
+        {
+            string outFile = e.Args[Array.IndexOf(e.Args, chk) + 1];
+            try
+            {
+                var scene = PathScene.Load(PathJobSetup.FromJobFolder(Path.GetFullPath(chk)));
+                var checks = scene.Verify();
+                File.WriteAllLines(outFile, checks.Select(c => $"[{(c.Ok ? "PASS" : "FAIL")}] {c.What}: {c.Detail}"));
+                Shutdown(checks.All(c => c.Ok) ? 0 : 1);
+            }
+            catch (Exception ex) { File.WriteAllText(outFile, "[FAIL] " + ex); Shutdown(1); }
+            return;
+        }
+        // Stage G8: "--view3d <job folder>" opens just the 3D view of a finished path job (for tests and screenshots).
+        if (Arg(e.Args, "--view3d") is { } v3)
+        {
+            ShutdownMode = ShutdownMode.OnMainWindowClose;
+            MainWindow = new View3DWindow(Path.GetFullPath(v3));
+            MainWindow.Show();
+            return;
+        }
         // Closing the main window closes the app, help window and all (help isn't owned by it, so it can sit beside it).
         ShutdownMode = ShutdownMode.OnMainWindowClose;
         MainWindow = new MainWindow(e.Args.FirstOrDefault(a => a.EndsWith(".kml", StringComparison.OrdinalIgnoreCase)), stations);

@@ -278,6 +278,6 @@ shown later as a raised layer).
 | **G7** | **Licence for the GUI.** It ships with GPLv2 SPLAT!. | **DECIDED 2026-11-22:** GPLv2 as well (simplest, matches SPLAT!). |
 | **G8** | **App name** shown in the window and Start menu | **DECIDED 2026-11-22:** "SPLAT! for Windows". |
 | **G9** | **First-run wizard?** (stage G6) | **DECIDED 2026-11-24: short wizard** (owner: "Short wizard (Recommended)"). Was recommended: a short wizard that opens once on first run, can be skipped, and can be reopened from Help: (1) welcome and what the app does; (2) terrain folder (the default is fine for most); (3) call-sign lookup: QRZ sign-in (the user types the password) or the free callook.info; (4) add your first station; (5) offer to run a first coverage map. Alternative: no wizard; the Getting started page opens on first run, and empty panels show what to do next. |
-| **G10** | **Where the 3D view shows** | **Its own window (Recommended)**, opened by a 3D view... button after a path is analyzed: big, resizable, can sit beside the main window. The alternative is a sixth tab beside the graphs, which is small. |
-| **G11** | **What covers the ground** | **Topographic map by default (Recommended)**, with street map and "colored by height" (offline) as choices. |
-| **G12** | **Strip width** | **About 1 mile either side by default (Recommended)**, adjustable from 1/4 to 5 miles. |
+| **G10** | **Where the 3D view shows** | **DECIDED 2026-11-24 ("Yes, start G8"): its own window.** Recommended was, opened by a 3D view... button after a path is analyzed: big, resizable, can sit beside the main window. The alternative is a sixth tab beside the graphs, which is small. |
+| **G11** | **What covers the ground** | **DECIDED 2026-11-24: topographic map by default.** Recommended was, with street map and "colored by height" (offline) as choices. |
+| **G12** | **Strip width** | **DECIDED 2026-11-24: about 1 mile either side.** Recommended was, adjustable from 1/4 to 5 miles. |

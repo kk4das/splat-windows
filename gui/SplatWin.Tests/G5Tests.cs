@@ -175,9 +175,15 @@ public class G5PathJobTests
             Assert.DoesNotContain("root://", doc);
             Assert.DoesNotContain("\uFFFD", doc);
             Assert.Contains("38° 55' 27\" North", doc);                       // SPLAT!'s Latin-1 degree sign, now UTF-8
-            Assert.Equal(2, Regex.Matches(doc, "<LineStyle>").Count);           // the path lines keep their colors
+            // SPLAT!'s own path lines keep their colors (stage G8 adds its own lines beside them, in their own folder).
+            Assert.Contains("<color>7fffffff</color>", doc);
+            Assert.Contains("<color>ff00ff00</color>", doc);
             Assert.Contains("<name>Line-of-Sight Path</name>", doc);
-            Assert.Equal(2, Regex.Matches(doc, "<Point>").Count);               // both stations
+            Assert.Contains("<name>Point-to-Point Path</name>", doc);
+            int g8 = doc.IndexOf("<name>3D path (SPLAT! for Windows)</name>", StringComparison.Ordinal);
+            Assert.True(g8 > 0, "the G8 additions are missing");
+            Assert.Equal(2, Regex.Matches(doc[..g8], "<Point>").Count);         // both stations, as SPLAT! wrote them
+            Assert.Equal(2, Regex.Matches(doc[g8..], "<extrude>1</extrude>").Count);   // the two masts
         }
         finally { Directory.Delete(jobs, true); }
     }

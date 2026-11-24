@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Google Earth</title>
 <meta name="order" content="70">
-<meta name="keywords" content="Google Earth; Google Earth Pro; Google Earth on the web; KMZ; KML; import; station pins; earth.google.com">
+<meta name="keywords" content="Google Earth; 3D path; true line of sight; antenna view; Google Earth Pro; Google Earth on the web; KMZ; KML; import; station pins; earth.google.com">
 <link rel="stylesheet" href="help.css">
 </head>
 <body>
@@ -17,12 +17,28 @@ map or the path you're looking at, whichever you showed last, in Google Earth Pr
   <li><b>A coverage map</b>: the map image laid over the ground, SPLAT!'s color key in the corner, the
       transmitter, and your other stations on the map as pins in a <b>Stations</b> folder.</li>
   <li><b>A path</b>: both stations, the path and its line-of-sight part, with SPLAT!'s descriptions
-      (positions, distance and direction).</li>
+      (positions, distance and direction), and the <a href="#path3d">3D additions</a> below.</li>
 </ul>
 <p>The app makes the file (<code>.kmz</code>) from SPLAT!'s own <code>.kml</code>, which it leaves
 unchanged in the job folder. Two things are put right in the app's copy: SPLAT!'s placemark icon exists
 only inside Google Earth Pro (the web version refuses files that use it), and SPLAT!'s path file
 garbles the degree sign.</p>
+
+<h2 id="path3d">A path in 3D in Google Earth</h2>
+<p>SPLAT!'s own "Line-of-Sight Path" is drawn a few yards above the ground along the track, so it
+doesn't show the radio path itself. The app adds, in a folder <b>3D path (SPLAT! for Windows)</b>:</p>
+<ul>
+  <li><b>Line of sight (true height)</b>: the line from one antenna top to the other at SPLAT!'s
+      heights above sea level (with its allowance for the atmosphere's bending), so you see it pass over
+      or into hills, and through trees and buildings where Google Earth shows them.</li>
+  <li>Both <b>antennas</b> as masts at their heights above sea level.</li>
+  <li><b>Terrain in the way</b>: red pins on the points SPLAT! lists as obstructions.</li>
+  <li><b>View from</b> each antenna: double-click the folder to stand at that antenna, looking at the
+      other one. Google Earth opens the file at the receiver's antenna; SPLAT!'s own view is kept as
+      <b>Overview (SPLAT!'s view)</b>.</li>
+</ul>
+<p>Google Earth's terrain isn't exactly SPLAT!'s, so the line can look a few feet off the ground in
+places; SPLAT!'s answers come from SPLAT!'s terrain, shown in <a href="path-3d.html">the app's 3D view</a>.</p>
 
 <h2 id="web">Google Earth on the web</h2>
 <p>Without Google Earth Pro, the same file opens in Google Earth in a web browser. Click

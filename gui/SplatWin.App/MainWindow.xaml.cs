@@ -9,8 +9,8 @@ namespace SplatWin.App;
 
 public partial class MainWindow : Window
 {
-    const string AppHost = "app.splat.local";   // the map page (files shipped with the app)
-    const string MapHost = "map.splat.local";   // the images made from the opened map
+    const string AppHost = "app.splatwin.example";   // the map page (files shipped with the app). ".example", never ".local": WebView2 treats .local as the home network and blocks one from loading the other
+    const string MapHost = "map.splatwin.example";   // the images made from the opened map: handed over by the app itself (ServeMapFile), no folder mapping
     public const string AgentName = "SPLATforWindows/0.9";   // identifies the app to map-tile servers
 
     static readonly string DataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SPLATforWindows");
@@ -58,7 +58,10 @@ public partial class MainWindow : Window
             string web = Path.Combine(AppContext.BaseDirectory, "web");
             Directory.CreateDirectory(MapCache);
             core.SetVirtualHostNameToFolderMapping(AppHost, web, CoreWebView2HostResourceAccessKind.Deny);
-            core.SetVirtualHostNameToFolderMapping(MapHost, MapCache, CoreWebView2HostResourceAccessKind.Allow);
+            // Map images are handed over by the app (ServeMapFile), not through a folder mapping: with WebView2
+            // 158 (November 2026) the page could no longer load them from a second mapped virtual host.
+            core.AddWebResourceRequestedFilter($"https://{MapHost}/*", CoreWebView2WebResourceContext.All);
+            core.WebResourceRequested += ServeMapFile;
             // Links in map attributions open in the user's browser, not inside the app.
             core.NewWindowRequested += (_, e) => { e.Handled = true; OpenExternal(e.Uri); };
             core.WebMessageReceived += OnPageMessage;
@@ -69,6 +72,26 @@ public partial class MainWindow : Window
             Status.Text = "The map view could not start: " + ex.Message +
                           " (it needs the Microsoft Edge WebView2 Runtime, which Windows 11 includes).";
         }
+    }
+
+    /// <summary>Serves a file from the map cache for https://map.../&lt;folder&gt;/&lt;file&gt;; nothing outside that folder.</summary>
+    void ServeMapFile(object? sender, CoreWebView2WebResourceRequestedEventArgs e)
+    {
+        var env = Web.CoreWebView2.Environment;
+        try
+        {
+            string rel = Uri.UnescapeDataString(new Uri(e.Request.Uri).AbsolutePath.TrimStart('/')).Replace('/', Path.DirectorySeparatorChar);
+            string root = Path.GetFullPath(MapCache) + Path.DirectorySeparatorChar;
+            string full = Path.GetFullPath(Path.Combine(root, rel));
+            if (full.StartsWith(root, StringComparison.OrdinalIgnoreCase) && File.Exists(full))
+            {
+                string type = Path.GetExtension(full).ToLowerInvariant() switch { ".png" => "image/png", ".json" => "application/json", _ => "application/octet-stream" };
+                e.Response = env.CreateWebResourceResponse(new MemoryStream(File.ReadAllBytes(full)), 200, "OK", $"Content-Type: {type}\r\nCache-Control: no-store");
+                return;
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or UriFormatException) { }
+        e.Response = env.CreateWebResourceResponse(null, 404, "Not Found", "");
     }
 
     void OnPageMessage(object? sender, CoreWebView2WebMessageReceivedEventArgs e)

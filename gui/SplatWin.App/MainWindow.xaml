@@ -420,8 +420,13 @@
                                 <Button x:Name="SumHelpButton" Content="What does this mean?" Padding="10,4" Margin="0,8,0,0" HorizontalAlignment="Left"
                                         Click="HelpLink_Click" Tag="path-analysis.html#summary" ToolTip="What each number in the summary means, and the white circles on the map"/>
                                 <TextBlock x:Name="SumEarth" TextWrapping="Wrap" Margin="0,6,0,0" Style="{StaticResource Caption}"/>
-                                <Button x:Name="JobFolderButton" Content="Open the job folder" Padding="10,4" Margin="0,8,0,0" HorizontalAlignment="Left"
-                                        Click="JobFolder_Click" ToolTip="The inputs, SPLAT!'s outputs and run-again.cmd, which repeats the job from the command line"/>
+                                <WrapPanel Margin="0,8,0,0">
+                                    <Button x:Name="View3DButton" Content="3D view…" Padding="10,4" Margin="0,0,8,0" Click="View3D_Click"
+                                            Style="{DynamicResource AccentButtonStyle}"
+                                            ToolTip="The terrain along the path in 3D: the line of sight, the Fresnel zone and what's in the way, seen from either antenna"/>
+                                    <Button x:Name="JobFolderButton" Content="Open the job folder" Padding="10,4"
+                                            Click="JobFolder_Click" ToolTip="The inputs, SPLAT!'s outputs and run-again.cmd, which repeats the job from the command line"/>
+                                </WrapPanel>
                             </StackPanel>
                         </Border>
                     </StackPanel>

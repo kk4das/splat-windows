@@ -56,6 +56,8 @@ public sealed class PathJob
     public string TxFile { get; }
     public string RxFile { get; }
     public IReadOnlyList<string> Tiles { get; }
+    /// <summary>Set when the Google Earth file couldn't get its 3D additions (it still has SPLAT!'s path).</summary>
+    public string? KmzNote { get; private set; }
 
     string Exe => Path.Combine(EngineFolder, Options.Hd ? "splat-hd.exe" : "splat.exe");
 
@@ -186,7 +188,13 @@ public sealed class PathJob
             string kml = Path.Combine(Folder, KmlName);
             if (!File.Exists(kml)) throw new InvalidOperationException($"SPLAT! didn't write its path KML ({KmlName}). Its output is in {Path.Combine(Folder, LogFile)}.");
             kmz = Path.ChangeExtension(kml, ".kmz");
-            Kmz.WritePath(kmz, Kmz.ReadSplatKml(kml));
+            (string, string)? extras = null;
+            try { extras = PathScene.Load(PathJobSetup.FromJobFolder(Folder)).KmlExtras(); }
+            catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException)
+            {
+                KmzNote = "The Google Earth file has SPLAT!'s path only (the 3D additions couldn't be made: " + ex.Message + ")";
+            }
+            Kmz.WritePath(kmz, Kmz.ReadSplatKml(kml), extras);
         }
 
         var graphs = new Dictionary<GraphKind, GraphData>();

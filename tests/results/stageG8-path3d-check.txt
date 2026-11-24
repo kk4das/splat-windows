@@ -1,0 +1,100 @@
+﻿== 2026-11-24 143906 K4HTA to KK4DAS: exit 0
+[PASS] terrain along the path (graph-profile\profile.gp): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph profile.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph reference.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph curvature.gp (curvature, line of sight, Fresnel): 99 points: 99 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel_pt_6.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] obstruction list (the report's lines, character for character): 3 point(s), identical
+[PASS] K4HTA antenna top (584.49 feet AMSL) as in the report: 584.49 feet AMSL
+[PASS] KK4DAS antenna top (305.59 feet AMSL) as in the report: 305.59 feet AMSL
+== 2026-11-24 143907 K4HTA to KK4DAS: exit 0
+[PASS] terrain along the path (graph-profile\profile.gp): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph profile.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph reference.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph curvature.gp (curvature, line of sight, Fresnel): 99 points: 99 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel_pt_6.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] obstruction list (the report's lines, character for character): 3 point(s), identical
+[PASS] K4HTA antenna top (584.49 feet AMSL) as in the report: 584.49 feet AMSL
+[PASS] KK4DAS antenna top (305.59 feet AMSL) as in the report: 305.59 feet AMSL
+== 2026-11-24 143908 K4HTA to Legion_Hall: exit 0
+[PASS] terrain along the path (graph-profile\profile.gp): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] height graph profile.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] height graph reference.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] height graph curvature.gp (curvature, line of sight, Fresnel): 82 points: 82 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel_pt_6.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] obstruction list (the report's lines, character for character): 4 point(s), identical
+[PASS] K4HTA antenna top (584.49 feet AMSL) as in the report: 584.49 feet AMSL
+[PASS] Legion_Hall antenna top (376.73 feet AMSL) as in the report: 376.73 feet AMSL
+== 2026-11-24 143910 K4HTA to Legion_Hall: exit 0
+[PASS] terrain along the path (graph-profile\profile.gp): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] height graph profile.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] height graph reference.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] height graph curvature.gp (curvature, line of sight, Fresnel): 82 points: 82 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel_pt_6.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] obstruction list (the report's lines, character for character): 6 point(s), identical
+[PASS] K4HTA antenna top (584.49 feet AMSL) as in the report: 584.49 feet AMSL
+[PASS] Legion_Hall antenna top (376.73 feet AMSL) as in the report: 376.73 feet AMSL
+== 2026-11-24 143911 K4HTA to KK4DAS: exit 0
+[PASS] terrain along the path (graph-profile\profile.gp): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph profile.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph reference.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph curvature.gp (curvature, line of sight, Fresnel): 99 points: 99 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel_pt_6.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] obstruction list (the report's lines, character for character): 3 point(s), identical
+[PASS] K4HTA antenna top (178.15 meters AMSL) as in the report: 178.15 meters AMSL
+[PASS] KK4DAS antenna top (93.14 meters AMSL) as in the report: 93.14 meters AMSL
+== 2026-11-24 143912 K4HTA to KK4DAS: exit 0
+[PASS] terrain along the path (graph-profile\profile.gp): 298 points: 298 identical, 0 differ in the last printed digit
+[PASS] height graph profile.gp (curvature, line of sight, Fresnel): 298 points: 297 identical, 0 differ in the last printed digit, 1 by up to 0.000003
+[PASS] height graph reference.gp (curvature, line of sight, Fresnel): 298 points: 298 identical, 0 differ in the last printed digit
+[PASS] height graph curvature.gp (curvature, line of sight, Fresnel): 297 points: 296 identical, 0 differ in the last printed digit, 1 by up to 0.000003
+[PASS] height graph fresnel.gp (curvature, line of sight, Fresnel): 298 points: 298 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel_pt_6.gp (curvature, line of sight, Fresnel): 298 points: 298 identical, 0 differ in the last printed digit
+[PASS] obstruction list (the report's lines, character for character): 5 point(s), identical
+[PASS] K4HTA antenna top (591.05 feet AMSL) as in the report: 591.05 feet AMSL
+[PASS] KK4DAS antenna top (312.15 feet AMSL) as in the report: 312.15 feet AMSL
+== 2026-11-24 143915 K4HTA to KK4DAS: exit 0
+[PASS] terrain along the path (graph-profile\profile.gp): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph profile.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph reference.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph curvature.gp (curvature, line of sight, Fresnel): 99 points: 99 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel_pt_6.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] obstruction list (the report's lines, character for character): 4 point(s), identical
+[PASS] K4HTA antenna top (584.49 feet AMSL) as in the report: 584.49 feet AMSL
+[PASS] KK4DAS antenna top (305.59 feet AMSL) as in the report: 305.59 feet AMSL
+== 2026-11-24 143916 K4HTA_pattern to KK4DAS: exit 0
+[PASS] terrain along the path (graph-profile\profile.gp): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph profile.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph reference.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph curvature.gp (curvature, line of sight, Fresnel): 99 points: 99 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel_pt_6.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] obstruction list (the report's lines, character for character): 3 point(s), identical
+[PASS] K4HTA_pattern antenna top (584.49 feet AMSL) as in the report: 584.49 feet AMSL
+[PASS] KK4DAS antenna top (305.59 feet AMSL) as in the report: 305.59 feet AMSL
+== 2026-11-24 143917 K4HTA to KK4DAS: exit 0
+[PASS] terrain along the path (graph-profile\profile.gp): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph profile.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph reference.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph curvature.gp (curvature, line of sight, Fresnel): 99 points: 99 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel_pt_6.gp (curvature, line of sight, Fresnel): 100 points: 100 identical, 0 differ in the last printed digit
+[PASS] obstruction list (the report's lines, character for character): 3 point(s), identical
+[PASS] K4HTA antenna top (584.49 feet AMSL) as in the report: 584.49 feet AMSL
+[PASS] KK4DAS antenna top (305.59 feet AMSL) as in the report: 305.59 feet AMSL
+== 2026-11-24 143918 K4HTA_pattern to Legion_Hall: exit 0
+[PASS] terrain along the path (graph-profile\profile.gp): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] height graph profile.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] height graph reference.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] height graph curvature.gp (curvature, line of sight, Fresnel): 82 points: 82 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] height graph fresnel_pt_6.gp (curvature, line of sight, Fresnel): 83 points: 83 identical, 0 differ in the last printed digit
+[PASS] obstruction list (the report's lines, character for character): 4 point(s), identical
+[PASS] K4HTA_pattern antenna top (178.15 meters AMSL) as in the report: 178.15 meters AMSL
+[PASS] Legion_Hall antenna top (114.83 meters AMSL) as in the report: 114.83 meters AMSL

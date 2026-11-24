@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>3D path view</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#1d232a; --panel:rgba(24,28,34,.88); --text:#eef1f4; --muted:#aeb7c2; --accent:#4cc2ff; --line:#3a4350; --red:#ff4d4d; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--text); font:14px "Segoe UI", system-ui, sans-serif; overflow:hidden; }
+  #view { position:absolute; inset:0; }
+  #bar { position:absolute; top:8px; left:8px; right:8px; display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center;
+         background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:6px 10px; z-index:2; }
+  .grp { display:flex; gap:4px; align-items:center; }
+  .grp > span { color:var(--muted); margin-right:2px; }
+  button, select { font:inherit; color:var(--text); background:#2b333d; border:1px solid #46515f; border-radius:4px; padding:4px 9px; cursor:pointer; }
+  button:hover, select:hover { border-color:var(--accent); }
+  button[aria-pressed="true"] { background:#0f5f8c; border-color:var(--accent); }
+  button:focus-visible, select:focus-visible, input:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  input[type=range] { width:110px; accent-color:var(--accent); }
+  #exv { min-width:2.4em; display:inline-block; }
+  #info { position:absolute; left:8px; bottom:8px; max-width:min(760px, calc(100% - 16px)); background:var(--panel); border:1px solid var(--line);
+          border-radius:6px; padding:8px 12px; z-index:2; }
+  #summary { font-weight:600; }
+  #summary.blocked { color:#ffb3b3; }
+  #readout { color:var(--muted); margin-top:4px; min-height:1.3em; }
+  #notes { color:var(--muted); margin-top:4px; font-size:12px; }
+  #legend { display:flex; flex-wrap:wrap; gap:4px 14px; margin-top:6px; font-size:12px; color:var(--muted); }
+  .chip { display:inline-block; width:18px; height:4px; border-radius:2px; vertical-align:middle; margin-right:5px; }
+  .dot { display:inline-block; width:9px; height:9px; border-radius:50%; vertical-align:middle; margin-right:5px; background:var(--red); }
+  #attrib { font-size:11px; color:var(--muted); margin-top:4px; }
+  #attrib a { color:var(--muted); }
+  #busy { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--muted); z-index:1; }
+  #busy.error { color:#ffb3b3; padding:40px; text-align:center; }
+  #busy.note { inset:auto; top:120px; left:50%; transform:translateX(-50%); padding:6px 14px; border-radius:16px;
+               background:var(--panel); border:1px solid var(--line); font-size:13px; z-index:3; }
+  .label { position:absolute; transform:translate(-50%, -130%); padding:1px 6px; border-radius:3px; background:rgba(20,24,30,.8);
+           color:#fff; font-size:12px; font-weight:600; white-space:nowrap; pointer-events:none; z-index:1; border:1px solid #556; }
+  .label.obs { border-color:var(--red); color:#ffd0d0; transform:translate(-50%, 60%); }
+</style>
+<script type="importmap">{ "imports": { "three": "./vendor/three-0.180.0/three.module.min.js" } }</script>
+</head>
+<body>
+<div id="view" aria-label="3D view of the terrain along the path"></div>
+<div id="labels"></div>
+<div id="bar" role="toolbar" aria-label="3D view controls">
+  <div class="grp" role="group" aria-label="Viewpoint">
+    <span>View</span>
+    <button id="v-rx" data-view="rx" title="From the receiver's antenna, looking at the transmitter (key 1)">From RX</button>
+    <button id="v-tx" data-view="tx" title="From the transmitter's antenna, looking at the receiver (key 2)">From TX</button>
+    <button id="v-side" data-view="side" title="Side view, like the height graph (key 3)">Side</button>
+    <button id="v-over" data-view="over" title="Overview (key 4)">Overview</button>
+    <button id="reset" title="Back to the chosen viewpoint (key R)">Reset view</button>
+  </div>
+  <div class="grp"><label for="ex"><span>Height ×</span></label><input id="ex" type="range" min="1" max="20" step="0.5" value="3"
+       aria-label="Height exaggeration" title="How much heights are stretched (keys + and -)"><span id="exv">3×</span></div>
+  <div class="grp"><label for="ground"><span>Ground</span></label>
+    <select id="ground" aria-label="What covers the ground">
+      <option value="topo">Topographic map</option><option value="streets">Street map</option><option value="heights">Colored by height (offline)</option>
+    </select></div>
+  <div class="grp"><label for="width"><span>Strip</span></label>
+    <select id="width" aria-label="Strip width either side of the path"></select></div>
+  <div class="grp"><label for="fres"><span>Fresnel</span></label>
+    <select id="fres" aria-label="Fresnel zone shown"></select></div>
+  <button id="help" title="Help for the 3D view (F1)">?</button>
+</div>
+<div id="busy">Starting…</div>
+<div id="info" hidden>
+  <div id="summary" role="status"></div>
+  <div id="readout" aria-live="polite">Click the ground to read its distance and height against the line of sight. Drag to turn, scroll to zoom, right-drag to move.</div>
+  <div id="legend">
+    <span><span class="chip" style="background:#00e5ff"></span>Line of sight</span>
+    <span><span class="chip" style="background:#5aa0ff;opacity:.7"></span><span id="lg-fres">Fresnel zone</span> (dark blue: its lower edge)</span>
+    <span><span class="dot" style="background:#ffe14d"></span>Antenna tops (a white ring alone: a hill hides it)</span>
+    <span><span class="chip" style="background:#ffd23f"></span>Ground under the path</span>
+    <span><span class="chip" style="background:#ff4d4d"></span>…where it rises above the line of sight</span>
+    <span><span class="dot"></span>Where SPLAT! finds terrain in the way</span>
+  </div>
+  <div id="notes"></div>
+  <div id="attrib"></div>
+</div>
+<script type="module" src="path3d.js"></script>
+</body>
+</html>

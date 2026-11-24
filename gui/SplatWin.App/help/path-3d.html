@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The 3D path view</title>
+<meta name="order" content="45">
+<meta name="keywords" content="3D view; 3D path view; terrain in 3D; what's blocking the signal; obstruction; line of sight; Fresnel zone; height exaggeration; viewpoint; from the antenna; side view; strip width; three.js">
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<h1>The 3D path view</h1>
+<p class="lead">After you analyze a path, <span class="ui">3D view…</span> (in the summary, beside
+<span class="ui">Open the job folder</span>) shows the terrain along the path in 3D: both antennas,
+the line of sight between them, the Fresnel zone, and the points where SPLAT! finds terrain in the way.
+It's for seeing <i>what</i> blocks a path and <i>where</i>, which the graphs show only edge-on.</p>
+
+<h2 id="what">What you see</h2>
+<ul>
+  <li><b>A strip of terrain</b> along the path, about a mile either side (<span class="ui">Strip</span>
+      changes it, from ¼ to 5 miles), with a topographic map, a street map, or colors by height on it
+      (<span class="ui">Ground</span>; colors by height work without the internet).</li>
+  <li><b>The antennas</b> as white masts, their tops as yellow dots.</li>
+  <li><b>The line of sight</b> (light blue) from one antenna top to the other.</li>
+  <li><b>The Fresnel zone</b>, see-through blue around the line of sight; its lower edge is the dark
+      blue line. <span class="ui">Fresnel</span> shows the zone your path analysis used (60 % unless you
+      changed it), the full first zone, or none. Terrain poking into the zone weakens the signal even
+      when the line of sight is clear.</li>
+  <li><b>The ground right under the path</b> as a yellow line, <b>red where it rises above the line of
+      sight</b>.</li>
+  <li><b>Red dots</b>: the points SPLAT! lists as obstructions in its report, labeled with the
+      distance from the receiver.</li>
+  <li>At the bottom, one sentence: <b>Blocked</b> (with where, and how high the ground rises above the
+      line of sight), <b>Line of sight clear, but the ground reaches into the Fresnel zone</b>, or
+      <b>Clear</b>. "Blocked" is exactly when SPLAT!'s report lists obstructions.</li>
+</ul>
+
+<h2 id="views">Viewpoints</h2>
+<ul>
+  <li><span class="ui">From <i>receiver</i></span> (key <kbd>1</kbd>): standing at the receiving
+      antenna, looking at the transmitter. <b>The most useful view:</b> if a hill hides the far antenna,
+      you see the hill, and the far antenna shows only as a <b>white ring</b> through it. A yellow dot
+      inside the ring means you can see it.</li>
+  <li><span class="ui">From <i>transmitter</i></span> (key <kbd>2</kbd>): the same from the other end.</li>
+  <li><span class="ui">Side</span> (key <kbd>3</kbd>): the whole path from the side, like the
+      <span class="ui">Height and Fresnel zone</span> graph.</li>
+  <li><span class="ui">Overview</span> (key <kbd>4</kbd>): from above and behind the receiver.</li>
+</ul>
+<p>Drag to turn, scroll to zoom, right-drag to move. <span class="ui">Reset view</span> (key
+<kbd>R</kbd>) goes back to the viewpoint you chose. <b>Click the ground</b> to read its distance from the
+receiver and how far it is above or below the line of sight's height there.</p>
+
+<h2 id="exaggeration">Height exaggeration</h2>
+<p>Over miles, hills that matter are only tens of feet high, too small to see at true scale. The
+<span class="ui">Height ×</span> slider (keys <kbd>+</kbd> and <kbd>−</kbd>) stretches every height,
+from 1× (true scale) to 20×; it starts at 3×. The line of sight and the Fresnel zone are stretched the
+same way, so <b>what is above or below the line of sight stays so at every setting</b>. (The view checks
+this for every point along the path each time it draws.) For long paths, try 10× or more in the side view.</p>
+
+<h2 id="faithful">Where the numbers come from</h2>
+<p>Nothing in the view is guessed or redrawn by eye. Along the path, the heights are SPLAT!'s own:
+the same terrain files, the same lookup and the same allowance for Earth's curvature (SPLAT!'s "4/3
+Earth", which includes the bending of radio waves in the atmosphere) as SPLAT!'s
+<span class="ui">Height and Fresnel zone</span> graph, and the red dots are SPLAT!'s obstruction list.
+The app's tests require these to match the files SPLAT! wrote. Either side of the path the same
+terrain and the same curvature are used. The curvature is taken out of the picture, as in SPLAT!'s
+graphs, so the line of sight is a straight line.</p>
+<p><b>SPLAT!'s terrain is bare ground.</b> Trees and buildings aren't in it (nor in the view), and on
+VHF and UHF they matter too. Look at the path in <a href="google-earth.html#path3d">Google Earth</a>,
+which has 3D buildings and, in many places, trees. If you gave a ground clutter height for the path,
+SPLAT! raised the ground by it when it looked for obstructions; the view says so and shows the bare
+ground. User terrain from an obstacle file is shown, as SPLAT! used it.</p>
+
+<h2 id="station-position">If the path looks wrong</h2>
+<p>A station whose position came from a mailing address may not be at its antenna, and a few hundred
+feet can decide whether a hill is in the way. Check each station's pin is on the antenna itself
+(<a href="stations.html">Stations</a>), then analyze the path again.</p>
+
+<h2 id="needs">What it needs</h2>
+<p>The terrain the path was analyzed with. For the sides of the strip the app may need a few more
+terrain tiles; it downloads them as it does for a path, and if it can't (no internet), it leaves that
+part of the strip out and says so. The map on the ground needs the internet; without it the ground is
+colored by height. The view draws with your graphics card (WebGL, part of the WebView2 runtime the map uses).</p>
+</body>
+</html>

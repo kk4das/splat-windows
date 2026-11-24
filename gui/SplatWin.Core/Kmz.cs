@@ -60,10 +60,33 @@ public static class Kmz
 
     static string SecurityElement(string s) => System.Security.SecurityElement.Escape(s) ?? "";
 
-    /// <summary>A point-to-point KMZ: SPLAT!'s path KML (stations, the path and the line-of-sight path), web-safe, no image.</summary>
-    public static void WritePath(string kmzPath, string kml)
+    /// <summary>
+    /// A point-to-point KMZ: SPLAT!'s path KML (stations, the path and the line-of-sight path), web-safe, no image.
+    /// With <paramref name="extras"/> (stage G8, from PathScene.KmlExtras): the true line of sight, masts,
+    /// obstruction points and antenna views are added, and Google Earth opens at the receiver's antenna
+    /// looking at the transmitter (SPLAT!'s own view is kept as "Overview"). SPLAT!'s .kml file itself is not changed.
+    /// </summary>
+    public static void WritePath(string kmzPath, string kml, (string Folder, string Camera)? extras = null)
     {
         string doc = WebSafeKml(kml, "", null);
+        if (extras is { } x)
+        {
+            doc = doc.Replace("xmlns=\"http://earth.google.com/kml/2.0\"", "xmlns=\"http://www.opengis.net/kml/2.2\"");   // <Camera> is KML 2.2
+            int end = doc.LastIndexOf("</Folder>", StringComparison.Ordinal);
+            if (end < 0) throw new InvalidDataException("the path KML has no folder");
+            var look = Regex.Match(doc[..end], @"\s*<LookAt>.*?</LookAt>\s*$", RegexOptions.Singleline);
+            string overview = "";
+            if (look.Success)
+            {
+                overview = "<Folder>\n<name>Overview (SPLAT!'s view)</name>\n" + look.Value.Trim() + "\n</Folder>\n";
+                doc = doc.Remove(look.Index, look.Length) + "";
+                end = doc.LastIndexOf("</Folder>", StringComparison.Ordinal);
+            }
+            doc = doc.Insert(end, "\n" + x.Folder + overview);
+            int desc = doc.IndexOf("</description>", StringComparison.Ordinal);
+            if (desc >= 0) doc = doc.Insert(desc + "</description>".Length, "\n" + x.Camera.TrimEnd());
+            XDocument.Parse(doc);
+        }
         string part = kmzPath + ".part";
         File.Delete(part);
         try
