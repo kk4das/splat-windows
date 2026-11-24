@@ -71,7 +71,7 @@ public partial class MainWindow
 
     // ---- the editor ----
 
-    void Add_Click(object sender, RoutedEventArgs e) => OpenEditor(null);
+    void Add_Click(object sender, RoutedEventArgs e) { if (CanSwitch()) OpenEditor(null); }
 
     void Edit_Click(object sender, RoutedEventArgs e)
     {
@@ -94,8 +94,7 @@ public partial class MainWindow
         MethodTabs.SelectedIndex = 0;
         ShowMethodHint();
         ClearPin();
-        ListPanel.Visibility = Visibility.Collapsed;
-        EditorPanel.Visibility = Visibility.Visible;
+        ShowView(View.Editor);
         if (_pageReady) _ = Web.CoreWebView2.ExecuteScriptAsync("window.splat.setEditing(true)");
         if (s != null)
         {
@@ -105,13 +104,7 @@ public partial class MainWindow
         FindBox.Focus();
     }
 
-    void CloseEditor()
-    {
-        EditorPanel.Visibility = Visibility.Collapsed;
-        ListPanel.Visibility = Visibility.Visible;
-        ClearPin();
-        if (_pageReady) _ = Web.CoreWebView2.ExecuteScriptAsync("window.splat.setEditing(false)");
-    }
+    void CloseEditor() => ShowView(View.Stations);   // ShowView clears the pin and stops map editing
 
     void Cancel_Click(object sender, RoutedEventArgs e) { CloseEditor(); Status.Text = "Nothing was changed."; }
 
@@ -375,7 +368,7 @@ public partial class MainWindow
 
     void Import_Click(object sender, RoutedEventArgs e)
     {
-        if (_library == null) return;
+        if (_library == null || !CanSwitch()) return;
         var dlg = new OpenFileDialog
         {
             Title = "Import SPLAT! site files",
@@ -383,6 +376,7 @@ public partial class MainWindow
             Multiselect = true,
         };
         if (dlg.ShowDialog(this) != true) return;
+        if (_view != View.Stations) ShowView(View.Stations);   // show where the imported stations went
         var added = new List<Station>();
         var problems = new List<string>();
         foreach (string f in dlg.FileNames)

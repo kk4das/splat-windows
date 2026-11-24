@@ -21,7 +21,8 @@ public partial class MainWindow
 
     void PathOpen_Click(object sender, RoutedEventArgs e)
     {
-        if (_library == null) return;
+        if (_library == null || !CanSwitch()) return;
+        if (_view == View.Path) return;   // already showing: keep what's typed
         if (_library.Stations.Count < 2) { Status.Text = "Add at least two stations first: a transmitter and a receiver."; return; }
         if (ClimateBox.Items.Count == 0) foreach (var c in RadioSettings.ClimateNames) ClimateBox.Items.Add(c);
         var list = _library.Stations.OrderBy(s => s.Name, StringComparer.OrdinalIgnoreCase).ToList();
@@ -33,18 +34,8 @@ public partial class MainWindow
         LoadRadio(tx);
         ShowTerrain();
         PathError.Text = "";
-        ListPanel.Visibility = Visibility.Collapsed;
-        PathPanel.Visibility = Visibility.Visible;
+        ShowView(View.Path);
         Status.Text = "Choose the transmitter and the receiver, check the radio settings, then click Analyse.";
-    }
-
-    void PathClose_Click(object sender, RoutedEventArgs e)
-    {
-        if (_pathCts != null) { _pathCts.Cancel(); return; }   // while running, this is Cancel
-        PathPanel.Visibility = Visibility.Collapsed;
-        ListPanel.Visibility = Visibility.Visible;
-        ShowResults(false);
-        if (_pageReady) _ = Web.CoreWebView2.ExecuteScriptAsync("window.splat.clearPath()");
     }
 
     void TxBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -175,11 +166,13 @@ public partial class MainWindow
         if (PathJob.Problem(tx, rx, radio!, options!, App.TerrainFolder, App.EngineDir, checkTerrain: false) is { } p) { PathError.Text = p; return; }
         var tiles = PathJob.TilesFor(tx!, rx!, options!);
         if (tiles.Count > (options!.Hd ? Terrain.HdMaxTiles : Terrain.StandardMaxTiles)) { PathError.Text = Terrain.Problem(App.TerrainFolder, tiles, options.Hd); return; }
-        AnalyseButton.IsEnabled = false;
+        _pathCts = new CancellationTokenSource();
+        SetBusy(path: true, on: true);
         string? terrainError;
-        try { terrainError = await EnsureTerrainAsync(tiles, options.Hd, CancellationToken.None); }
-        finally { AnalyseButton.IsEnabled = true; ShowTerrain(); }
-        if (terrainError != null) { PathError.Text = terrainError; return; }
+        try { terrainError = await EnsureTerrainAsync(tiles, options.Hd, _pathCts.Token); }
+        catch (OperationCanceledException) { Status.Text = "Cancelled while fetching terrain; nothing was run."; terrainError = ""; }
+        finally { _pathCts.Dispose(); _pathCts = null; SetBusy(path: true, on: false); ShowTerrain(); }
+        if (terrainError != null) { if (terrainError.Length > 0) PathError.Text = terrainError; return; }
         if (Terrain.Problem(App.TerrainFolder, tiles, options.Hd) is { } tp) { PathError.Text = tp; return; }
 
         // The radio settings belong to the transmitter: save them with it.
@@ -197,8 +190,7 @@ public partial class MainWindow
         { PathError.Text = "The job folder couldn't be made: " + ex.Message; return; }
 
         _pathCts = new CancellationTokenSource();
-        AnalyseButton.IsEnabled = false;
-        PathCloseButton.Content = "Cancel";
+        SetBusy(path: true, on: true);
         var progress = new Progress<string>(s => Status.Text = s);
         try
         {
@@ -212,8 +204,7 @@ public partial class MainWindow
         finally
         {
             _pathCts.Dispose(); _pathCts = null;
-            AnalyseButton.IsEnabled = true;
-            PathCloseButton.Content = "Close";
+            SetBusy(path: true, on: false);
         }
     }
 

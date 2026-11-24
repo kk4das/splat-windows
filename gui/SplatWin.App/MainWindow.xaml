@@ -46,21 +46,29 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" Margin="14,4,8,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!-- Always here, whatever the panel below shows; the current one is highlighted. -->
+                <UniformGrid x:Name="NavBar" Rows="2" Columns="2" Margin="0,4,0,12">
+                    <Button x:Name="AddButton" Content="Add station…" Padding="10,5" Margin="0,0,4,4" HorizontalAlignment="Stretch" Click="Add_Click"
+                            ToolTip="Add a station by call sign, address, grid square, coordinates or a click on the map"/>
+                    <Button x:Name="ImportButton" Content="Import .qth…" Padding="10,5" Margin="4,0,0,4" HorizontalAlignment="Stretch" Click="Import_Click"
+                            ToolTip="Add stations from SPLAT! .qth files (a .lrp, .az or .el file beside one comes too)"/>
+                    <Button x:Name="PathButton" Content="Analyse a path…" Padding="10,5" Margin="0,4,4,0" HorizontalAlignment="Stretch" Click="PathOpen_Click"
+                            ToolTip="Pick a transmitter and a receiver and run SPLAT!'s path analysis"/>
+                    <Button x:Name="CoverageButton" Content="Coverage map…" Padding="10,5" Margin="4,4,0,0" HorizontalAlignment="Stretch" Click="CoverageOpen_Click"
+                            ToolTip="Map a transmitter's coverage with SPLAT!, shown on the map in this window"/>
+                </UniformGrid>
+                <!-- Fixed too (never scrolls away): back to the list from path analysis, coverage maps or the editor. -->
+                <Button x:Name="BackButton" Grid.Row="1" Content="Back to stations" Padding="10,4" Margin="0,0,0,10" HorizontalAlignment="Left"
+                        Visibility="Collapsed" Click="Back_Click"/>
+                <Grid Grid.Row="2">
                 <!-- The stations list -->
                 <DockPanel x:Name="ListPanel">
-                    <TextBlock DockPanel.Dock="Top" Text="Stations" FontSize="20" FontWeight="SemiBold"/>
-                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,10,0,10">
-                        <Button x:Name="AddButton" Content="Add station…" Padding="12,5" Click="Add_Click"
-                                Style="{DynamicResource AccentButtonStyle}"/>
-                        <Button x:Name="ImportButton" Content="Import .qth…" Padding="12,5" Margin="8,0,0,0" Click="Import_Click"
-                                ToolTip="Add stations from SPLAT! .qth files (a .lrp file beside one brings its radio settings)"/>
-                    </StackPanel>
-                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
-                        <Button x:Name="PathButton" Content="Analyse a path…" Padding="12,5" Click="PathOpen_Click"
-                                ToolTip="Pick a transmitter and a receiver and run SPLAT!'s path analysis"/>
-                        <Button x:Name="CoverageButton" Content="Coverage map…" Padding="12,5" Margin="8,0,0,0" Click="CoverageOpen_Click"
-                                ToolTip="Map a transmitter's coverage with SPLAT!, shown on the map in this window"/>
-                    </StackPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Stations" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8"/>
                     <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,10,0,0">
                         <Button x:Name="EditButton" Content="Edit…" Padding="12,5" Click="Edit_Click" IsEnabled="False"/>
                         <Button x:Name="DeleteButton" Content="Delete" Padding="12,5" Margin="8,0,0,0" Click="Delete_Click" IsEnabled="False"/>
@@ -236,7 +244,8 @@
                         <TextBlock x:Name="CovError" Foreground="#D13438" TextWrapping="Wrap" Margin="0,12,0,0"/>
                         <StackPanel Orientation="Horizontal" Margin="0,12,0,8">
                             <Button x:Name="CovRunButton" Content="Run" Padding="18,6" Click="CovRun_Click" Style="{DynamicResource AccentButtonStyle}"/>
-                            <Button x:Name="CovCloseButton" Content="Close" Padding="14,6" Margin="8,0,0,0" Click="CovClose_Click"/>
+                            <Button x:Name="CovCancelButton" Content="Cancel" Padding="14,6" Margin="8,0,0,0" Click="CovCancel_Click" Visibility="Collapsed"
+                                    ToolTip="Stop making this map"/>
                         </StackPanel>
 
                         <Border x:Name="CovResultBox" Visibility="Collapsed" Padding="10,8" Margin="0,6,0,8" CornerRadius="4" BorderThickness="1"
@@ -373,7 +382,8 @@
                         <StackPanel Orientation="Horizontal" Margin="0,12,0,8">
                             <Button x:Name="AnalyseButton" Content="Analyse" Padding="18,6" Click="Analyse_Click"
                                     Style="{DynamicResource AccentButtonStyle}"/>
-                            <Button x:Name="PathCloseButton" Content="Close" Padding="14,6" Margin="8,0,0,0" Click="PathClose_Click"/>
+                            <Button x:Name="PathCancelButton" Content="Cancel" Padding="14,6" Margin="8,0,0,0" Click="PathCancel_Click" Visibility="Collapsed"
+                                    ToolTip="Stop this analysis"/>
                         </StackPanel>
 
                         <!-- The result's headline numbers: SPLAT!'s own text from the report -->
@@ -392,6 +402,7 @@
                         </Border>
                     </StackPanel>
                 </ScrollViewer>
+                </Grid>
             </Grid>
 
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>

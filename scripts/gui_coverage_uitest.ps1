@@ -122,7 +122,8 @@ try {
 
     # 1. Open the coverage panel.
     Click (ById 'CoverageButton')
-    Check (-not (Hidden 'CoveragePanel') -and (Hidden 'AddButton')) 'coverage panel opens'
+    Check (-not (Hidden 'CoveragePanel') -and (Hidden 'StationList')) 'coverage panel opens'
+    Check (-not (Hidden 'AddButton') -and -not (Hidden 'ImportButton') -and -not (Hidden 'PathButton') -and -not (Hidden 'CoverageButton') -and -not (Hidden 'BackButton')) 'the four buttons stay at the top, and Back to stations is shown'
     Choose 'CovTxBox' 'K4HTA'
     Check ((Text 'CovRadioHint') -like 'No radio settings for K4HTA yet*') 'no radio settings yet, and it says so' (Text 'CovRadioHint')
     Check ((Text 'CovTerrainText') -like '*\terrain (0 .sdf files). Missing tiles are downloaded automatically.') 'empty terrain folder shown' (Text 'CovTerrainText')
@@ -196,11 +197,12 @@ try {
     Run-Map
     $computing = Wait-For { $t = Text 'Status'; $t -like 'K4HTA coverage: *Computing*' -or $t -like 'K4HTA coverage: *% to*' } 180000
     Check ([bool]$computing) 'HD terrain fetched, SPLAT! computing' (Text 'Status')
-    Click (ById 'CovCloseButton')   # "Cancel" while running
+    Check (-not (Hidden 'CovCancelButton') -and -not (ById 'PathButton').Current.IsEnabled -and -not (ById 'BackButton').Current.IsEnabled) 'while running: Cancel shown, switching views waits' ''
+    Click (ById 'CovCancelButton')
     $null = Wait-For { (Text 'Status') -like 'Cancelled*' } 20000
     Check ((Text 'Status') -like 'Cancelled. The unfinished job folder is *') 'cancelled' (Text 'Status')
     Check (-not (Get-Process splat-hd -ErrorAction SilentlyContinue)) 'SPLAT! HD stopped'
-    Check ((ById 'CovRunButton').Current.IsEnabled -and (Text 'CovCloseButton') -eq 'Close') 'ready again'
+    Check ((ById 'CovRunButton').Current.IsEnabled -and (Hidden 'CovCancelButton') -and (ById 'PathButton').Current.IsEnabled) 'ready again'
     Check ((Get-MapList).Count -eq 2) 'a cancelled map is not in the history'
     Tick 'CovHdBox' $false
 
@@ -277,9 +279,15 @@ try {
     } else { Check $false 'G5: web steps name the Google Earth file to import' 'window not found' }
 
     # 7. Close.
-    Click (ById 'CovCloseButton')
+    # Straight to path analysis and back, without the stations list in between; what was typed stays.
+    Click (ById 'PathButton')
+    Check (-not (Hidden 'PathPanel') -and (Hidden 'CoveragePanel')) 'Analyse a path… switches straight from the coverage panel'
+    Click (ById 'CoverageButton')
+    $radius = (ById 'CovRadiusBox').GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value
+    Check (-not (Hidden 'CoveragePanel') -and (Hidden 'PathPanel') -and $radius -eq '20') 'and back, with the radius still as typed' $radius
+    Click (ById 'BackButton')
     Start-Sleep -Milliseconds 400
-    Check ((Hidden 'CoveragePanel') -and -not (Hidden 'AddButton')) 'Close returns to the stations list'
+    Check ((Hidden 'CoveragePanel') -and -not (Hidden 'StationList')) 'Back to stations returns to the stations list'
     Check (-not ((Requests) | Where-Object { $_ -notlike 'GET /dem3/*' -and $_ -notlike 'GET /skadi/*' })) 'only the stand-in terrain server was asked' ((Requests) -join ' / ')
 }
 finally {

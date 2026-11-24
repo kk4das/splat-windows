@@ -27,7 +27,8 @@ public partial class MainWindow
 
     void CoverageOpen_Click(object sender, RoutedEventArgs e)
     {
-        if (_library == null) return;
+        if (_library == null || !CanSwitch()) return;
+        if (_view == View.Coverage) return;   // already showing: keep what's typed
         if (_library.Stations.Count == 0) { Status.Text = "Add the transmitter as a station first."; return; }
         var list = _library.Stations.OrderBy(s => s.Name, StringComparer.OrdinalIgnoreCase).ToList();
         CovTxBox.ItemsSource = list;
@@ -46,16 +47,8 @@ public partial class MainWindow
         ShowTerrain();
         CovKindBox_SelectionChanged(this, null!);
         RefreshHistory();
-        ListPanel.Visibility = Visibility.Collapsed;
-        CoveragePanel.Visibility = Visibility.Visible;
+        ShowView(View.Coverage);
         Status.Text = "Choose the transmitter, what to map, the radius and the receiver height, then click Run.";
-    }
-
-    void CovClose_Click(object sender, RoutedEventArgs e)
-    {
-        if (_covCts != null) { _covCts.Cancel(); return; }   // while running, this is Cancel
-        CoveragePanel.Visibility = Visibility.Collapsed;
-        ListPanel.Visibility = Visibility.Visible;
     }
 
     void CovTxBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -134,8 +127,7 @@ public partial class MainWindow
         }
 
         _covCts = new CancellationTokenSource();
-        CovRunButton.IsEnabled = false;
-        CovCloseButton.Content = "Cancel";
+        SetBusy(path: false, on: true);
         CoverageJob? job = null;
         _lastTerrainNote = null;
         try
@@ -167,8 +159,7 @@ public partial class MainWindow
         finally
         {
             _covCts.Dispose(); _covCts = null;
-            CovRunButton.IsEnabled = true;
-            CovCloseButton.Content = "Close";
+            SetBusy(path: false, on: false);
         }
     }
 

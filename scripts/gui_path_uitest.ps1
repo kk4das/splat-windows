@@ -81,8 +81,14 @@ try {
     Check ((Text 'Status') -like 'Ready. 4 station(s)*') 'app started on the test library' (Text 'Status')
 
     # 1. Open the path panel: transmitter and receiver chosen, no radio settings yet.
+    # The editor's Back (fixed under the four buttons) leaves without saving.
+    Check (Hidden 'BackButton') 'no Back button on the stations list'
+    Click (ById 'AddButton')
+    Check (-not (Hidden 'EditorPanel') -and (Text 'BackButton') -eq 'Back to stations (nothing saved)') 'the editor shows Back to stations (nothing saved)' (Text 'BackButton')
+    Click (ById 'BackButton')
+    Check ((Hidden 'EditorPanel') -and -not (Hidden 'StationList') -and (Text 'Status') -eq 'Nothing was changed.') 'Back leaves the editor without saving' (Text 'Status')
     Click (ById 'PathButton')
-    Check (-not (Hidden 'PathPanel') -and (Hidden 'AddButton')) 'path panel opens'
+    Check (-not (Hidden 'PathPanel') -and (Hidden 'StationList') -and -not (Hidden 'CoverageButton') -and -not (Hidden 'BackButton')) 'path panel opens; the four buttons and Back to stations are shown'
     Check ((Selected 'TxBox') -eq 'Far North' -or (Selected 'TxBox') -eq 'K4HTA') 'a transmitter is chosen' (Selected 'TxBox')
     Choose 'TxBox' 'K4HTA'
     Choose 'RxBox' 'KK4DAS'
@@ -190,10 +196,15 @@ try {
         $gfx.Dispose(); $bmp.Dispose()
     }
 
-    # 9. Close: back to the list, results and the map path gone.
-    Click (ById 'PathCloseButton')
+    # 9. Straight to the coverage panel: the path's results go; then back to path analysis.
+    Click (ById 'CoverageButton')
+    Check (-not (Hidden 'CoveragePanel') -and (Hidden 'PathPanel') -and (Hidden 'ResultTabs')) 'Coverage map… switches straight from path analysis, clearing its results'
+    Click (ById 'PathButton')
+    Check (-not (Hidden 'PathPanel') -and (Hidden 'CoveragePanel')) 'and back to path analysis'
+    # Back to stations: the list, results and the map path gone.
+    Click (ById 'BackButton')
     Start-Sleep -Milliseconds 400
-    Check ((Hidden 'PathPanel') -and -not (Hidden 'AddButton')) 'Close returns to the stations list'
+    Check ((Hidden 'PathPanel') -and -not (Hidden 'StationList')) 'Back to stations returns to the stations list'
     Check (Hidden 'ResultTabs') 'results hidden'
     Check ((JobCount) -eq 4) 'four job folders, one per analysis' "$(JobCount)"
 }

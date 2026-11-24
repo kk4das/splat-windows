@@ -425,6 +425,13 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-23 — Stage G5b (switching between panels) done. HALT for owner review.** At the
+  owner's request before G6: the four buttons (Add station…, Import .qth…, Analyse a path…,
+  Coverage map…) are fixed at the top of the left panel and switch views directly; the current
+  one is highlighted; "Back to stations" (fixed, under them) replaces Close; Cancel is its own
+  button while a job runs, and switching waits meanwhile. Window tests coverage 52/52, path 41/41,
+  stations 31/31, QRZ 24/24; one deliberate breakage caught; preflight OK at both ends. Report:
+  `reports\stageG5b-navigation.md`.
 - **2026-11-23 — Owner's G5 review passed.** Owner: "all checks passed" (the coverage readout,
   terrain shading off, station pins in Google Earth, the path in Google Earth, Settings showing
   the terrain folder `data\sdf3`). G6 waits for an explicit go-ahead.
