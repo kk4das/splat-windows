@@ -7,6 +7,9 @@ public sealed class AppSettings
 {
     public string? TerrainFolder { get; set; }
 
+    /// <summary>The first-run setup has been finished or skipped (G6), or wasn't needed (stations already there).</summary>
+    public bool SetupDone { get; set; }
+
     // Defaults for new coverage maps (Settings window, G5). Distances in miles and feet unless Metric.
     public double CoverageRadius { get; set; } = 30;
     public double CoverageRxHeight { get; set; } = 6;

@@ -1,0 +1,40 @@
+/* SPLAT! for Windows help: plain pages, readable in the app's help window or any browser. */
+:root {
+  --bg: #ffffff; --fg: #1f1f1f; --muted: #5c5c5c; --line: #d6d6d6; --accent: #0b5cad;
+  --note-bg: #f3f7fc; --note-line: #9cc0e6; --warn-bg: #fff8e6; --warn-line: #d9a400; --code-bg: #f2f2f2;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1e1e1e; --fg: #e6e6e6; --muted: #a8a8a8; --line: #3d3d3d; --accent: #6cb4ff;
+    --note-bg: #1f2a36; --note-line: #3b6a99; --warn-bg: #33290f; --warn-line: #8a6d00; --code-bg: #2b2b2b;
+  }
+}
+html { background: var(--bg); }
+body { margin: 0 auto; max-width: 820px; padding: 20px 28px 48px; color: var(--fg); background: var(--bg);
+       font: 15px/1.55 "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif; }
+h1 { font-size: 26px; font-weight: 600; margin: 4px 0 14px; }
+h2 { font-size: 19px; font-weight: 600; margin: 28px 0 8px; padding-top: 6px; border-top: 1px solid var(--line); }
+h3 { font-size: 16px; font-weight: 600; margin: 20px 0 6px; }
+a { color: var(--accent); }
+p, li, dd { max-width: 74ch; }
+li { margin: 3px 0; }
+code, kbd { font: 13px Consolas, "Cascadia Mono", monospace; background: var(--code-bg); padding: 1px 4px; border-radius: 3px; }
+.ui { font-weight: 600; }                     /* a button or label in the app */
+.note, .warn { padding: 8px 12px; border-left: 4px solid; border-radius: 3px; margin: 12px 0; }
+.note { background: var(--note-bg); border-color: var(--note-line); }
+.warn { background: var(--warn-bg); border-color: var(--warn-line); }
+.lead { font-size: 16px; color: var(--muted); }
+table { border-collapse: collapse; margin: 10px 0 14px; }
+th, td { border: 1px solid var(--line); padding: 4px 10px; text-align: left; vertical-align: top; }
+th { font-weight: 600; }
+td.num { text-align: right; white-space: nowrap; }
+.swatch { display: inline-block; width: 14px; height: 14px; border: 1px solid #0006; vertical-align: -2px; margin-right: 6px; }
+dl.msgs dt { font-family: Consolas, "Cascadia Mono", monospace; font-size: 13px; margin-top: 14px; }
+dl.msgs dd { margin: 4px 0 0 18px; }
+dl.terms dt { font-weight: 600; margin-top: 12px; }
+dl.terms dd { margin: 2px 0 0 18px; }
+figure { margin: 14px 0; }
+figure img { max-width: 100%; border: 1px solid var(--line); border-radius: 4px; }
+figcaption { color: var(--muted); font-size: 13px; margin-top: 4px; }
+ol.steps > li { margin: 10px 0; }
+.contents li { margin: 6px 0; }

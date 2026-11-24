@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Troubleshooting</title>
+<meta name="order" content="100">
+<meta name="keywords" content="troubleshooting; messages; errors; warnings; problems; internet connection; exit code; refused">
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<h1>Troubleshooting</h1>
+<p class="lead">Every message the app can show, grouped by where you'd see it, with what it means and
+what to do. To find one, search help for a few of its words. Words in <i>italics</i> stand for what
+the app fills in (a name, a number, a file).</p>
+<p>When SPLAT! itself stops with an error, its own output is in <code>splat-log.txt</code> in the
+<a href="job-folders.html">job folder</a>; the message gives the path.</p>
+
+<h2 id="call-signs">Looking up call signs</h2>
+<dl class="msgs">
+  <dt>Look up the call sign without /P, /M or a prefix, such as KK4DAS.</dt>
+  <dd>The FCC database (callook.info) knows only the base call sign. Type it without the portable or mobile suffix.</dd>
+  <dt>That doesn't look like a call sign (3 to 7 letters and digits, such as KK4DAS).</dt>
+  <dt>That doesn't look like a call sign (letters and digits, such as KK4DAS or DL1ABC).</dt>
+  <dd>Check for typing errors and spaces. To place a station that has no call sign, use the Address, Grid, Coordinates or Map tab.</dd>
+  <dt><i>call</i> isn't in the FCC database. callook.info only knows US licences; for other calls use a grid square or the map.</dt>
+  <dd>Without a QRZ.com sign-in only US call signs can be looked up. Sign in to QRZ.com (see <a href="settings.html#qrz">QRZ.com</a>) or place the station another way.</dd>
+  <dt>callook.info has no position for <i>call</i>. Use a grid square or the map.</dt>
+  <dt>QRZ.com has no position for <i>call</i>. Use the address, a grid square or the map.</dt>
+  <dd>The service knows the call sign but not where it is. QRZ.com gives positions only with an XML Logbook Data subscription. Place the station another way.</dd>
+  <dt><i>call</i> isn't on QRZ.com. Check the call, or use the address, a grid square or the map.</dt>
+  <dd>QRZ.com doesn't know that call sign. Check it, or place the station another way.</dd>
+  <dt>callook.info is updating its copy of the FCC database. Try again in a few minutes.</dt>
+  <dd>A short pause on callook.info's side. Wait, or place the station another way.</dd>
+  <dt>callook.info answered for "<i>call</i>" instead of <i>call</i>.</dt>
+  <dt>QRZ.com answered for "<i>call</i>" instead of <i>call</i>.</dt>
+  <dd>The service sent the details of a different call sign; the app didn't use them. Try again, and check the call sign.</dd>
+  <dt>callook.info gave an unexpected answer ("<i>status</i>").</dt>
+  <dt>callook.info sent a reply that couldn't be read. Try again later.</dt>
+  <dt>QRZ.com sent a reply that couldn't be read. Try again later.</dt>
+  <dt>callook.info answered with an error (<i>code</i>). Try again later.</dt>
+  <dt>QRZ.com answered with an error (<i>code</i>). Try again later.</dt>
+  <dd>Something went wrong on the service's side. Try again later, or place the station another way.</dd>
+  <dt>callook.info didn't answer in time. Check the internet connection and try again.</dt>
+  <dt>QRZ.com didn't answer in time. Check the internet connection and try again.</dt>
+  <dt>Couldn't reach callook.info (<i>reason</i>). Check the internet connection.</dt>
+  <dt>Couldn't reach QRZ.com (<i>reason</i>). Check the internet connection.</dt>
+  <dd>No answer from the service: check the internet connection. The rest of the app (paths and maps with terrain already downloaded) works offline.</dd>
+</dl>
+
+<h3 id="position-warnings">Warnings about a call sign's position</h3>
+<p>These come with a found position, to say how far to trust it. The pin is placed anyway: check it,
+and drag it onto the antenna.</p>
+<dl class="msgs">
+  <dt><i>call</i> set this position on QRZ.com themselves. It's usually their home station; for a repeater or a club call it may not be the antenna. Check the pin.</dt>
+  <dd>The owner chose this position on QRZ.com. Usually right for a home station.</dd>
+  <dt>QRZ.com placed <i>call</i> from the licence's mailing address (<i>address</i>). That is often not the antenna; for a club or repeater it is usually the trustee's address, or a PO box. Drag the pin to the antenna.</dt>
+  <dd>The position is where the licence's mail goes. Find the antenna on the map.</dd>
+  <dt>QRZ.com only has a grid square for <i>call</i> (<i>grid</i>); the pin is at its centre. Drag it to the antenna.</dt>
+  <dd>A six-character grid square is about 4.5 by 3 miles: far too coarse for VHF or UHF. Find the antenna on the map.</dd>
+  <dt>WARNING: this is only the centre of <i>call</i>'s zip code, possibly miles from the antenna. Useless for a VHF path as it is: find the antenna on the map, or use the Address tab.</dt>
+  <dt>WARNING: this is only the centre of <i>call</i>'s state. Find the antenna on the map, or use the Address tab.</dt>
+  <dt>WARNING: this is only the centre of <i>call</i>'s country. Find the antenna on the map, or use the Address tab.</dt>
+  <dd>The position is only a rough area. Don't use it as it is.</dd>
+  <dt>WARNING: QRZ.com doesn't say where this position for <i>call</i> came from ("<i>code</i>"). Check the pin carefully.</dt>
+  <dd>QRZ.com gave a position without saying how it got it. Treat it as unknown.</dd>
+</dl>
+
+<h3 id="qrz-signin">QRZ.com sign-in</h3>
+<dl class="msgs">
+  <dt>Type your QRZ.com user name and password.</dt>
+  <dd>Both are needed to sign in.</dd>
+  <dt>Sign in to QRZ.com first.</dt>
+  <dt>That session has no key.</dt>
+  <dd>The QRZ.com session wasn't set up. Sign out and sign in again (<span class="ui">QRZ.com</span> button, top right).</dd>
+  <dt>QRZ.com refused service to this account ("Connection refused"). QRZ says sign-in won't work for at least 24 hours.</dt>
+  <dd>QRZ.com has blocked the account for a while, usually after many failed sign-ins. Wait a day; meanwhile US calls still work through callook.info if you sign out.</dd>
+  <dt>The sign-in couldn't be saved in Windows Credential Manager: <i>reason</i></dt>
+  <dt>Couldn't remove the saved sign-in: <i>reason</i></dt>
+  <dd>Windows refused to store or delete the password. Check Credential Manager (in Control Panel), under Windows Credentials.</dd>
+  <dt>The password is too long to store.</dt>
+  <dd>Windows Credential Manager has a size limit. QRZ.com passwords are much shorter than it, so check what was pasted.</dd>
+</dl>
+
+<h2 id="places">Addresses, coordinates and grid squares</h2>
+<dl class="msgs">
+  <dt>Type the street address of the antenna site, such as "225 Main St, Newington, CT".</dt>
+  <dd>The Address tab needs an address to search for.</dd>
+  <dt>That address is longer than <i>100</i> characters. Shorten it to street, town and state.</dt>
+  <dd>The US Census geocoder refuses longer addresses.</dd>
+  <dt>A PO box is at the post office, not at the antenna. Type the street address of the site, or use the map.</dt>
+  <dd>A PO box would put the station at the post office.</dd>
+  <dt>No match for "<i>address</i>". Check the spelling, add the town and state (or country), or use the map.</dt>
+  <dd>Neither the Census geocoder nor OpenStreetMap found it.</dd>
+  <dt>The US Census geocoder refused the address: <i>reason</i></dt>
+  <dd>The Census geocoder says why. Usually rewording the address helps; OpenStreetMap is tried too.</dd>
+  <dt>The US Census geocoder sent a reply that couldn't be read. Try again later.</dt>
+  <dt>OpenStreetMap sent a reply that couldn't be read. Try again later.</dt>
+  <dt><i>service</i> answered with an error (<i>code</i>).</dt>
+  <dt><i>service</i> didn't answer in time.</dt>
+  <dt>Couldn't reach <i>service</i> (<i>reason</i>). Check the internet connection.</dt>
+  <dd>A problem on the geocoding service's side or with the internet connection. Try again later, or use the map.</dd>
+  <dt>Enter a latitude and a longitude, such as 38.9242, -77.2058.</dt>
+  <dt>Enter both a latitude and a longitude, such as 38.9242, -77.2058.</dt>
+  <dt>Separate the latitude and the longitude with a comma, such as 38 55 27, -77 12 21.</dt>
+  <dt>Use one comma, between the latitude and the longitude (and a dot for decimals).</dt>
+  <dd>Coordinates are "latitude, longitude": one comma between them, dots for decimals. Decimal degrees as Google Maps shows them work as they are.</dd>
+  <dt>"<i>text</i>" isn't part of a position. Use numbers, and N/S/E/W if you like.</dt>
+  <dt>Each of latitude and longitude takes one of N, S, E or W.</dt>
+  <dt>The <i>latitude</i> can't be <i>E</i>: use N/S for latitude and E/W for longitude.</dt>
+  <dt>Use either a minus sign or <i>S</i> for the <i>latitude</i>, not both.</dt>
+  <dt>Only the degrees of the <i>latitude</i> can have a sign.</dt>
+  <dd>South and west can be written with N/S/E/W letters or with a minus sign, once per number.</dd>
+  <dt>The <i>latitude</i> has too many numbers; use degrees, minutes and seconds at most.</dt>
+  <dt>With minutes given, the <i>latitude</i>'s degrees must be a whole number.</dt>
+  <dt>With seconds given, the <i>latitude</i>'s minutes must be a whole number.</dt>
+  <dt>The <i>latitude</i>'s minutes must be less than 60.</dt>
+  <dt>The <i>latitude</i>'s seconds must be less than 60.</dt>
+  <dd>Degrees, minutes and seconds: whole degrees and minutes, then seconds (which may have decimals), such as 38 55 27.5.</dd>
+  <dt>Latitude <i>value</i> is outside -90 to 90.</dt>
+  <dt>Longitude <i>value</i> is outside -180 to 180.</dt>
+  <dd>The numbers can't be a place on earth. Check whether latitude and longitude were swapped.</dd>
+  <dt>A grid square has 4, 6, 8 or 10 characters, such as FM18 or FM18jw.</dt>
+  <dt>The first two characters must be letters from A to R, as in FM18.</dt>
+  <dt>Characters 3 and 4 must be digits, as in FM18.</dt>
+  <dt>Characters 5 and 6 must be letters from A to X, as in FM18jw.</dt>
+  <dt>Characters 7 and 8 must be digits, as in FM18jw40.</dt>
+  <dt>Characters 9 and 10 must be letters from A to X, as in FM18jw40xx.</dt>
+  <dd>A Maidenhead grid square alternates letter pairs and digit pairs. Check the typing.</dd>
+</dl>
+
+<h2 id="station-editor">Saving stations</h2>
+<dl class="msgs">
+  <dt>Find the place first (or click the map), so there is a pin.</dt>
+  <dt>Place the station on the map first.</dt>
+  <dd>A station needs a position: find it, or click the map.</dd>
+  <dt>Check that the pin is on the antenna (drag it if not), then tick "The pin is on the antenna site".</dt>
+  <dd>The tick says you have checked the pin. Moving the pin clears it.</dd>
+  <dt>Give the station a name, such as its call sign.</dt>
+  <dt>The name can have at most <i>78</i> characters (SPLAT!'s limit).</dt>
+  <dt>Use plain letters, digits, spaces and punctuation in the name (SPLAT! can't show other characters).</dt>
+  <dt>There is already a station called <i>name</i>.</dt>
+  <dd>Names become SPLAT!'s file names and appear in its reports, so each must be different and plain.</dd>
+  <dt>SPLAT! can't name its report after "<i>name</i>" (Windows doesn't allow : ? " &lt; &gt; | in file names). Rename the station.</dt>
+  <dt>SPLAT! can't name its files after "<i>name</i>" (Windows doesn't allow : ? " &lt; &gt; | in file names). Rename the station.</dt>
+  <dd>SPLAT! names its report after the stations. Edit the station and take those characters out.</dd>
+  <dt>Enter the antenna height above ground as a number, such as 30.</dt>
+  <dt>Enter the antenna height above ground (more than 0).</dt>
+  <dt>That antenna height is over 10,000 ft. Check the number and the ft/m choice.</dt>
+  <dd>The height is above the ground at the antenna, in feet or metres (the box beside it).</dd>
+  <dt>The station couldn't be saved: <i>reason</i></dt>
+  <dt>The station couldn't be deleted: <i>reason</i></dt>
+  <dt>The imported stations couldn't be saved: <i>reason</i></dt>
+  <dt>The stations file could not be written correctly; the previous version is unchanged.</dt>
+  <dd>Documents\SPLAT\stations.json couldn't be written: the disk may be full, the file read-only, or OneDrive busy with it. Nothing was lost; fix the cause and try again.</dd>
+  <dt>The stations file <i>path</i> is damaged (<i>reason</i>). It has been left as it is.</dt>
+  <dt><i>path</i> is not a SPLAT! for Windows stations file. It has been left as it is.</dt>
+  <dt><i>path</i> was written by a newer version of SPLAT! for Windows. It has been left as it is.</dt>
+  <dd>The app won't change a stations file it can't read. The previous copy is <code>stations.json.bak</code>; or update the app.</dd>
+  <dt>Couldn't write <i>file</i>: <i>reason</i></dt>
+  <dd>Export .qth couldn't write the file. Choose another folder.</dd>
+</dl>
+
+<h2 id="files">SPLAT!'s files (.qth, .lrp, patterns, obstacles)</h2>
+<p>These are about a file you imported or chose. The app checks files against SPLAT!'s own rules,
+because SPLAT! itself would quietly misread them.</p>
+<dl class="msgs">
+  <dt><i>file</i> couldn't be used: <i>reason</i></dt>
+  <dd>The file you chose couldn't be read; the reason says why.</dd>
+  <dt>A .qth file needs four lines: name, latitude, longitude and antenna height.</dt>
+  <dt>Line <i>n</i> is longer than <i>78</i> characters, which SPLAT! would cut short.</dt>
+  <dt>The <i>latitude</i> "<i>text</i>" is longer than the 18 characters SPLAT! reads.</dt>
+  <dt>The <i>latitude</i> "<i>text</i>" isn't decimal degrees or "degrees minutes seconds"; SPLAT! would read it as 0.</dt>
+  <dt>The <i>longitude</i> "<i>text</i>" is out of range; SPLAT! would read it as 0.</dt>
+  <dt>The antenna height "<i>text</i>" isn't a number of feet, or of meters ("9.14 meters").</dt>
+  <dt>The antenna height "<i>text</i>" must be above 0.</dt>
+  <dd>A .qth file: line 1 the name, line 2 the latitude, line 3 the longitude in degrees WEST, line 4 the height (feet, or "meters").</dd>
+  <dt>A .lrp file needs at least eight lines of values; this one is shorter.</dt>
+  <dt>Line <i>n</i> is longer than <i>78</i> characters, which SPLAT! would split and misread.</dt>
+  <dt>Line <i>n</i> (<i>value</i>) doesn't start with a number, so SPLAT! would stop reading the file there.</dt>
+  <dt>Line <i>n</i> (<i>value</i>) doesn't start with a whole number, so SPLAT! would stop reading the file there.</dt>
+  <dd>A .lrp file is nine lines, each starting with a number (then optionally ";" and a comment), in SPLAT!'s order. See <a href="radio-settings.html">Radio settings</a>.</dd>
+  <dt>There is no azimuth pattern file <i>name</i>.az beside <i>file</i>; SPLAT! needs the .az file (the .el file is optional).</dt>
+  <dt>The <i>.az</i> file is empty.</dt>
+  <dt>The .az file's first line should be the pattern's rotation in degrees.</dt>
+  <dt>The .el file's first line should be the mechanical tilt and the tilt's azimuth, in degrees.</dt>
+  <dt>The <i>.az</i> file's line <i>n</i> is too long for SPLAT! (at most 250 characters).</dt>
+  <dt>The <i>.az</i> file's line <i>n</i> isn't numbers: "<i>text</i>".</dt>
+  <dt>The <i>.az</i> file's line <i>n</i> should be an angle and an amplitude: "<i>text</i>".</dt>
+  <dt>The <i>.az</i> file's line <i>n</i> has angle <i>a</i>; SPLAT! uses <i>0</i> to <i>360</i> degrees.</dt>
+  <dt>The <i>.az</i> file's line <i>n</i> has amplitude <i>a</i>; SPLAT! expects normalised values from 0 to 1.</dt>
+  <dt>The <i>.az</i> file has <i>n</i> pattern value(s); a pattern needs at least two.</dt>
+  <dt><i>station</i>'s antenna pattern: <i>reason</i></dt>
+  <dd>The antenna pattern files don't follow SPLAT!'s format; see <a href="stations.html#antenna-pattern">Antenna pattern</a>. Amplitudes are relative field strength, 0 to 1, not dB.</dd>
+  <dt>The obstacles file <i>path</i> doesn't exist.</dt>
+  <dt>The file has no obstacles in it.</dt>
+  <dt>Line <i>n</i> is too long for SPLAT! (at most 76 characters).</dt>
+  <dt>Line <i>n</i> should be "latitude, longitude, height": "<i>text</i>".</dt>
+  <dt>Line <i>n</i>: "<i>text</i>" isn't a latitude.</dt>
+  <dt>Line <i>n</i>: "<i>text</i>" isn't a longitude.</dt>
+  <dt>Line <i>n</i>: "<i>text</i>" isn't a height.</dt>
+  <dt>Line <i>n</i>: the height must be above zero (SPLAT! ignores it otherwise).</dt>
+  <dt><i>file</i>: none of its <i>n</i> obstacle(s) is in this job's area. SPLAT! reads longitudes as degrees WEST (77.2 for 77.2° W, not -77.2), so check the signs.</dt>
+  <dd>An obstacles (.udt) file: one "latitude, longitude, height" per line, longitude in degrees west. See <a href="terrain.html#obstacles">Obstacles</a>.</dd>
+</dl>
+
+<h2 id="path">Path analysis</h2>
+<dl class="msgs">
+  <dt>Choose a transmitter and a receiver.</dt>
+  <dt>The transmitter and the receiver are at the same place. Choose two different stations.</dt>
+  <dd>A path needs two stations at different places.</dd>
+  <dt>Enter the frequency in MHz (SPLAT! works from 20 MHz to 20 GHz).</dt>
+  <dt>Enter the transmitter's ERP in watts (more than 0).</dt>
+  <dt>Choose horizontal or vertical polarization.</dt>
+  <dt>Choose a radio climate from 1 to 7.</dt>
+  <dt>The fraction of situations should be between 1% and 99%.</dt>
+  <dt>The fraction of time should be between 1% and 99%.</dt>
+  <dt>The atmospheric bending constant should be between 250 and 400 N-units (301 is usual).</dt>
+  <dt>The ground's dielectric constant should be between 1 and 100 (average ground is 15).</dt>
+  <dt>The ground's conductivity should be more than 0 and at most 10 S/m (average ground is 0.005).</dt>
+  <dt>The Fresnel zone clearance should be between 1% and 100% (60% is usual).</dt>
+  <dt>The ground clutter height should be between 0 and 1000.</dt>
+  <dd>A radio setting is outside what SPLAT! accepts. See <a href="radio-settings.html">Radio settings</a> for each value.</dd>
+  <dt>The radio settings couldn't be saved with the station: <i>reason</i></dt>
+  <dd>The stations file couldn't be written; nothing was run. See "The station couldn't be saved" above.</dd>
+  <dt>The job folder couldn't be made: <i>reason</i></dt>
+  <dd>Documents\SPLAT\Jobs couldn't be written to. Check the disk and OneDrive.</dd>
+  <dt>The path analysis didn't finish. Job folder: <i>folder</i></dt>
+  <dd>Something stopped the run; the message above it says what. The job folder holds SPLAT!'s log.</dd>
+  <dt>SPLAT! didn't write the path report (exit code <i>n</i>). Its output is in <i>splat-log.txt</i>:</dt>
+  <dt>SPLAT! didn't write its path KML (<i>file</i>). Its output is in <i>splat-log.txt</i>.</dt>
+  <dt>SPLAT! stopped with exit code <i>n</i>: <i>output</i></dt>
+  <dd>SPLAT! ended without its usual output. Its own words are in the log; the most common cause is terrain it couldn't read.</dd>
+  <dt>SPLAT! took more than 5 minutes on a path and was stopped.</dt>
+  <dd>A path normally takes seconds. Try again; if it repeats, the terrain files may be damaged (delete the path's tiles from the terrain folder and they'll be fetched again).</dd>
+  <dt>This isn't a SPLAT! path report.</dt>
+  <dt>The path report doesn't name both sites.</dt>
+  <dd>The report SPLAT! wrote couldn't be read. It's still in the job folder; please report it.</dd>
+  <dt>The <i>terrain profile</i> graph couldn't be drawn: <i>reason</i></dt>
+  <dt>SPLAT! didn't write the graph's command file (splat.gp).</dt>
+  <dt>The graph's command file has no plot command.</dt>
+  <dt>The graph's plot command isn't one SPLAT! writes: <i>line</i></dt>
+  <dt>The graph has a command the app doesn't know: <i>line</i></dt>
+  <dt>The graph has a range that isn't a number: <i>line</i></dt>
+  <dt>The graph refers to the file "<i>file</i>" outside its folder.</dt>
+  <dt><i>file</i>, line <i>n</i>, isn't two numbers: "<i>text</i>"</dt>
+  <dt><i>file</i> has no data.</dt>
+  <dd>The app draws the graphs from SPLAT!'s graph data and refuses anything it doesn't recognise. The report and the other graphs are still right. The data is in the job folder's graph folders.</dd>
+</dl>
+
+<h2 id="coverage">Coverage maps</h2>
+<dl class="msgs">
+  <dt>Choose the transmitter.</dt>
+  <dd>Pick the station the map is for.</dd>
+  <dt>Enter the frequency in MHz as a number.</dt>
+  <dt>Enter the ERP in watts as a number.</dt>
+  <dt>Enter the radius as a number.</dt>
+  <dt>Enter the receiver antenna height as a number.</dt>
+  <dt>Enter the radius in <i>miles</i> (more than 0).</dt>
+  <dt>Enter the receiver antenna height above ground in <i>feet</i>.</dt>
+  <dd>Type a number, with a dot for decimals.</dd>
+  <dt>SPLAT! can map at most about <i>155</i> <i>miles</i> around <i>station</i> (it holds <i>64</i> terrain tiles); beyond that it cuts the map short. Use a smaller radius.</dt>
+  <dd>SPLAT! holds a limited amount of terrain at once; see <a href="terrain.html#limits">How much terrain a job can use</a>.</dd>
+  <dt>The map name may use only letters, digits, - and _.</dt>
+  <dt>The cities file <i>file</i> doesn't exist.</dt>
+  <dd>Only seen when a job is set up outside the window (the test tools).</dd>
+  <dt>The coverage map didn't finish.</dt>
+  <dd>Something stopped the run; the message above it says what.</dd>
+  <dt>SPLAT! didn't write the map (exit code <i>n</i>). Its output is in <i>splat-log.txt</i>:</dt>
+  <dd>SPLAT! ended without making the map. Its own words are in the log in the job folder.</dd>
+</dl>
+
+<h2 id="terrain">Terrain</h2>
+<dl class="msgs">
+  <dt>Terrain couldn't be fetched, so nothing was run: <i>reason</i></dt>
+  <dt>Couldn't download <i>address</i>: <i>reason</i> Check the internet connection.</dt>
+  <dt>Downloading <i>address</i> took more than 10 minutes and was stopped.</dt>
+  <dd>The terrain download failed. Check the internet connection and try again; whatever arrived intact is kept. With no connection, jobs work where the terrain is already downloaded.</dd>
+  <dt>srtm2sdf could not be started.</dt>
+  <dt>SPLAT! could not be started.</dt>
+  <dt>The SPLAT! program wasn't found at <i>path</i>.</dt>
+  <dd>The SPLAT! programs in the app's <code>engine</code> folder are missing or blocked (some antivirus programs quarantine them). Reinstall the app, or allow its engine folder.</dd>
+  <dt>This job needs <i>n</i> terrain tiles, but <i>standard</i> SPLAT! can hold only <i>64</i> at once. Pick stations closer together, or use standard terrain.</dt>
+  <dd>The stations are too far apart for SPLAT!'s terrain memory; see <a href="terrain.html#limits">How much terrain a job can use</a>.</dd>
+  <dt>Choose the folder that holds your terrain (.sdf) files.</dt>
+  <dt>The terrain folder <i>folder</i> doesn't exist.</dt>
+  <dt>The terrain folder is missing <i>n</i> of the <i>m</i> tile(s) this job needs: <i>tiles</i>. SPLAT! would treat those areas as sea level, so the job wasn't run.</dt>
+  <dd>Choose the terrain folder again in <a href="settings.html">Settings</a> (or go back to the app's own folder); missing tiles are downloaded automatically.</dd>
+  <dt>The terrain folder's path is too long for SPLAT! (at most 200 characters). Move the terrain to a shorter path.</dt>
+  <dd>SPLAT! can't open terrain files in a deeply nested folder. Choose a folder nearer the top of the drive.</dd>
+  <dt>The choice couldn't be saved: <i>reason</i></dt>
+  <dd>The terrain folder choice couldn't be written to the settings file.</dd>
+</dl>
+
+<h2 id="maps-earth">Maps, Google Earth and the window</h2>
+<dl class="msgs">
+  <dt>The map view could not start: <i>reason</i></dt>
+  <dt>Help couldn't start its page view (<i>reason</i>). The pages are in <i>folder</i> and open in any web browser.</dt>
+  <dd>The map and the help pages use Microsoft Edge WebView2, part of Windows 11. On Windows 10, install the "WebView2 Runtime" from Microsoft. Meanwhile the help pages can be opened in any web browser from the folder named.</dd>
+  <dt>Could not open <i>file</i>: <i>reason</i></dt>
+  <dt>KML has no &lt;GroundOverlay&gt; (is it a coverage-map KML?)</dt>
+  <dt>KML has no &lt;LatLonBox&gt;</dt>
+  <dt>KML has no &lt;<i>element</i>&gt;</dt>
+  <dt>KML box is not valid: N<i>n</i> S<i>s</i> E<i>e</i> W<i>w</i></dt>
+  <dt>the KML does not name a map image</dt>
+  <dt>the map image <i>file</i> is not next to the KML</dt>
+  <dd>Open coverage map… needs a coverage map's .kml from SPLAT! (made with -kml), with its .ppm or .png beside it. A path's .kml isn't a map.</dd>
+  <dt>Google Earth Pro isn't installed and no program opens .kmz files, so here are the steps for Google Earth on the web.</dt>
+  <dd>See <a href="google-earth.html#web">Google Earth on the web</a>, or install Google Earth Pro.</dd>
+  <dt>The settings couldn't be saved: <i>reason</i></dt>
+  <dt>The coverage radius should be more than 0 (and at most 1000).</dt>
+  <dt>The receiver antenna height should be more than 0.</dt>
+  <dt>The map opacity should be between 10% and 100%.</dt>
+  <dd>From the Settings window: check the value, or why the settings file couldn't be written.</dd>
+</dl>
+
+<h3 id="technical">Technical messages</h3>
+<p>These come from checks the app makes on SPLAT!'s files and its own. They point to a damaged or
+unusual file; please report them with the file.</p>
+<dl class="msgs">
+  <dt>bad PPM header</dt>
+  <dt>not a binary (P6) PPM</dt>
+  <dt>unsupported PPM maxval <i>n</i></dt>
+  <dt>PPM is truncated</dt>
+  <dt>image size must be positive</dt>
+  <dt>pixel buffer size does not match the image size</dt>
+  <dt>PNG check failed for <i>file</i></dt>
+  <dd>A map image is damaged or not in the form SPLAT! writes. Make the map again.</dd>
+  <dt>KML still refers to a Google Earth Pro built-in icon</dt>
+  <dt>KMZ check failed: doc.kml is missing</dt>
+  <dt>KMZ check failed: doc.kml or the image is missing or incomplete</dt>
+  <dt>the KML has no folder to add the stations to</dt>
+  <dd>The Google Earth file didn't come out right, so it wasn't kept. Check the disk space and try again.</dd>
+  <dt><i>file</i> isn't a SPLAT! colour file</dt>
+  <dt>the colour file has no colour levels</dt>
+  <dd>The colour file beside the map is damaged; the click readout won't work for that map.</dd>
+</dl>
+</body>
+</html>

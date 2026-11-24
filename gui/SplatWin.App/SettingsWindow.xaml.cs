@@ -19,6 +19,7 @@ public partial class SettingsWindow : Window
     public SettingsWindow()
     {
         InitializeComponent();
+        CommandBindings.Add(new System.Windows.Input.CommandBinding(System.Windows.Input.ApplicationCommands.Help, (_, _) => App.ShowHelp(SplatWin.Core.HelpTopics.Settings)));
         var s = App.Settings;
         UnitsBox.SelectedIndex = s.Metric ? 1 : 0;
         RadiusBox.Text = s.CoverageRadius.ToString("0.###", CultureInfo.CurrentCulture);

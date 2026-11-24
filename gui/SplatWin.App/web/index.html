@@ -20,7 +20,7 @@
 </head>
 <body>
 <div id="map"></div>
-<div id="empty">Open a SPLAT! coverage map (.kml) to show it here.</div>
+<div id="empty">Add a station to begin (Add station…), or open a SPLAT! coverage map (.kml).</div>
 <div id="readout" hidden></div>
 <script src="vendor/leaflet-1.9.4/leaflet.js"></script>
 <script>
@@ -82,6 +82,7 @@ window.splat = {
   // Saved stations: blue dots with their names. Clicking one selects it in the app's list.
   setStations(list) {
     stationList = list || [];
+    if (stationList.length > 0) document.getElementById("empty").hidden = true;   // the hint is only for an empty map
     stations.clearLayers();
     for (const s of list || [])
       L.circleMarker([s.lat, s.lon], { radius: 6, color: "#0b4f99", weight: 2, fillColor: "#2b88d8", fillOpacity: 0.95 })
@@ -94,6 +95,7 @@ window.splat = {
   // The pin being placed while adding or editing a station. It can be dragged, and while
   // editing a click on the map moves it there. Either way the app is told the new position.
   setPin(lat, lon, rect, zoom) {
+    document.getElementById("empty").hidden = true;
     if (!pin) {
       pin = L.marker([lat, lon], { draggable: true, autoPan: true, zIndexOffset: 1000, title: "Drag me onto the antenna" }).addTo(map);
       pin.on("dragend", () => { const p = pin.getLatLng(); post({ type: "pin", lat: p.lat, lon: p.lng }); });

@@ -1,0 +1,31 @@
+[PASS] first start with no stations: the setup opens  
+[PASS] step 1 of 4, no Back on the first step  Step 1 of 4
+[PASS] nothing saved yet  
+[PASS] step 2 shows the terrain folder in use  D:\ClaudeAI\projects\SPLATWIN\work\g6-final-help-uitest\20261124-002651\terrain
+[PASS] step 3: not signed in, callook.info for US calls  Not signed in: US call signs are looked up on callook.info.
+[PASS] Back goes back a step  
+[PASS] step 4 offers to add the first station  
+[PASS] the station editor opens  
+[PASS] the setup is recorded as done (its own settings file)  
+[PASS] "What does this mean?" opens help at antenna patterns  Help shows stations.html#antenna-pattern: Stations
+[PASS] antenna pattern chosen with the file picker (the .el comes too)  From k4hta_pat.az and k4hta_pat.el. SPLAT! uses it when this station transmits.
+[PASS] after the first station, a first coverage map is offered  Yes No  K4HTA is saved. Make a first coverage map for it now? |  | You'll need the transmitter's frequency (MHz) and ERP (watts).
+[PASS] Yes opens the coverage panel for K4HTA  No radio settings for K4HTA yet: enter the frequency and ERP (the rest are SPLAT!'s documented defaults; change them in Analyse a path). Antenna pattern: azimuth and elevation pattern (k4hta_pat.az and k4hta_pat.el).
+[PASS] the pattern is saved with the station  k4hta_pat.az and k4hta_pat.el
+[PASS] the pattern file is kept exactly as it was  
+[PASS] the coverage panel says the pattern is used  No radio settings for K4HTA yet: enter the frequency and ERP (the rest are SPLAT!'s documented defaults; change them in Analyse a path). Antenna pattern: azimuth and elevation pattern (k4hta_pat.az and k4hta_pat.el).
+[PASS] obstacles file chosen with the file picker  obstacle.udt (49 obstacles)
+[PASS] F1 in the coverage panel opens help at coverage maps  Help shows coverage-maps.html: Coverage maps
+[PASS] Help > Index opens the index  
+[PASS] typing narrows the index  231 entries, then 1 for 'white'
+[PASS] index entry "white circles" opens path analysis  Help shows path-analysis.html: Path analysis
+[PASS] search "colour key": Coverage maps first  Coverage maps
+[PASS] and it opens at "Reading the colour key"  Help shows coverage-maps.html#colour-key: Coverage maps
+[PASS] a search with no answer says so  No page has all of: zzqqxx. Try fewer or other words, or the Index.
+[PASS] Contents lists the pages in order  SPLAT! for Windows help / Getting started / Stations / Radio settings / Path analysis / Coverage maps / Terrain / Google Earth / Job folders / Settings and QRZ.com / Troubleshooting / Glossary / About SPLAT! for Windows
+[PASS] About shows the app's version  Help shows about.html: About SPLAT! for Windows (version 0.7.0)
+[PASS] Help > Setup. opens the setup again  
+[PASS] Skip setup closes it  
+[PASS] closing the main window closes the app, help window included  
+[PASS] second start: the setup doesn't open again  Ready. 1 station(s) in D:\ClaudeAI\projects\SPLATWIN\work\g6-final-help-uitest\20261124-002651\stations.json.
+30 checks, 0 failed (run folder D:\ClaudeAI\projects\SPLATWIN\work\g6-final-help-uitest\20261124-002651)

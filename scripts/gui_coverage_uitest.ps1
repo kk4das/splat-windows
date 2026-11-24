@@ -113,6 +113,8 @@ $fake = Start-Process powershell -WindowStyle Hidden -PassThru -ArgumentList @('
 $null = Wait-For { (Test-Path $log) -and ((Get-Content $log) -contains 'listening') } 15000
 Check (Test-Path $log) 'stand-in terrain server started'
 
+# This test's own settings file, with the first-run setup marked done (gui_help_uitest.ps1 tests the setup).
+'{"SetupDone": true}' | Set-Content -Encoding ascii (Join-Path $run 'settings.json')
 $script:proc = Start-Process $App -PassThru -ArgumentList @('--stations', "`"$lib`"", '--settings', "`"$(Join-Path $run 'settings.json')`"", '--terrain', "`"$terrain`"", '--jobs', "`"$jobs`"",
     '--qrz-credential', "SPLATforWindows/ui-test/$([guid]::NewGuid())", '--terrain-std-url', "http://localhost:$Port/dem3/", '--terrain-hd-url', "http://localhost:$Port/skadi/")
 try {

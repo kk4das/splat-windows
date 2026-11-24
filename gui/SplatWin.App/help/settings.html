@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings and QRZ.com</title>
+<meta name="order" content="90">
+<meta name="keywords" content="settings; preferences; defaults; map opacity; terrain folder; QRZ.com; sign in; sign out; password; Credential Manager; XML Logbook Data subscription; callook.info">
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<h1>Settings and QRZ.com</h1>
+
+<h2 id="settings">Settings</h2>
+<p><span class="ui">Settings…</span> (top right) holds:</p>
+<ul>
+  <li><b>Terrain</b>: the terrain folder in use, with <span class="ui">Change…</span> and
+      <span class="ui">Use the app's own folder</span>. See <a href="terrain.html">Terrain</a>.</li>
+  <li><b>New coverage maps start with</b>: units, radius, receiver antenna height and terrain shading.
+      These fill in the coverage panel the first time it opens in a session; after that it keeps what
+      you typed.</li>
+  <li><b>Map</b>: how opaque coverage maps are over the background map (the slider at the top of the
+      window changes it for the moment).</li>
+  <li><b>QRZ.com</b>: who you're signed in as, and <span class="ui">Sign in or out…</span>.</li>
+  <li><b>Google Earth</b>: whether Google Earth Pro was found.</li>
+  <li><b>Job folders</b>: where jobs go, and <span class="ui">Open</span>.</li>
+</ul>
+<p>Settings are kept in <code>%LOCALAPPDATA%\SPLATforWindows\settings.json</code>, the stations in
+<code>Documents\SPLAT\stations.json</code>.</p>
+
+<h2 id="qrz">QRZ.com sign-in</h2>
+<p>Call-sign lookups use QRZ.com when you're signed in: call signs worldwide, and the position the
+owner set, when they did. Positions need a <b>QRZ XML Logbook Data subscription</b>; without one QRZ
+gives no positions. Without a sign-in, US call signs are looked up free on callook.info (FCC data).</p>
+<ul>
+  <li><span class="ui">QRZ.com: sign in…</span> (top right): type your QRZ.com user name (usually your
+      call sign) and password, and click <span class="ui">Sign in</span>.</li>
+  <li><b>You type the password; the app never does.</b> It is kept in Windows Credential Manager,
+      encrypted for your Windows account, and never written to a file or a log.</li>
+  <li><span class="ui">Sign out</span> removes it from Credential Manager.</li>
+</ul>
+<div class="warn">A call sign's position on QRZ.com or callook.info is often the licence's mailing
+address, not the antenna, and for a club or repeater it may be the trustee's home. The app says where
+each position came from; always check the pin.</div>
+</body>
+</html>

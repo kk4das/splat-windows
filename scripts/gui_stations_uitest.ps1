@@ -107,6 +107,8 @@ function Library { (Get-Content $lib -Raw | ConvertFrom-Json).Stations }
 
 # A throwaway QRZ credential entry that never exists: this test checks the free callook.info path,
 # and must not use the owner's real QRZ sign-in (added 2026-11-22 after the owner signed in at G2).
+# This test's own settings file, with the first-run setup marked done (gui_help_uitest.ps1 tests the setup).
+'{"SetupDone": true}' | Set-Content -Encoding ascii (Join-Path $Work 'settings.json')
 $script:proc = Start-Process $App -ArgumentList @('--stations', "`"$lib`"", '--settings', "`"$(Join-Path $Work 'settings.json')`"", '--qrz-credential', "SPLATforWindows/ui-test/$([guid]::NewGuid())") -PassThru
 try {
     $script:win = Wait-For { $AE::RootElement.FindFirst($TS::Children, (New-Object $PC($AE::ProcessIdProperty, $script:proc.Id))) } 20000

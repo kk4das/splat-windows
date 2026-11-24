@@ -63,6 +63,33 @@ public partial class App : Application
 
     public static TerrainFetcher Fetcher(string folder) => new(TerrainHttp, folder, EngineDir, TerrainStdSource, TerrainHdSource);
 
+    // ---- help and setup (G6) ----
+    static Task<Microsoft.Web.WebView2.Core.CoreWebView2Environment>? _webEnv;
+    /// <summary>One WebView2 environment for the map and the help window (same data folder).</summary>
+    public static Task<Microsoft.Web.WebView2.Core.CoreWebView2Environment> WebEnvironmentAsync() =>
+        _webEnv ??= Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync(null,
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SPLATforWindows", "WebView2"));
+
+    static SplatWin.App.HelpWindow? _help;
+    /// <summary>Opens help at a page ("page.html" or "page.html#place"); tab is "contents", "index" or "search".</summary>
+    public static void ShowHelp(string target, string? tab = null)
+    {
+        if (_help == null)
+        {
+            _help = new SplatWin.App.HelpWindow();
+            _help.Closed += (_, _) => _help = null;
+        }
+        _help.Show(target, tab);
+    }
+
+    /// <summary>The first-run setup is done (finished, skipped, or not needed); saved so it doesn't open again.</summary>
+    public static void MarkSetupDone()
+    {
+        if (Settings.SetupDone) return;
+        Settings.SetupDone = true;
+        try { Settings.Save(SettingsPath); } catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { }
+    }
+
     /// <summary>Saves the terrain folder choice; null goes back to the app's own folder.</summary>
     public static void SetTerrainFolder(string? folder)
     {
@@ -178,6 +205,9 @@ public partial class App : Application
             Shutdown(HeadlessPathJob(spec));
             return;
         }
-        new MainWindow(e.Args.FirstOrDefault(a => a.EndsWith(".kml", StringComparison.OrdinalIgnoreCase)), stations).Show();
+        // Closing the main window closes the app, help window and all (help isn't owned by it, so it can sit beside it).
+        ShutdownMode = ShutdownMode.OnMainWindowClose;
+        MainWindow = new MainWindow(e.Args.FirstOrDefault(a => a.EndsWith(".kml", StringComparison.OrdinalIgnoreCase)), stations);
+        MainWindow.Show();
     }
 }

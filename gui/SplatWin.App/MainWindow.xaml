@@ -29,6 +29,22 @@
                 <TextBlock Text="Map opacity" VerticalAlignment="Center" Margin="24,0,8,0"/>
                 <Slider x:Name="OpacitySlider" Width="160" Minimum="0" Maximum="1" Value="0.65" VerticalAlignment="Center"
                         ValueChanged="Opacity_Changed" IsEnabled="False"/>
+                <Button x:Name="HelpButton" DockPanel.Dock="Right" Content="Help" Padding="14,6" Margin="8,0,0,0" Click="HelpMenu_Click"
+                        ToolTip="Help contents, index and search, getting started, setup, about (F1: help for what you're looking at)">
+                    <Button.ContextMenu>
+                        <ContextMenu x:Name="HelpMenu">
+                            <MenuItem x:Name="HelpContentsItem" Header="Contents" InputGestureText="F1" Click="HelpContents_Click"/>
+                            <MenuItem x:Name="HelpIndexItem" Header="Index" Click="HelpIndex_Click"/>
+                            <MenuItem x:Name="HelpSearchItem" Header="Search" Click="HelpSearch_Click"/>
+                            <Separator/>
+                            <MenuItem x:Name="HelpStartItem" Header="Getting started" Click="HelpStart_Click"/>
+                            <MenuItem x:Name="HelpSetupItem" Header="Setup…" Click="HelpSetup_Click"/>
+                            <MenuItem x:Name="HelpTroubleItem" Header="Troubleshooting" Click="HelpTrouble_Click"/>
+                            <Separator/>
+                            <MenuItem x:Name="HelpAboutItem" Header="About SPLAT! for Windows" Click="HelpAbout_Click"/>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
                 <Button x:Name="SettingsButton" DockPanel.Dock="Right" Content="Settings…" Padding="14,6" Margin="8,0,0,0" Click="Settings_Click"
                         ToolTip="Terrain folder, defaults for new maps, map opacity, QRZ.com and Google Earth"/>
                 <Button x:Name="QrzButton" DockPanel.Dock="Right" Content="QRZ.com: sign in…" Padding="14,6" Click="Qrz_Click"
@@ -150,6 +166,8 @@
 
                         <TextBlock Style="{StaticResource Heading}" Text="4. Antenna pattern (optional)"/>
                         <TextBlock x:Name="PatternText" Style="{StaticResource Caption}" Margin="0,0,0,6" Text="None: the same in all directions."/>
+                        <Button x:Name="PatternHelpButton" Content="What does this mean?" Padding="8,2" Margin="0,0,0,8" HorizontalAlignment="Left"
+                                Click="HelpLink_Click" Tag="stations.html#antenna-pattern" ToolTip="Antenna pattern files (.az and .el)"/>
                         <StackPanel Orientation="Horizontal">
                             <Button x:Name="PatternButton" Content="Choose .az file…" Padding="10,4" Click="Pattern_Click"
                                     ToolTip="SPLAT!'s antenna pattern files: name.az (azimuth) and, beside it, name.el (elevation). Used when this station transmits."/>
@@ -256,6 +274,8 @@
                                 <Image x:Name="CovKeyImage" Margin="0,8,0,0" HorizontalAlignment="Left" Stretch="None"
                                        AutomationProperties.Name="Colour key" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                                 <TextBlock x:Name="CovKeyText" TextWrapping="Wrap" Margin="0,6,0,0" Style="{StaticResource Caption}"/>
+                                <Button x:Name="CovKeyHelpButton" Content="What does this mean?" Padding="10,4" Margin="0,8,0,0" HorizontalAlignment="Left"
+                                        Click="HelpLink_Click" Tag="coverage-maps.html#colour-key" ToolTip="How to read the colour key and the map"/>
                                 <Button x:Name="CovFolderButton" Content="Open the job folder" Padding="10,4" Margin="0,8,0,0" HorizontalAlignment="Left"
                                         Click="CovFolder_Click"/>
                             </StackPanel>
@@ -291,6 +311,8 @@
 
                         <TextBlock Style="{StaticResource Heading}" Text="Transmitter radio"/>
                         <TextBlock x:Name="RadioHint" Style="{StaticResource Caption}" Margin="0,0,0,6"/>
+                        <Button x:Name="RadioHelpButton" Content="What does this mean?" Padding="8,2" Margin="0,0,0,8" HorizontalAlignment="Left"
+                                Click="HelpLink_Click" Tag="radio-settings.html" ToolTip="Each radio setting in plain words"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -395,6 +417,8 @@
                                 <TextBlock x:Name="SumNumbers" TextWrapping="Wrap" Margin="0,6,0,0" FontFamily="Consolas" FontSize="12"/>
                                 <TextBlock x:Name="SumWarning" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#D13438" Visibility="Collapsed"/>
                                 <TextBlock x:Name="SumClearance" TextWrapping="Wrap" Margin="0,6,0,0" Style="{StaticResource Caption}"/>
+                                <Button x:Name="SumHelpButton" Content="What does this mean?" Padding="10,4" Margin="0,8,0,0" HorizontalAlignment="Left"
+                                        Click="HelpLink_Click" Tag="path-analysis.html#summary" ToolTip="What each number in the summary means, and the white circles on the map"/>
                                 <TextBlock x:Name="SumEarth" TextWrapping="Wrap" Margin="0,6,0,0" Style="{StaticResource Caption}"/>
                                 <Button x:Name="JobFolderButton" Content="Open the job folder" Padding="10,4" Margin="0,8,0,0" HorizontalAlignment="Left"
                                         Click="JobFolder_Click" ToolTip="The inputs, SPLAT!'s outputs and run-again.cmd, which repeats the job from the command line"/>

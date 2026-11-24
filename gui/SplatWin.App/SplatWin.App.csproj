@@ -16,7 +16,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>SplatForWindows</AssemblyName>
     <Product>SPLAT! for Windows</Product>
-    <Version>0.6.0</Version>
+    <Version>0.7.0</Version>
     <ApplicationIcon>splat.ico</ApplicationIcon>
     <!-- ThemeMode (the Fluent theme) is marked experimental in WPF; it is what gives the modern look. -->
     <NoWarn>$(NoWarn);WPF0001</NoWarn>
@@ -30,6 +30,8 @@
   <ItemGroup>
     <!-- The map page and Leaflet (BSD-2, vendored and integrity-checked), served from the app folder. -->
     <None Include="web\**\*" CopyToOutputDirectory="PreserveNewest" />
+    <!-- The help pages (G6): plain HTML, shown in the help window and readable in any browser. -->
+    <None Include="help\**\*" CopyToOutputDirectory="PreserveNewest" />
     <!-- The unchanged SPLAT! engine (built by build.ps1 into dist\) and its licence (GPLv2). The app runs these. -->
     <None Include="..\..\dist\splat.exe;..\..\dist\splat-hd.exe;..\..\dist\srtm2sdf.exe;..\..\dist\srtm2sdf-hd.exe" Link="engine\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\src\COPYING" Link="engine\COPYING" CopyToOutputDirectory="PreserveNewest" />

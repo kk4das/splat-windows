@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Coverage maps</title>
+<meta name="order" content="50">
+<meta name="keywords" content="coverage maps; colour key; color key; reading the map; dBµV/m; dBm; signal strength; received power; path loss map; line of sight map; radius; receiver antenna height; talk-in; talk-out; rules of thumb; handheld; mobile; 50% / 90%; terrain shading; grey; opacity; readout; click the map; earlier maps; history; smooth colour bands; high-definition; HD; cancel">
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<h1>Coverage maps</h1>
+<p class="lead">A coverage map shows how one transmitter's signal reaches the area around it, for a
+receiver at a given antenna height. Click <span class="ui">Coverage map…</span>, choose the
+transmitter, what to show, the radius and the receiver antenna height, and click
+<span class="ui">Run</span>.</p>
+
+<h2 id="kinds">What to show</h2>
+<ul>
+  <li><span class="ui">Signal strength (dBµV/m)</span>: the field strength a receiver would find, from
+      the transmitter's ERP. The usual choice.</li>
+  <li><span class="ui">Received power (dBm)</span>: the power a receiving antenna (a dipole) would
+      deliver. Easiest to compare with a radio's sensitivity.</li>
+  <li><span class="ui">Path loss (dB)</span>: the loss between the antennas; the ERP isn't used.</li>
+  <li><span class="ui">Line of sight</span>: where a receiver antenna at that height can see the
+      transmitter's antenna, in green. No radio settings needed.</li>
+</ul>
+<p>The <b>radius</b> is in miles (kilometres with metric). SPLAT! can map about 155 miles around a
+station at mid-latitudes with standard terrain, 66 miles with high-definition terrain; the app says
+the limit if you ask for more. The <b>receiver antenna</b> height is above the ground everywhere on the
+map: 6 ft is a car or a handheld, 30 ft a house antenna.</p>
+<p>The first map in a new area downloads its terrain first (a minute or so); later maps there reuse it.
+A standard map takes a few seconds; a high-definition one, several minutes.
+<span class="ui">Cancel</span> stops it.</p>
+
+<h2 id="colour-key">Reading the colour key</h2>
+<p>Each colour is a band of signal strength: "at least this much, but less than the next band up".
+SPLAT!'s key is shown in the panel beside the map, and is in the Google Earth file too. The default
+signal key:</p>
+<table>
+<tr><th>Colour</th><th>dBµV/m</th><th>≈ dBm at 146 MHz</th><th>Roughly, on 2 m FM (rule of thumb)</th></tr>
+<tr><td><span class="swatch" style="background:#ff0000"></span><span class="swatch" style="background:#ffa500"></span><span class="swatch" style="background:#ffce00"></span>red to yellow</td><td class="num">98 to 128+</td><td class="num">-20 to -10</td><td>Very strong, close to the transmitter.</td></tr>
+<tr><td><span class="swatch" style="background:#b8ff00"></span><span class="swatch" style="background:#00ff00"></span><span class="swatch" style="background:#00d000"></span>yellow-green to green</td><td class="num">68 to 88</td><td class="num">-50 to -30</td><td>Very strong.</td></tr>
+<tr><td><span class="swatch" style="background:#00c4c4"></span><span class="swatch" style="background:#0094ff"></span>cyan, light blue</td><td class="num">48 to 58</td><td class="num">-70 to -60</td><td>Strong: a handheld indoors should work.</td></tr>
+<tr><td><span class="swatch" style="background:#5050ff"></span><span class="swatch" style="background:#0026ff"></span>blues</td><td class="num">28 to 38</td><td class="num">-90 to -80</td><td>Good for a mobile; a handheld outdoors usually fine.</td></tr>
+<tr><td><span class="swatch" style="background:#8e3fff"></span>violet</td><td class="num">18</td><td class="num">about -100</td><td>Weak: works with a good antenna, may be noisy.</td></tr>
+<tr><td><span class="swatch" style="background:#8c0080"></span>purple</td><td class="num">8</td><td class="num">about -110</td><td>Fringe: scratchy, in and out.</td></tr>
+<tr><td>no colour</td><td class="num">below 8</td><td class="num">below -110</td><td>Too weak to count on (not necessarily zero).</td></tr>
+</table>
+<p><b>dBµV/m to dBm</b> for a dipole: dBm ≈ dBµV/m − 20 × log<sub>10</sub>(frequency in MHz) − 75.
+That is about −118 at 146 MHz (2 m) and about −128 at 440 MHz (70 cm). The last column is a rule of
+thumb, not something SPLAT! calculates: buildings, a body-worn handheld or a small antenna each cost
+roughly 10 to 20 dB, so a handheld indoors needs a band or two more than a car does.</p>
+<div class="note"><b>What the map assumes.</b> The <a href="radio-settings.html#values">situations and
+time</a> settings (50% and 90% by default) mean the colour is the signal at least half of the places
+of that colour get, at least 90% of the time. Hills, trees and buildings smaller than the terrain data
+aren't in it. And the map shows the signal <b>from</b> the transmitter: where you can hear a
+repeater ("talk-out"). A handheld's 5 W going back to it is much weaker than a repeater's ERP, so at
+the edges you may hear the repeater but not reach it ("talk-in").</div>
+<p>The other maps have their own keys: received power in dBm (0 down to −150 by default), path loss in dB
+(where less is better), and green for line of sight.</p>
+
+<h2 id="readout">Reading a point: click the map</h2>
+<p>Click anywhere on a coverage map to see what the map shows there, for example
+"58 to 68 dBµV/m". The app reads the colour SPLAT! painted at that spot against SPLAT!'s own colour
+file, so the answer is a band, not SPLAT!'s exact number; the popup says so. With
+<span class="ui">Smooth colour bands</span> it gives an estimate ("about 63 dBµV/m"). On a site marker
+or a label it says so.</p>
+
+<h2 id="shading">Terrain shading and opacity</h2>
+<p>Normally SPLAT! paints the areas without a coloured band in grey shades of the terrain (lighter is
+higher) over the whole area of the terrain tiles, beyond the radius too. Lower the
+<span class="ui">Map opacity</span> slider to see the streets through it.</p>
+<p>Or untick <span class="ui">Grey terrain shading</span> (under <span class="ui">More options</span>):
+SPLAT! then leaves those areas white, and the app shows them clear, so only the coverage colours sit
+over the street map, in the app and in Google Earth. SPLAT!'s own map file in the job folder stays
+as SPLAT! wrote it.</p>
+
+<h2 id="options">More options</h2>
+<ul>
+  <li><span class="ui">Propagation model</span>: ITWOM (SPLAT!'s default) or Longley-Rice.</li>
+  <li><span class="ui">Smooth colour bands</span>: blends the colours between levels instead of hard steps.</li>
+  <li><span class="ui">Kilometres and metres</span>: the radius and receiver height in metric.</li>
+  <li><span class="ui">High-definition terrain</span>: 1 arc-second terrain (about 30 m) instead of
+      3 arc-second (about 90 m). Finer, slower, smaller maximum radius.</li>
+  <li><span class="ui">Obstacles</span>: a SPLAT! user terrain file; see <a href="terrain.html#obstacles">Terrain</a>.</li>
+</ul>
+<p>Ground, climate and the other radio settings are the transmitter's, set in
+<a href="path-analysis.html">Analyse a path</a>. The transmitter's
+<a href="stations.html#antenna-pattern">antenna pattern</a>, if it has one, is used too.</p>
+
+<h2 id="earlier">Earlier maps</h2>
+<p>Every finished map is listed under <span class="ui">Earlier maps</span>, newest first. Click one to
+show it again from its job folder; nothing is run again. Cancelled or failed maps aren't listed.</p>
+</body>
+</html>

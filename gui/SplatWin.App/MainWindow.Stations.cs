@@ -345,6 +345,7 @@ public partial class MainWindow
         CloseEditor();
         RefreshList(saved);
         Status.Text = $"Saved {saved.Name} ({saved.Grid}, antenna {saved.HeightText}) to {_library.FilePath}.";
+        AfterStationSaved(saved);
     }
 
     // ---- delete, import, export ----

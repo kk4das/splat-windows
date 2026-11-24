@@ -73,6 +73,8 @@ function JobCount { @(Get-ChildItem $jobs -Directory -ErrorAction SilentlyContin
 $terrain = Join-Path $run 'terrain'
 New-Item -ItemType Directory $terrain | Out-Null
 Copy-Item (Join-Path $root 'data\sdf3\*.sdf') $terrain
+# This test's own settings file, with the first-run setup marked done (gui_help_uitest.ps1 tests the setup).
+'{"SetupDone": true}' | Set-Content -Encoding ascii (Join-Path $run 'settings.json')
 $script:proc = Start-Process $App -PassThru -ArgumentList @('--stations', "`"$lib`"", '--settings', "`"$(Join-Path $run 'settings.json')`"", '--terrain', "`"$terrain`"", '--jobs', "`"$jobs`"", '--qrz-credential', "SPLATforWindows/ui-test/$([guid]::NewGuid())",
     '--terrain-std-url', 'http://localhost:9/dem3/', '--terrain-hd-url', 'http://localhost:9/skadi/')
 try {

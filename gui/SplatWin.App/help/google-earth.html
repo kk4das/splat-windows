@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Google Earth</title>
+<meta name="order" content="70">
+<meta name="keywords" content="Google Earth; Google Earth Pro; Google Earth on the web; KMZ; KML; import; station pins; earth.google.com">
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<h1>Google Earth</h1>
+<p class="lead"><span class="ui">Open in Google Earth Pro</span> (top of the window) opens the coverage
+map or the path you're looking at, whichever you showed last, in Google Earth Pro.</p>
+
+<h2 id="whats-in">What's in the file</h2>
+<ul>
+  <li><b>A coverage map</b>: the map image laid over the ground, SPLAT!'s colour key in the corner, the
+      transmitter, and your other stations on the map as pins in a <b>Stations</b> folder.</li>
+  <li><b>A path</b>: both stations, the path and its line-of-sight part, with SPLAT!'s descriptions
+      (positions, distance and direction).</li>
+</ul>
+<p>The app makes the file (<code>.kmz</code>) from SPLAT!'s own <code>.kml</code>, which it leaves
+unchanged in the job folder. Two things are put right in the app's copy: SPLAT!'s placemark icon exists
+only inside Google Earth Pro (the web version refuses files that use it), and SPLAT!'s path file
+garbles the degree sign.</p>
+
+<h2 id="web">Google Earth on the web</h2>
+<p>Without Google Earth Pro, the same file opens in Google Earth in a web browser. Click
+<span class="ui">Google Earth on the web…</span> for the steps:</p>
+<ol>
+  <li><span class="ui">Open earth.google.com</span> opens it in your browser. Sign in to Google if it asks.</li>
+  <li>In Google Earth, open <b>Projects</b>, then <b>New project</b>, then <b>Import KML file from computer</b>.</li>
+  <li>Choose the file: <span class="ui">Copy its path</span> and paste it into the file box, or
+      <span class="ui">Show the file</span>.</li>
+</ol>
+<p>The app never uploads anything itself. Google's menus may change; the import is in Projects.</p>
+<p>If Google Earth Pro isn't installed and no program opens .kmz files,
+<span class="ui">Open in Google Earth Pro</span> shows these steps instead.
+<a href="settings.html">Settings</a> says whether Google Earth Pro was found.</p>
+</body>
+</html>

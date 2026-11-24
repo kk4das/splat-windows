@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stations</title>
+<meta name="order" content="20">
+<meta name="keywords" content="stations; station list; add station; call sign; QRZ.com; callook.info; address; geocoder; grid square; Maidenhead; coordinates; latitude; longitude; map click; pin; antenna height; .qth; import; export; edit; delete; antenna pattern; .az; .el">
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<h1>Stations</h1>
+<p class="lead">A station is a named antenna position: a call sign, a repeater, a friend's house. The
+stations list is kept in <code>Documents\SPLAT\stations.json</code>. Paths and maps are always
+between or from stations in the list.</p>
+
+<h2 id="adding">Adding a station</h2>
+<p>Click <span class="ui">Add station…</span>. The editor has four steps.</p>
+<h3 id="find">1. Find the place</h3>
+<p>Choose a tab, type, and click <span class="ui">Find</span> (or press Enter):</p>
+<ul>
+  <li><span class="ui">Call sign</span>: looked up on QRZ.com if you're signed in (worldwide, needs a QRZ
+      XML Logbook Data subscription), otherwise on callook.info (US licences, free). Leave off /P, /M or
+      a prefix. <b>A call sign's position is where the licence or the owner says, often a mailing
+      address, not the antenna.</b> The app says where the position came from and warns when it is
+      only a zip code, state or country centre.</li>
+  <li><span class="ui">Address</span>: a street address, found by the US Census geocoder (US only) or
+      OpenStreetMap. The app says how precise the match is (the building, only the street, only the
+      town). A PO box is refused: it's the post office, not the antenna.</li>
+  <li><span class="ui">Grid</span>: a Maidenhead grid square of 4 to 10 characters, such as FM18jw. The
+      square is drawn on the map; the pin starts at its centre.</li>
+  <li><span class="ui">Coordinates</span>: decimal degrees as Google Maps shows them
+      (<code>38.9242, -77.2058</code>) or degrees, minutes and seconds
+      (<code>38 55 27 N, 77 12 21 W</code>).</li>
+  <li><span class="ui">Map</span>: click the map where the antenna is.</li>
+</ul>
+<h3 id="pin">2. Put the pin on the antenna</h3>
+<p>Drag the pin, or click the map, until it sits on the antenna itself. Zoom in: at VHF and UHF a few
+hundred metres can change the answer. Then tick <span class="ui">The pin is on the antenna site</span>.
+Moving the pin again clears the tick.</p>
+<h3 id="name-height">3. Name and antenna height</h3>
+<p>The name is usually the call sign; it names SPLAT!'s files, so plain letters, digits and punctuation
+only, and each name only once. The antenna height is above the ground at the pin, in feet or metres,
+not above sea level.</p>
+<h3 id="antenna-pattern">4. Antenna pattern (optional)</h3>
+<p>Without a pattern SPLAT! treats the antenna as sending equally in all directions. For a directional
+antenna, or to include a real antenna's pattern, click <span class="ui">Choose .az file…</span> and
+pick SPLAT!'s azimuth pattern file. A <code>.el</code> elevation pattern file with the same name beside
+it is read too. The pattern is kept with the station and used whenever that station transmits, in
+paths and in coverage maps (not line-of-sight maps, which don't use it).</p>
+<ul>
+  <li>A <code>.az</code> file: the first line is the pattern's rotation in degrees clockwise from true
+      north; then one line per direction, "azimuth amplitude", azimuth 0 to 360, amplitude 0 to 1
+      (relative field strength).</li>
+  <li>A <code>.el</code> file: the first line is the mechanical tilt and the tilt's azimuth; then
+      "elevation amplitude" lines, elevation -10 to 90 degrees.</li>
+</ul>
+<p>The app checks the files against SPLAT!'s format before using them and says which line is wrong.
+<span class="ui">Remove</span> goes back to no pattern.</p>
+<p>Click <span class="ui">Save station</span>. <span class="ui">Back to stations (nothing saved)</span>,
+under the four buttons, leaves without saving.</p>
+
+<h2 id="editing">Editing, deleting and exporting</h2>
+<ul>
+  <li><span class="ui">Edit…</span> (or double-click a station) opens the editor with its pin.</li>
+  <li><span class="ui">Delete</span> asks first. The previous list is kept as <code>stations.json.bak</code>.</li>
+  <li><span class="ui">Export .qth…</span> writes the station as a SPLAT! site file for the command line.
+      SPLAT! wants longitude as degrees west, so the file has 77.2058 for 77.2058° W; the app does that for you.</li>
+  <li>A station's radio settings (frequency, ERP and the rest) are kept with it too; see
+      <a href="radio-settings.html">Radio settings</a>.</li>
+</ul>
+
+<h2 id="import">Importing .qth files</h2>
+<p><span class="ui">Import .qth…</span> adds stations from SPLAT! site files (several at once). Files
+of the same name beside a <code>.qth</code> come too: a <code>.lrp</code> brings its radio settings,
+<code>.az</code>/<code>.el</code> its antenna pattern. A .qth height is in feet unless the file says
+meters; check the imported heights. If a station of that name already exists, the app asks whether to
+replace it.</p>
+</body>
+</html>

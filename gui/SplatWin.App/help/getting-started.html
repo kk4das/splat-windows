@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Getting started</title>
+<meta name="order" content="10">
+<meta name="keywords" content="getting started; first steps; setup; wizard; first run; tutorial; step by step">
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<h1>Getting started</h1>
+<p class="lead">From an empty app to your first coverage map, about ten minutes. You need your
+station's position (a call sign, address or grid square is enough to start) and, for maps, your
+transmitter's frequency and ERP.</p>
+
+<h2 id="wizard">The setup on first start</h2>
+<p>The first time the app opens, a short setup offers to do steps 1 to 3 with you: where terrain goes,
+how call signs are looked up, and your first station. You can skip it, and open it again any time from
+<span class="ui">Help</span> &gt; <span class="ui">Setup…</span>. Everything it does can also be done
+as below.</p>
+<figure><img src="images/gs-wizard.png" alt="The setup's first page">
+<figcaption>The setup's first page.</figcaption></figure>
+
+<h2 id="steps">Step by step</h2>
+<ol class="steps">
+  <li><b>Terrain: nothing to do.</b> SPLAT! needs terrain elevation data. The app downloads the tiles
+      each job needs, once, into its terrain folder. See <a href="terrain.html">Terrain</a> if you
+      already have SPLAT! terrain files (.sdf) to use instead.</li>
+  <li><b>Call-sign lookups (optional).</b> US call signs are looked up free on callook.info. For
+      call signs worldwide, and often a better position, sign in to QRZ.com with
+      <span class="ui">QRZ.com: sign in…</span> (top right). That needs a QRZ XML Logbook Data
+      subscription; see <a href="settings.html#qrz">QRZ.com</a>.</li>
+  <li><b>Add your station.</b> Click <span class="ui">Add station…</span>. Type your call sign and
+      click <span class="ui">Find</span> (or use the Address, Grid, Coordinates or Map tab). A pin
+      appears on the map: <b>drag it onto the antenna itself</b>, zooming in to be precise, and tick
+      <span class="ui">The pin is on the antenna site</span>. Give the antenna height above ground and
+      click <span class="ui">Save station</span>. Add a second station (a friend, a repeater) the same
+      way. More in <a href="stations.html">Stations</a>.
+      <figure><img src="images/gs-add-station.jpg" alt="Adding a station: the pin on the map">
+      <figcaption>Adding a station: the pin goes on the antenna.</figcaption></figure></li>
+  <li><b>Analyse a path.</b> Click <span class="ui">Analyse a path…</span>. Choose the transmitter and
+      the receiver, type the transmitter's frequency (MHz) and ERP (watts), and click
+      <span class="ui">Analyse</span>. The summary shows the signal at the receiver and whether the
+      terrain blocks the line of sight; the path is drawn on the map and the graphs open below it.
+      See <a href="path-analysis.html">Path analysis</a>.
+      <figure><img src="images/gs-path.jpg" alt="A path analysis: summary, path on the map, graphs">
+      <figcaption>A path analysis: the summary on the left, the path on the map, the graphs below.</figcaption></figure></li>
+  <li><b>Make a coverage map.</b> Click <span class="ui">Coverage map…</span>. Choose the
+      transmitter (its frequency and ERP are already there from step 4), leave
+      <span class="ui">Signal strength</span>, set the radius (30 miles is a good start) and the
+      receiver antenna height (6 ft for a car or a handheld), and click <span class="ui">Run</span>.
+      The map appears over the street map; click any point on it to read the signal there. See
+      <a href="coverage-maps.html">Coverage maps</a> and
+      <a href="coverage-maps.html#colour-key">reading the colour key</a>.
+      <figure><img src="images/gs-coverage.jpg" alt="A coverage map over the street map, with its colour key">
+      <figcaption>A coverage map, with SPLAT!'s colour key in the panel.</figcaption></figure></li>
+  <li><b>Open it in Google Earth (optional).</b> <span class="ui">Open in Google Earth Pro</span> opens
+      the map or path you're looking at, with your stations as pins. No Google Earth Pro?
+      <span class="ui">Google Earth on the web…</span> shows how to open the same file in a browser.
+      See <a href="google-earth.html">Google Earth</a>.</li>
+</ol>
+
+<h2 id="moving">Moving around the app</h2>
+<p>The four buttons at the top of the left panel (<span class="ui">Add station…</span>,
+<span class="ui">Import .qth…</span>, <span class="ui">Analyse a path…</span> and
+<span class="ui">Coverage map…</span>) are always there; the one you're using is highlighted. Click
+another to switch straight to it. <span class="ui">Back to stations</span>, just below them, returns to
+the stations list. While a path or a map is being worked out, the switching waits: use
+<span class="ui">Cancel</span> next to <span class="ui">Run</span> or <span class="ui">Analyse</span>
+to stop it.</p>
+
+<h2 id="next">Next</h2>
+<ul>
+  <li>Every run is kept in its own <a href="job-folders.html">job folder</a> under Documents\SPLAT\Jobs.</li>
+  <li>Defaults for new maps, and the terrain folder, are in <a href="settings.html">Settings</a>.</li>
+  <li>Something went wrong? <a href="troubleshooting.html">Troubleshooting</a> explains every message.</li>
+</ul>
+</body>
+</html>

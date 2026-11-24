@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Terrain</title>
+<meta name="order" content="60">
+<meta name="keywords" content="terrain; elevation data; SRTM; .sdf; terrain folder; tiles; download; viewfinderpanoramas.org; AWS terrain tiles; open water; sea level; .sea; high-definition; HD; 1 arc-second; 3 arc-second; tile limit; obstacles; user terrain; .udt; buildings; towers; trees; degrees west">
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<h1>Terrain</h1>
+<p class="lead">SPLAT! works out what the ground does to a signal from elevation data: one file
+(<code>.sdf</code>) per 1° × 1° tile. The app finds the tiles each job needs and downloads any it
+hasn't got, once.</p>
+
+<h2 id="folder">The terrain folder</h2>
+<p>Tiles are kept in one folder, shown in the path and coverage panels and in
+<a href="settings.html">Settings</a>. Unless you choose another, it is the app's own folder,
+<code>%LOCALAPPDATA%\SPLATforWindows\Terrain</code> (local, not in Documents, which OneDrive may
+sync). If you already have SPLAT! terrain files, choose their folder with
+<span class="ui">Change…</span>; new tiles are added there. Standard and high-definition tiles can
+share a folder.</p>
+
+<h2 id="downloads">Where the terrain comes from</h2>
+<ul>
+  <li><b>Standard terrain</b> (3 arc-second, about 90 m): Jonathan de Ferranti's viewfinderpanoramas.org,
+      in 6° × 4° blocks (a block can be 30 MB, so the first job in a new area takes a minute).</li>
+  <li><b>High-definition terrain</b> (1 arc-second, about 30 m): the AWS open terrain tiles (Mapzen
+      "skadi").</li>
+</ul>
+<p>Each download is unpacked, checked for size and converted with SPLAT!'s own <code>srtm2sdf</code>.
+A broken or cut-short download is thrown away, never used. Downloads are kept in the folder's
+<code>raw</code> folder, so nothing is fetched twice. Where a source has no tile, that's open water:
+the app records it (a <code>.sea</code> file) and SPLAT!'s sea level is then the right answer.</p>
+<div class="note">Without terrain for an area SPLAT! quietly treats it as sea level, which gives wrong
+answers. So the app never runs a job with a tile missing: it downloads it first, or stops and says why.</div>
+
+<h2 id="limits">How much terrain a job can use</h2>
+<p>SPLAT! holds 64 standard tiles (8° × 8°) or 16 high-definition tiles (4° × 4°) at once. That limits
+how far apart a path's stations can be, and a coverage map's radius: about 155 miles at mid-latitudes
+with standard terrain, 66 miles with high-definition. The app checks first and says the limit.</p>
+
+<h2 id="hd">Standard or high-definition?</h2>
+<p>Standard terrain is right for most VHF and UHF work and is fast. High-definition terrain shows
+smaller hills and valleys, which matters most for short paths and microwave links, but a coverage map
+takes several minutes instead of seconds.</p>
+
+<h2 id="obstacles">Obstacles (user terrain, .udt)</h2>
+<p>SPLAT!'s user terrain files add buildings, towers or trees on top of the ground. In path analysis
+(under <span class="ui">Ground, climate and model</span>) or a coverage map (under
+<span class="ui">More options</span>), <span class="ui">Obstacles</span> &gt; <span class="ui">Choose…</span>
+picks one for the job; <span class="ui">Clear</span> removes it. Each line is:</p>
+<p><code>latitude, longitude, height</code> &nbsp; for example &nbsp; <code>38.9396, 77.2404, 200</code></p>
+<ul>
+  <li>Latitude and longitude in decimal degrees, or "degrees minutes seconds".</li>
+  <li><b>Longitude in degrees WEST</b>, as everywhere in SPLAT!: 77.2404 for 77.2404° W.</li>
+  <li>Height above the ground in feet, or metres if it ends in <code>m</code> (<code>61m</code>).</li>
+</ul>
+<p>A file with none of its obstacles inside the job's area is refused: that almost always means the
+longitudes were written east-negative (−77.24), which SPLAT! would read as 77° east and quietly
+ignore.</p>
+</body>
+</html>

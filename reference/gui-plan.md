@@ -1,7 +1,7 @@
 # SPLAT! for Windows: GUI front end, plan for owner review (2026-11-22)
 
 **Status: in progress.** All decisions G1–G8 made 2026-11-22. G0 approved; G1 (stations,
-plus street addresses) passed the owner's check; G2 (QRZ) passed the owner's check 2026-11-22; G3 (path) passed the owner's check 2026-11-22; G4 (coverage) passed the owner's check 2026-11-23; G5 (Google Earth and polish) passed the owner's review 2026-11-23. Progress is in the runbook and `reports\`.
+plus street addresses) passed the owner's check; G2 (QRZ) passed the owner's check 2026-11-22; G3 (path) passed the owner's check 2026-11-22; G4 (coverage) passed the owner's check 2026-11-23; G5 (Google Earth and polish) passed the owner's review 2026-11-23; G6 (help and getting started) done 2026-11-24, awaiting the owner's review. Progress is in the runbook and `reports\`.
 
 ## The owner's request
 > "plan a GUI front end to eliminate the need for command line and make it a modern windows
@@ -205,4 +205,4 @@ prompts the user for the necessary information would be helpful". Club members o
 | **G6** | **Order: GUI before Stage 5 packaging**, so one package holds both | **DECIDED 2026-11-22:** GUI first. Stage 5 becomes G6 (renumbered G7 on 2026-11-23, when the help stage was added as G6). |
 | **G7** | **Licence for the GUI.** It ships with GPLv2 SPLAT!. | **DECIDED 2026-11-22:** GPLv2 as well (simplest, matches SPLAT!). |
 | **G8** | **App name** shown in the window and Start menu | **DECIDED 2026-11-22:** "SPLAT! for Windows". |
-| **G9** | **First-run wizard?** (stage G6) | **OPEN, decide at the start of G6.** Recommended: a short wizard that opens once on first run, can be skipped, and can be reopened from Help: (1) welcome and what the app does; (2) terrain folder (the default is fine for most); (3) call-sign lookup: QRZ sign-in (the user types the password) or the free callook.info; (4) add your first station; (5) offer to run a first coverage map. Alternative: no wizard; the Getting started page opens on first run, and empty panels show what to do next. |
+| **G9** | **First-run wizard?** (stage G6) | **DECIDED 2026-11-24: short wizard** (owner: "Short wizard (Recommended)"). Was recommended: a short wizard that opens once on first run, can be skipped, and can be reopened from Help: (1) welcome and what the app does; (2) terrain folder (the default is fine for most); (3) call-sign lookup: QRZ sign-in (the user types the password) or the free callook.info; (4) add your first station; (5) offer to run a first coverage map. Alternative: no wizard; the Getting started page opens on first run, and empty panels show what to do next. |

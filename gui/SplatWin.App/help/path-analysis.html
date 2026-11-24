@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Path analysis</title>
+<meta name="order" content="40">
+<meta name="keywords" content="path analysis; point to point; analyse; summary; line of sight; obstructions; white circles; red dashed line; antenna height advice; Fresnel zone; graphs; terrain profile; elevation angle; height and Fresnel zone; path loss graph; report; swap; signal at the receiver; field strength; free-space loss">
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<h1>Path analysis</h1>
+<p class="lead">One transmitter to one receiver: what signal arrives, and what the terrain in between
+does to it. Click <span class="ui">Analyse a path…</span>, choose the <span class="ui">Transmitter</span>
+and the <span class="ui">Receiver</span> (<span class="ui">Swap</span> turns the path round), check the
+<a href="radio-settings.html">radio settings</a>, and click <span class="ui">Analyse</span>.</p>
+<p>Any terrain tiles the path needs are downloaded first. SPLAT! then runs once for its report and once
+for each graph; it takes a few seconds. <span class="ui">Cancel</span> stops it.</p>
+
+<h2 id="summary">The summary</h2>
+<p>The box on the left gives SPLAT!'s own numbers, copied word for word from its report:</p>
+<ul>
+  <li><b>Title</b>: the distance and the direction (azimuth, degrees from true north) from the
+      transmitter to the receiver.</li>
+  <li><b>Line of sight</b>: whether the straight line between the antennas clears the terrain, or how
+      many points block it.</li>
+  <li><b>Signal at the receiver</b>: the power a receiving antenna would deliver, in dBm.</li>
+  <li><b>Field strength</b>: the same signal as field strength, in dBµV/m.</li>
+  <li><b>Path loss</b>: the total loss between the antennas by the chosen model;
+      <b>free-space loss</b> is what open space alone would cost; <b>terrain loss</b> (attenuation) is
+      the extra the terrain causes.</li>
+  <li><b>Mode</b>: how the model says the signal gets there (for example line of sight, single or
+      double horizon diffraction).</li>
+  <li>A red line appears if the model reported a problem with the inputs.</li>
+  <li><b>Clearance</b>: how high the receiver's antenna would have to be to see past the terrain, to
+      clear the first Fresnel zone, and to clear the chosen percentage of it (60% is the usual rule
+      for a path with no extra loss).</li>
+</ul>
+
+<h2 id="map">The path on the map</h2>
+<p>The path is drawn between the two stations: <b>solid green</b> when the line of sight is clear,
+<b>dashed red</b> when terrain blocks it.</p>
+<p id="obstructions"><b>The white circles with red rims are the obstructions</b> SPLAT! found: points
+where the ground rises into the straight line between the antennas. Hover over one to see its height
+above sea level and its distance from the receiver. The same list is in the
+<span class="ui">Report</span> tab. Blocked doesn't mean no signal: the signal bends over the
+obstruction (diffraction) at a cost, which SPLAT! includes in the path loss.</p>
+
+<h2 id="graphs">The graphs</h2>
+<p>The tabs under the map are SPLAT!'s graphs, drawn by the app from SPLAT!'s data:</p>
+<ul>
+  <li><span class="ui">Terrain profile</span>: the ground's height along the path.</li>
+  <li><span class="ui">Elevation angle</span>: the angle up (or down) to the terrain along the path,
+      as seen from the receiver, with the line to the transmitter.</li>
+  <li><span class="ui">Height and Fresnel zone</span>: the terrain relative to the straight line between
+      the antennas, with the earth's curvature, the first Fresnel zone and 60% of it. Terrain poking into
+      the Fresnel zone costs signal even when the line of sight is clear.</li>
+  <li><span class="ui">Path loss</span>: the loss along the path, by distance.</li>
+  <li><span class="ui">Report</span>: SPLAT!'s complete report, as it wrote it.</li>
+</ul>
+
+<h2 id="after">Afterwards</h2>
+<ul>
+  <li><span class="ui">Open in Google Earth Pro</span> (top of the window) shows both stations, the path
+      and its line-of-sight part. See <a href="google-earth.html">Google Earth</a>.</li>
+  <li><span class="ui">Open the job folder</span> shows everything SPLAT! wrote, and a
+      <code>run-again.cmd</code> that repeats the run from the command line. See
+      <a href="job-folders.html">Job folders</a>.</li>
+  <li><span class="ui">Back to stations</span> clears the path from the map.</li>
+</ul>
+</body>
+</html>

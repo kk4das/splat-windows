@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Radio settings</title>
+<meta name="order" content="30">
+<meta name="keywords" content="radio settings; frequency; ERP; effective radiated power; polarization; ground; dielectric constant; conductivity; radio climate; situations; time; variability; atmospheric bending; N-units; propagation model; ITWOM; Longley-Rice; .lrp; Fresnel clearance; ground clutter; units; metric">
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<h1>Radio settings</h1>
+<p class="lead">These are the values SPLAT! keeps in a transmitter's <code>.lrp</code> file. The app
+keeps them with the transmitting station and saves your changes when you click
+<span class="ui">Analyse</span> or <span class="ui">Run</span>. Usually only the frequency and the ERP
+need changing; the rest are SPLAT!'s documented defaults.</p>
+
+<h2 id="values">The values</h2>
+<table>
+<tr><th>Setting</th><th>What it is</th><th>Default</th></tr>
+<tr><td>Frequency (MHz)</td><td>The transmitter's frequency. SPLAT! works from 20 MHz to 20 GHz.</td><td>none</td></tr>
+<tr><td>ERP (watts)</td><td>Effective radiated power: transmitter power, less feed-line loss, plus antenna gain over a dipole. 50 W into a 6 dBd antenna with 2 dB of feed-line loss is about 50 × 10<sup>0.4</sup> ≈ 126 W ERP.</td><td>none</td></tr>
+<tr><td>Polarization</td><td>Horizontal or vertical. FM voice repeaters are vertical.</td><td>Vertical</td></tr>
+<tr><td>Ground</td><td>The ground's electrical properties (dielectric constant and conductivity), from SPLAT!'s table: average ground, poor, good, farmland and forest, marshy land, mountain and sand, city and industrial, fresh water, salt water.</td><td>Average ground (15, 0.005 S/m)</td></tr>
+<tr><td>Radio climate</td><td>One of seven climates SPLAT! knows. Most of the US east of the Rockies is 5, continental temperate.</td><td>5 Continental temperate</td></tr>
+<tr><td>Situations (%)</td><td>Location variability. 50% means the answer is what at least half of places of this kind would get.</td><td>50</td></tr>
+<tr><td>Time (%)</td><td>Time variability. 90% means the signal is at least the answer 90% of the time.</td><td>90</td></tr>
+<tr><td>Atmospheric bending (N-units)</td><td>How much the atmosphere bends radio waves over the horizon. 301 is the standard atmosphere.</td><td>301</td></tr>
+</table>
+<p>Load from a .lrp file… fills these in from an existing SPLAT! file.</p>
+
+<h2 id="path-options">Path options</h2>
+<p>Under <span class="ui">Ground, climate and model</span> in path analysis:</p>
+<ul>
+  <li><span class="ui">Propagation model</span>: ITWOM 3.0 (SPLAT!'s default) or Longley-Rice ITM, the
+      older model. Longley-Rice sometimes reports "a combination of parameters is out of range": the
+      app shows that warning rather than hiding it.</li>
+  <li><span class="ui">Fresnel clearance (%)</span>: how much of the first Fresnel zone must be clear
+      for SPLAT!'s antenna-height advice. 60% is the usual rule.</li>
+  <li><span class="ui">Ground clutter</span>: a height added to all terrain, for trees or buildings
+      (in feet, or metres with metric units).</li>
+  <li><span class="ui">Units in the report</span>: miles and feet, or kilometres and metres.</li>
+  <li><span class="ui">High-definition terrain</span> and <span class="ui">Obstacles</span>: see
+      <a href="terrain.html">Terrain</a>.</li>
+</ul>
+<p>Coverage maps use the same radio settings; their own options are on the
+<a href="coverage-maps.html">Coverage maps</a> page.</p>
+</body>
+</html>

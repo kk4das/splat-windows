@@ -276,7 +276,7 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G7 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 passed 2026-11-23; G5 passed 2026-11-23; G6 next)
+### Stages G0–G7 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 passed 2026-11-23; G5 passed 2026-11-23; G6 DONE 2026-11-24, awaiting owner's review; G7 next)
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
@@ -313,6 +313,9 @@ coverage map is shown in the window, with a button that opens it in Google Earth
   **Publish with `gui\build-gui.ps1 publish` (self-contained).** A framework-dependent publish
   makes Windows offer to install the .NET Desktop Runtime each time the app starts (G5 finding).
   The icon is drawn by `scripts\make_icon.ps1`.
+  From G6, `scripts\gui_help_uitest.ps1 -App gui\publish\SplatForWindows.exe -Work work\g6-help-uitest`
+  (first-run setup, help window, F1, file pickers). The other window tests mark the setup done in
+  their own settings files. `scripts\help_screens.ps1` remakes Help > Getting started's pictures.
 - **Run `verify_toolchain.ps1` from PowerShell, not Git Bash.** Git Bash sets `HOME`, so the
   "P4 HOME unset" finding can't reproduce there and the script reports PROBLEMS.
 
@@ -425,6 +428,18 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-24 — Stage G6 (help and getting started) complete. HALT for owner review.**
+  - Started on the owner's words "Start G6". **Decision G9 → short first-run setup** (owner: "Short
+    wizard (Recommended)").
+  - Help menu (Contents, Index, Search, Getting started, Setup…, Troubleshooting, About), F1 by
+    view, "What does this mean?" buttons; 13 offline HTML pages; index and search built from the
+    pages; troubleshooting covers every message in the code (a unit test fails if one is added
+    without an entry); getting-started pictures from the real app.
+  - Unit tests 319; window tests help 30/30, coverage 52/52, path 41/41, stations 31/31, QRZ 24/24;
+    gates EQUIVALENT; 11 deliberate breakages caught; preflight OK at both ends. Version 0.7.0.
+  - Findings: the G1 map hint showed over the map while placing a pin (fixed); the G5 report wrongly
+    said the file pickers couldn't be tested (now tested); closing the main window now closes help.
+    Report: `reports\stageG6-help.md`.
 - **2026-11-23 — Owner's G5b check passed.** Owner: "switching works well and is easy enough." G6 waits for an explicit go-ahead.
 - **2026-11-23 — Stage G5b (switching between panels) done. HALT for owner review.** At the
   owner's request before G6: the four buttons (Add station…, Import .qth…, Analyse a path…,

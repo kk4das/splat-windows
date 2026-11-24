@@ -11,7 +11,7 @@ public partial class MainWindow : Window
 {
     const string AppHost = "app.splat.local";   // the map page (files shipped with the app)
     const string MapHost = "map.splat.local";   // the images made from the opened map
-    public const string AgentName = "SPLATforWindows/0.6";   // identifies the app to map-tile servers
+    public const string AgentName = "SPLATforWindows/0.7";   // identifies the app to map-tile servers
 
     static readonly string DataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SPLATforWindows");
     static readonly string MapCache = Path.Combine(DataDir, "map-cache");
@@ -29,7 +29,10 @@ public partial class MainWindow : Window
         LoadLibrary(stationsPath);
         UpdateQrzButton();
         OpacitySlider.Value = App.Settings.MapOpacity;
+        // F1: help for what the window shows.
+        CommandBindings.Add(new System.Windows.Input.CommandBinding(System.Windows.Input.ApplicationCommands.Help, (_, _) => App.ShowHelp(ContextTopic())));
         Loaded += async (_, _) => await InitWebAsync();
+        Loaded += (_, _) => Dispatcher.BeginInvoke(FirstRunSetup, System.Windows.Threading.DispatcherPriority.ApplicationIdle);
     }
 
     void UpdateQrzButton() =>
@@ -47,8 +50,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            var env = await CoreWebView2Environment.CreateAsync(null, Path.Combine(DataDir, "WebView2"));
-            await Web.EnsureCoreWebView2Async(env);
+            await Web.EnsureCoreWebView2Async(await App.WebEnvironmentAsync());
             var core = Web.CoreWebView2;
             core.Settings.UserAgent += " " + AgentName;   // OpenStreetMap's tile policy asks apps to identify themselves
             core.Settings.AreDevToolsEnabled = false;

@@ -1,0 +1,65 @@
+<Window x:Class="SplatWin.App.SetupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Set up SPLAT! for Windows" Width="560" SizeToContent="Height" ResizeMode="NoResize" Icon="splat.ico"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+    <Window.Resources>
+        <Style x:Key="Body" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,8,0,0"/>
+        </Style>
+    </Window.Resources>
+    <DockPanel Margin="22,18,22,18">
+        <TextBlock x:Name="StepText" DockPanel.Dock="Top" FontSize="12" Opacity="0.7"/>
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,20,0,0" LastChildFill="False">
+            <Button x:Name="SkipButton" Content="Skip setup" Padding="12,6" Click="Skip_Click"
+                    ToolTip="Close the setup; it can be opened again from Help &gt; Setup…"/>
+            <Button x:Name="NextButton" DockPanel.Dock="Right" Content="Next" Padding="18,6" Margin="8,0,0,0" Click="Next_Click"
+                    Style="{DynamicResource AccentButtonStyle}"/>
+            <Button x:Name="BackButton" DockPanel.Dock="Right" Content="Back" Padding="14,6" Click="Back_Click"/>
+        </DockPanel>
+        <Grid MinHeight="250">
+            <!-- 1. Welcome -->
+            <StackPanel x:Name="Page1">
+                <TextBlock Text="Welcome to SPLAT! for Windows" FontSize="22" FontWeight="SemiBold"/>
+                <TextBlock Style="{StaticResource Body}"
+                           Text="This app predicts how a radio signal travels over real terrain: between two stations (path analysis), or from a transmitter over the area around it (coverage maps). It runs SPLAT!, by John Magliacane, KD2BD, and shows its answers on a map."/>
+                <TextBlock Style="{StaticResource Body}"
+                           Text="This short setup takes a minute: where terrain goes, how call signs are looked up, and your first station. You can skip it now, and open it again any time from the Help menu."/>
+            </StackPanel>
+            <!-- 2. Terrain -->
+            <StackPanel x:Name="Page2" Visibility="Collapsed">
+                <TextBlock Text="Terrain" FontSize="22" FontWeight="SemiBold"/>
+                <TextBlock Style="{StaticResource Body}"
+                           Text="SPLAT! needs elevation data for the area of each job. The app downloads what each job needs, once, into this folder:"/>
+                <TextBlock x:Name="TerrainText" Style="{StaticResource Body}" FontWeight="SemiBold"/>
+                <TextBlock Style="{StaticResource Body}"
+                           Text="The app's own folder is right for most people. If you already have SPLAT! terrain files (.sdf), choose their folder instead."/>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <Button x:Name="TerrainChangeButton" Content="Choose another folder…" Padding="10,4" Click="TerrainChange_Click"/>
+                    <Button x:Name="TerrainDefaultButton" Content="Use the app's own folder" Padding="10,4" Margin="8,0,0,0" Click="TerrainDefault_Click"/>
+                </StackPanel>
+            </StackPanel>
+            <!-- 3. Call signs -->
+            <StackPanel x:Name="Page3" Visibility="Collapsed">
+                <TextBlock Text="Looking up call signs" FontSize="22" FontWeight="SemiBold"/>
+                <TextBlock Style="{StaticResource Body}"
+                           Text="A station can be found by its call sign. Without signing in, US call signs are looked up free on callook.info (FCC licence data)."/>
+                <TextBlock Style="{StaticResource Body}"
+                           Text="For call signs worldwide, sign in to QRZ.com. Positions from QRZ.com need its XML Logbook Data subscription. You type your password; it is kept in Windows Credential Manager, never in a file."/>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <Button x:Name="QrzButton" Content="Sign in to QRZ.com…" Padding="10,4" Click="Qrz_Click"/>
+                </StackPanel>
+                <TextBlock x:Name="QrzText" Style="{StaticResource Body}" FontWeight="SemiBold"/>
+            </StackPanel>
+            <!-- 4. First station -->
+            <StackPanel x:Name="Page4" Visibility="Collapsed">
+                <TextBlock Text="Your first station" FontSize="22" FontWeight="SemiBold"/>
+                <TextBlock Style="{StaticResource Body}"
+                           Text="Add your own station first: by call sign, street address, grid square, coordinates or a click on the map. Then drag the pin onto the antenna itself and give its height above the ground."/>
+                <TextBlock Style="{StaticResource Body}"
+                           Text="When it's saved, the app offers to make a first coverage map for it. Getting started, in Help, goes on from there."/>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</Window>

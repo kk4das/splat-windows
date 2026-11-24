@@ -16,6 +16,7 @@ public partial class QrzSignInWindow : Window
     public QrzSignInWindow()
     {
         InitializeComponent();
+        CommandBindings.Add(new System.Windows.Input.CommandBinding(System.Windows.Input.ApplicationCommands.Help, (_, _) => App.ShowHelp(SplatWin.Core.HelpTopics.Qrz)));
         var saved = App.QrzSaved();
         SavedText.Text = saved is { } s ? $"Signed in as {s.User}." : "Not signed in.";
         UserBox.Text = saved?.User ?? "";

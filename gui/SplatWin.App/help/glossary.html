@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Glossary</title>
+<meta name="order" content="110">
+<meta name="keywords" content="glossary; terms; definitions; abbreviations">
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<h1>Glossary</h1>
+<dl class="terms">
+  <dt id="agl">AGL</dt>
+  <dd>Above ground level: a height measured from the ground at that spot. Antenna heights in the app are AGL.</dd>
+  <dt id="amsl">AMSL</dt>
+  <dd>Above mean sea level. SPLAT!'s terrain and obstruction heights are AMSL.</dd>
+  <dt id="arc-second">Arc-second</dt>
+  <dd>1/3600 of a degree. Standard terrain has a point every 3 arc-seconds (about 90 m); high-definition every 1 arc-second (about 30 m).</dd>
+  <dt id="azimuth">Azimuth</dt>
+  <dd>A direction, in degrees clockwise from true north.</dd>
+  <dt id="atmospheric-bending">Atmospheric bending (N-units)</dt>
+  <dd>How much the atmosphere bends radio waves back towards the earth, letting them reach a little past the horizon. 301 is the standard atmosphere.</dd>
+  <dt id="conductivity">Conductivity</dt>
+  <dd>How well the ground conducts electricity, in siemens per metre (S/m). Part of the ground setting.</dd>
+  <dt id="db">dB (decibel)</dt>
+  <dd>A ratio on a logarithmic scale: +3 dB is double the power, +10 dB ten times, −10 dB a tenth.</dd>
+  <dt id="dbm">dBm</dt>
+  <dd>Power compared with one milliwatt: 0 dBm is 1 mW, −100 dBm is 0.1 picowatt. A typical FM receiver needs about −120 dBm to hear anything and −105 to −100 dBm for a clear signal.</dd>
+  <dt id="dbuv-m">dBµV/m</dt>
+  <dd>Field strength: the radio wave's strength at a place, in decibels above one microvolt per metre. It doesn't depend on the receiving antenna. dBm into a dipole ≈ dBµV/m − 20 log<sub>10</sub>(MHz) − 75.</dd>
+  <dt id="dielectric-constant">Dielectric constant</dt>
+  <dd>The ground's relative permittivity, part of the ground setting: about 15 for average ground, 80 for water.</dd>
+  <dt id="diffraction">Diffraction</dt>
+  <dd>A radio wave bending over the edge of an obstruction such as a hilltop. It lets signals reach past terrain, at a cost in loss.</dd>
+  <dt id="erp">ERP (effective radiated power)</dt>
+  <dd>Transmitter power, less feed-line loss, plus antenna gain over a dipole. The power a dipole would need to give the same signal in the antenna's best direction.</dd>
+  <dt id="field-strength">Field strength</dt>
+  <dd>See <a href="#dbuv-m">dBµV/m</a>.</dd>
+  <dt id="free-space-loss">Free-space loss</dt>
+  <dd>The loss a signal would have between the antennas in open space, with no ground or terrain. The real path loss is that plus the terrain's.</dd>
+  <dt id="fresnel-zone">Fresnel zone</dt>
+  <dd>The football-shaped region around the straight line between two antennas that carries most of the signal. Terrain inside the first Fresnel zone costs signal even when the line of sight is clear; keeping 60% of it clear is the usual rule.</dd>
+  <dt id="grid-square">Grid square (Maidenhead locator)</dt>
+  <dd>A position as letters and digits, such as FM18jw. Four characters are about 100 × 70 miles, six about 4.5 × 3 miles, eight about 700 × 460 m (at mid-latitudes).</dd>
+  <dt id="hd">HD (high-definition) terrain</dt>
+  <dd>1 arc-second terrain, run by <code>splat-hd</code>. Finer and slower than standard terrain.</dd>
+  <dt id="itwom">ITWOM</dt>
+  <dd>The Irregular Terrain With Obstructions Model, version 3.0 by Sid Shumate: SPLAT!'s default propagation model, a development of Longley-Rice.</dd>
+  <dt id="kml">KML and KMZ</dt>
+  <dd>Google Earth's file formats. A .kml is text; a .kmz is a zip of a .kml with its pictures. SPLAT! writes .kml; the app makes .kmz for Google Earth.</dd>
+  <dt id="line-of-sight">Line of sight</dt>
+  <dd>The straight line between the two antennas, clear of terrain. With the earth's curve and atmospheric bending, SPLAT! works out whether the terrain blocks it.</dd>
+  <dt id="longley-rice">Longley-Rice (ITM)</dt>
+  <dd>The Irregular Terrain Model from the US Institute for Telecommunication Sciences, SPLAT!'s older model (<code>-olditm</code>).</dd>
+  <dt id="lrp">.lrp file</dt>
+  <dd>SPLAT!'s file of a transmitter's radio settings (Longley-Rice parameters).</dd>
+  <dt id="obstruction">Obstruction</dt>
+  <dd>A point where terrain rises into the line of sight between two antennas. Shown as white circles on a path.</dd>
+  <dt id="path-loss">Path loss</dt>
+  <dd>How much weaker the signal is at the receiving antenna than at the transmitting one, in dB, by the propagation model.</dd>
+  <dt id="pattern">Antenna pattern (.az and .el files)</dt>
+  <dd>How an antenna's radiation varies with direction: around the horizon (.az, azimuth) and up and down (.el, elevation), as relative field strength from 0 to 1.</dd>
+  <dt id="polarization">Polarization</dt>
+  <dd>The orientation of the radio wave's electric field: horizontal or vertical, as the antennas are mounted.</dd>
+  <dt id="qth">.qth file</dt>
+  <dd>SPLAT!'s site file: name, latitude, longitude (degrees west) and antenna height.</dd>
+  <dt id="radio-climate">Radio climate</dt>
+  <dd>One of seven climates (equatorial to maritime temperate over sea) that change how signals travel over the horizon.</dd>
+  <dt id="sdf">.sdf file</dt>
+  <dd>SPLAT!'s terrain file: elevations for one 1° × 1° tile, made from SRTM data by <code>srtm2sdf</code>.</dd>
+  <dt id="situations-time">Situations and time</dt>
+  <dd>How sure the prediction is. Situations 50%, time 90% means the signal is at least the answer at half of such places, 90% of the time.</dd>
+  <dt id="srtm">SRTM</dt>
+  <dd>The Shuttle Radar Topography Mission (2000): the elevation data SPLAT!'s terrain comes from.</dd>
+  <dt id="talk-in">Talk-in and talk-out</dt>
+  <dd>For a repeater: talk-out is how well you hear it (what a coverage map shows); talk-in is how well it hears you, usually weaker because a mobile or handheld has much less ERP.</dd>
+  <dt id="udt">.udt file (user terrain)</dt>
+  <dd>SPLAT!'s file of obstacles added to the terrain: latitude, longitude (degrees west) and height.</dd>
+</dl>
+</body>
+</html>
