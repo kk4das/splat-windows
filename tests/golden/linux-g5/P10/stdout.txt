@@ -1,0 +1,12 @@
+
+		--==[ Welcome To SPLAT! v1.4.2 ]==--
+
+Loading "../sdf3/38:39:77:78.sdf" into page 1... Done!
+
+Reading "obstacle.udt"... Done!
+
+Site analysis report written to: "K4HTA_pattern-site_report.txt"
+
+KML file written to: "K4HTA_pattern-to-Legion_Hall.kml"
+Path Loss Report written to: "K4HTA_pattern-to-Legion_Hall.txt"
+

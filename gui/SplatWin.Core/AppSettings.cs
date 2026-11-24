@@ -7,6 +7,23 @@ public sealed class AppSettings
 {
     public string? TerrainFolder { get; set; }
 
+    // Defaults for new coverage maps (Settings window, G5). Distances in miles and feet unless Metric.
+    public double CoverageRadius { get; set; } = 30;
+    public double CoverageRxHeight { get; set; } = 6;
+    public bool Metric { get; set; }
+    public bool TerrainShading { get; set; } = true;
+    /// <summary>How opaque coverage maps are drawn over the background map (0 to 1).</summary>
+    public double MapOpacity { get; set; } = 0.65;
+
+    /// <summary>Why these values can't be saved, or null.</summary>
+    public string? Problem()
+    {
+        if (!(CoverageRadius > 0 && CoverageRadius <= 1000)) return "The coverage radius should be more than 0 (and at most 1000).";
+        if (!(CoverageRxHeight > 0 && CoverageRxHeight <= 3000)) return "The receiver antenna height should be more than 0.";
+        if (!(MapOpacity >= 0.1 && MapOpacity <= 1)) return "The map opacity should be between 10% and 100%.";
+        return null;
+    }
+
     static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
 
     /// <summary>A missing or damaged file gives the defaults; settings are never worth refusing to start over.</summary>

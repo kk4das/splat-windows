@@ -1,7 +1,7 @@
 # SPLAT! for Windows: GUI front end, plan for owner review (2026-11-22)
 
 **Status: in progress.** All decisions G1–G8 made 2026-11-22. G0 approved; G1 (stations,
-plus street addresses) passed the owner's check; G2 (QRZ) passed the owner's check 2026-11-22; G3 (path) passed the owner's check 2026-11-22; G4 (coverage) passed the owner's check 2026-11-23. Progress is in the runbook and `reports\`.
+plus street addresses) passed the owner's check; G2 (QRZ) passed the owner's check 2026-11-22; G3 (path) passed the owner's check 2026-11-22; G4 (coverage) passed the owner's check 2026-11-23; G5 (Google Earth and polish) done 2026-11-23, awaiting the owner's review. Progress is in the runbook and `reports\`.
 
 ## The owner's request
 > "plan a GUI front end to eliminate the need for command line and make it a modern windows
@@ -155,7 +155,7 @@ antenna.**
 | **G2 QRZ** | QRZ sign-in (the owner types the password), lookup, `geoloc` warnings, Credential Manager. | The owner looks up three calls. |
 | **G3 Path** | Path analysis: run SPLAT!, a report summary panel, graphs drawn in the app, path on the map. | Same numbers as the CLI reports, and the equivalence test passes. |
 | **G4 Coverage** | Coverage jobs, automatic terrain, overlay, opacity, cancel, job history. | The owner runs the 30-mile K4HTA map from the GUI alone. |
-| **G5 Google Earth + polish** | Pro and web KMZ, the point-to-point KML test, settings, icons. (Help moved to G6.) | The owner's review. |
+| **G5 Google Earth + polish** | Pro and web KMZ, the point-to-point KML test, settings, icons, the click readout. Owner added (2026-11-23): stations in Google Earth, terrain shading off, antenna patterns and -udt. (Help moved to G6.) | The owner's review. |
 | **G6 Help + getting started** | A Help menu with indexed, searchable help (offline); step-by-step getting started; a first-run wizard if decision G9 says so. See below. | A new user gets from a fresh start to a first coverage map using only the help (and wizard); the owner's review. |
 | **G7 Packaging** | Merges with Stage 5: a zip or installer, a clean-machine test, D10. Was G6 until 2026-11-23. | A clean-PC report. |
 

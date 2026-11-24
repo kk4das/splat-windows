@@ -73,7 +73,7 @@ function JobCount { @(Get-ChildItem $jobs -Directory -ErrorAction SilentlyContin
 $terrain = Join-Path $run 'terrain'
 New-Item -ItemType Directory $terrain | Out-Null
 Copy-Item (Join-Path $root 'data\sdf3\*.sdf') $terrain
-$script:proc = Start-Process $App -PassThru -ArgumentList @('--stations', "`"$lib`"", '--terrain', "`"$terrain`"", '--jobs', "`"$jobs`"", '--qrz-credential', "SPLATforWindows/ui-test/$([guid]::NewGuid())",
+$script:proc = Start-Process $App -PassThru -ArgumentList @('--stations', "`"$lib`"", '--settings', "`"$(Join-Path $run 'settings.json')`"", '--terrain', "`"$terrain`"", '--jobs', "`"$jobs`"", '--qrz-credential', "SPLATforWindows/ui-test/$([guid]::NewGuid())",
     '--terrain-std-url', 'http://localhost:9/dem3/', '--terrain-hd-url', 'http://localhost:9/skadi/')
 try {
     $script:win = Wait-For { $AE::RootElement.FindFirst($TS::Children, (New-Object $PC($AE::ProcessIdProperty, $script:proc.Id))) } 20000
@@ -130,6 +130,13 @@ try {
     Check ($k.Radio.FrequencyMHz -eq 146.685 -and $k.Radio.ErpWatts -eq 93 -and $k.Radio.Polarization -eq 1) 'radio settings saved with K4HTA' ($k.Radio | ConvertTo-Json -Compress)
     $job = Get-ChildItem $jobs -Directory | Select-Object -First 1
     Check ((JobCount) -eq 1 -and $job.Name -match '^\d{4}-\d\d-\d\d \d{6} K4HTA to KK4DAS$') 'one job folder, named by date and stations' $job.Name
+    # G5: the path's Google Earth file (SPLAT!'s path KML, web-safe), opened by the same button as maps.
+    $pk = Join-Path $job.FullName 'K4HTA-to-KK4DAS.kmz'
+    Check ((Test-Path $pk) -and (ById 'EarthButton').Current.IsEnabled -and (ById 'EarthWebButton').Current.IsEnabled -and (Text 'SumEarth') -like '*both stations, the path*') 'G5: path Google Earth file made; Google Earth buttons on' (Text 'SumEarth')
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $z = [IO.Compression.ZipFile]::OpenRead($pk); $sr = New-Object IO.StreamReader($z.GetEntry('doc.kml').Open(), [Text.Encoding]::UTF8); $doc = $sr.ReadToEnd(); $sr.Dispose(); $z.Dispose()
+    Check ($doc -like ('*38' + [char]0xB0 + " 55' 27`" North*") -and $doc -notlike '*root://*' -and $doc -like '*Line-of-Sight Path*') 'G5: its descriptions show the degree sign, and it opens on the web (no Pro-only icon)' ''
+    Check ((Text 'RadioHint') -like '*Antenna: the same in all directions*') 'G5: the transmitter''s antenna (no pattern) is stated' (Text 'RadioHint')
     $copy = Join-Path $run 'rerun'
     Copy-Item $job.FullName $copy -Recurse
     Get-ChildItem $copy -Recurse -File | Where-Object { $_.Extension -notin '.qth', '.lrp', '.cmd' } | Remove-Item

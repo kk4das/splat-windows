@@ -1,0 +1,74 @@
+
+		--==[ SPLAT! v1.4.2 Path Analysis ]==--
+
+---------------------------------------------------------------------------
+
+Transmitter site: K4HTA_pattern
+Site location: 38.9242 North / 77.2058 West (38° 55' 27" N / 77° 12' 20" W)
+Ground elevation: 105.00 meters AMSL
+Antenna height: 73.15 meters AGL / 178.15 meters AMSL
+Distance to Legion_Hall: 6.00 kilometers
+Azimuth to Legion_Hall: 249.45 degrees
+Depression angle to Legion_Hall: -0.6317 degrees
+Depression angle to the first obstruction: -0.6214 degrees
+
+---------------------------------------------------------------------------
+
+Receiver site: Legion_Hall
+Site location: 38.9053 North / 77.2707 West (38° 54' 18" N / 77° 16' 14" W)
+Ground elevation: 113.00 meters AMSL
+Antenna height: 1.83 meters AGL / 114.83 meters AMSL
+Distance to K4HTA_pattern: 6.00 kilometers
+Azimuth to K4HTA_pattern: 69.41 degrees
+Elevation angle to K4HTA_pattern: +0.5777 degrees
+Elevation angle to the first obstruction: +0.7075 degrees
+
+---------------------------------------------------------------------------
+
+ITWOM Version 3.0 Parameters Used In This Analysis:
+
+Earth's Dielectric Constant: 15.000
+Earth's Conductivity: 0.005 Siemens/meter
+Atmospheric Bending Constant (N-units): 301.000 ppm
+Frequency: 146.685 MHz
+Radio Climate: 5 (Continental Temperate)
+Polarization: 1 (Vertical)
+Fraction of Situations: 50.0%
+Fraction of Time: 90.0%
+Transmitter ERP: 93 Watts (+49.68 dBm)
+Transmitter EIRP: 152 Watts (+51.82 dBm)
+
+---------------------------------------------------------------------------
+
+Summary For The Link Between K4HTA_pattern and Legion_Hall:
+
+K4HTA_pattern antenna pattern towards Legion_Hall: 0.189 (-14.48 dB)
+Free space path loss: 91.36 dB
+ITWOM Version 3.0 path loss: 94.26 dB
+Attenuation due to terrain shielding: 2.90 dB
+Total path loss including K4HTA_pattern antenna pattern: 108.69 dB
+Field strength at Legion_Hall: 63.73 dBuV/meter
+Signal power level at Legion_Hall: -56.86 dBm
+Signal power density at Legion_Hall: -82.06 dBW per square meter
+Voltage across a 50 ohm dipole at Legion_Hall: 410.55 uV (52.27 dBuV)
+Voltage across a 75 ohm dipole at Legion_Hall: 502.82 uV (54.03 dBuV)
+Mode of propagation: Double Horizon Diffraction Dominant
+ITWOM error number: 0 (No error)
+
+---------------------------------------------------------------------------
+
+Between Legion_Hall and K4HTA_pattern, SPLAT! detected obstructions at:
+
+    38.9076 N,  77.2626 W,  0.75 kilometers, 124.00 meters AMSL
+    38.9079 N,  77.2618 W,  0.83 kilometers, 127.00 meters AMSL
+    38.9142 N,  77.2402 W,  2.82 kilometers, 148.00 meters AMSL
+    38.9144 N,  77.2394 W,  2.90 kilometers, 149.00 meters AMSL
+
+Antenna at Legion_Hall must be raised to at least 10.36 meters AGL
+to clear all obstructions detected by SPLAT!.
+
+Antenna at Legion_Hall must be raised to at least 149.96 meters AGL
+to clear the first Fresnel zone.
+
+Antenna at Legion_Hall must be raised to at least 85.65 meters AGL
+to clear 60% of the first Fresnel zone.

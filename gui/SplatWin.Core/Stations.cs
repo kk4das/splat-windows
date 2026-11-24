@@ -16,6 +16,8 @@ public sealed class Station
     public DateTime Updated { get; set; }
     /// <summary>Radio settings (the .lrp values) when this station is used as a transmitter; null until first used.</summary>
     public RadioSettings? Radio { get; set; }
+    /// <summary>The antenna's radiation pattern (SPLAT!'s .az/.el files), used when this station transmits; null for none (omnidirectional).</summary>
+    public AntennaPattern? Pattern { get; set; }
 
     [JsonIgnore] public double HeightFeet => QthFile.ToFeet(AntennaHeight, HeightUnit);
     [JsonIgnore] public string Grid => Maidenhead.FromLatLon(Lat, Lon, 8);

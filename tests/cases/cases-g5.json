@@ -1,0 +1,20 @@
+{
+ "_about": "Stage G5 additions to the SPLAT! test cases (tests/cases/cases.json holds the originals and is unchanged). Same runner, same inputs (tests/cases/inputs), same terrain. Run on Linux 2026-11-23 for the golden set data/golden-linux-g5.",
+ "convert": [
+  {"id": "C01", "program": "srtm2sdf", "hgt": "hgt3", "out": "sdf3", "covers": "standard SDF, as in cases.json"}
+ ],
+ "cases": [
+  {"id": "P09", "program": "splat", "sdf": "sdf3",
+   "args": ["-t", "k4hta", "-r", "kk4das", "-d", "../sdf3", "-kml"],
+   "covers": "point-to-point KML (never compared before G5)"},
+  {"id": "P10", "program": "splat", "sdf": "sdf3",
+   "args": ["-t", "k4hta_pat", "-r", "legion", "-d", "../sdf3", "-udt", "obstacle.udt", "-kml", "-metric"],
+   "covers": "path with antenna pattern, user terrain and KML, metric"},
+  {"id": "M09", "program": "splat", "sdf": "sdf3",
+   "args": ["-t", "k4hta_pat", "-L", "6", "-R", "30", "-d", "../sdf3", "-o", "pat.ppm", "-udt", "obstacle.udt", "-ngs", "-kml"],
+   "covers": "signal map with antenna pattern, user terrain, no terrain shading (-ngs), KML"},
+  {"id": "M10", "program": "splat", "sdf": "sdf3",
+   "args": ["-t", "k4hta", "-c", "6", "-R", "20", "-d", "../sdf3", "-o", "los_ngs.ppm", "-ngs", "-kml"],
+   "covers": "line-of-sight map with no terrain shading (-ngs), KML"}
+ ]
+}

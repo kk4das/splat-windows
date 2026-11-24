@@ -9,6 +9,9 @@
   The outputs are compared with data\golden-linux by scripts\compare_outputs.py.
     M01  line of sight, 30 mi, RX 6 ft, town names (standard terrain)
     M07  signal strength, 30 mi, RX 6 ft (HD terrain; the 7200x7200 map and its colour key)
+    Stage G5 (golden run data\golden-linux-g5, cases tests\cases\cases-g5.json):
+    M09  signal strength, 30 mi: antenna pattern (kept with the station), obstacles (-udt), no terrain shading (-ngs)
+    M10  line of sight, 20 mi, no terrain shading (-ngs)
 .EXAMPLE
   .\scripts\gui_coverage_equiv.ps1 -App .\gui\publish\SplatForWindows.exe -Work .\work\g4-equiv
 #>
@@ -22,6 +25,7 @@ $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $inputs = Join-Path $root 'tests\cases\inputs'
 $golden = Join-Path $root 'data\golden-linux'
+$goldenG5 = Join-Path $root 'data\golden-linux-g5'
 $Work = (New-Item -ItemType Directory -Force $Work).FullName
 $run = New-Item -ItemType Directory (Join-Path $Work (Get-Date -Format 'yyyyMMdd-HHmmss'))
 $jobs = New-Item -ItemType Directory (Join-Path $run 'jobs')
@@ -31,10 +35,21 @@ $l = Get-Content (Join-Path $inputs 'k4hta.qth')
 $k4hta = [ordered]@{ Name = $l[0].Trim(); Lat = [double]$l[1]; Lon = - [double]$l[2]; AntennaHeight = [double]$l[3]; HeightUnit = 'Feet'; Source = 'test case'; Updated = '2026-11-22T00:00:00' }
 $p = Get-Content (Join-Path $inputs 'k4hta.lrp') | ForEach-Object { ($_ -split ';')[0].Trim() }
 $radio = [ordered]@{ Dielectric = [double]$p[0]; Conductivity = [double]$p[1]; Bending = [double]$p[2]; FrequencyMHz = [double]$p[3]; Climate = [int]$p[4]; Polarization = [int]$p[5]; Situations = [double]$p[6]; Time = [double]$p[7]; ErpWatts = [double]$p[8] }
+# The pattern transmitter (G5): its .az/.el kept with the station, and its own .lrp.
+$l = Get-Content (Join-Path $inputs 'k4hta_pat.qth')
+$k4htaPat = [ordered]@{ Name = $l[0].Trim(); Lat = [double]$l[1]; Lon = - [double]$l[2]; AntennaHeight = [double]$l[3]; HeightUnit = 'Feet'; Source = 'test case'; Updated = '2026-11-22T00:00:00'
+                        Pattern = [ordered]@{ Az = [IO.File]::ReadAllText((Join-Path $inputs 'k4hta_pat.az')); El = [IO.File]::ReadAllText((Join-Path $inputs 'k4hta_pat.el')); Source = 'k4hta_pat.az and k4hta_pat.el' } }
+$p = Get-Content (Join-Path $inputs 'k4hta_pat.lrp') | ForEach-Object { ($_ -split ';')[0].Trim() }
+$radioPat = [ordered]@{ Dielectric = [double]$p[0]; Conductivity = [double]$p[1]; Bending = [double]$p[2]; FrequencyMHz = [double]$p[3]; Climate = [int]$p[4]; Polarization = [int]$p[5]; Situations = [double]$p[6]; Time = [double]$p[7]; ErpWatts = [double]$p[8] }
 $cases = @(
-    @{ Id = 'M01'; Kind = 'LineOfSight'; Hd = $false; Name = 'los'; Cities = (Join-Path $inputs 'cities.dat') },
-    @{ Id = 'M07'; Kind = 'FieldStrength'; Hd = $true; Name = 'hd_fs'; Cities = $null }
+    @{ Id = 'M01'; Kind = 'LineOfSight'; Hd = $false; Name = 'los'; Cities = (Join-Path $inputs 'cities.dat'); Radius = 30 },
+    @{ Id = 'M07'; Kind = 'FieldStrength'; Hd = $true; Name = 'hd_fs'; Cities = $null; Radius = 30 },
+    @{ Id = 'M09'; Kind = 'FieldStrength'; Hd = $false; Name = 'pat'; Cities = $null; Radius = 30; G5 = $true; Tx = $k4htaPat; Radio = $radioPat; NoShading = $true; Udt = (Join-Path $inputs 'obstacle.udt') },
+    @{ Id = 'M10'; Kind = 'LineOfSight'; Hd = $false; Name = 'los_ngs'; Cities = $null; Radius = 20; G5 = $true; NoShading = $true }
 )
+# SPLAT!'s colour file names itself in its header: k4hta_pat.scf in the golden run (the test's file name), k4hta_pattern.scf in the
+# app's (the station's name). Checked separately: identical apart from that name.
+$scfRenamed = @{ 'M09' = @('k4hta_pat.scf', 'k4hta_pattern.scf') }
 $notCompared = @{ 'stdout.txt' = 'console output: the app passes an absolute terrain path (-d)'; 'cmd.log' = 'the -log command record: the app keeps its own (splat-log.txt, run-again.cmd)' }
 
 $fake = Start-Process powershell -WindowStyle Hidden -PassThru -ArgumentList @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
@@ -43,13 +58,17 @@ $problems = 0
 $lm = @{}; $wm = @{}
 $lin = New-Item -ItemType Directory (Join-Path $run 'linux'); $win = New-Item -ItemType Directory (Join-Path $run 'windows')
 $gm = (Get-Content (Join-Path $golden 'manifest.json') -Raw | ConvertFrom-Json).cases
+$gmG5 = (Get-Content (Join-Path $goldenG5 'manifest.json') -Raw | ConvertFrom-Json).cases
 try {
     $sw = [Diagnostics.Stopwatch]::StartNew(); while (-not ((Test-Path $log) -and ((Get-Content $log) -contains 'listening'))) { if ($sw.Elapsed.TotalSeconds -gt 15) { throw 'stand-in terrain server did not start' }; Start-Sleep -Milliseconds 200 }
     foreach ($c in $cases) {
         $terrain = New-Item -ItemType Directory (Join-Path $run "terrain-$($c.Id)")   # empty: everything is fetched
         $spec = Join-Path $run "$($c.Id).json"
-        [ordered]@{ Tx = $k4hta; Radio = $radio; Options = [ordered]@{ Kind = $c.Kind; Radius = 30; RxHeight = 6; Metric = $false; Hd = $c.Hd; Smooth = $false; Model = 'Itwom'; OutputName = $c.Name; CitiesFile = $c.Cities } } |
+        $tx = if ($c.Tx) { $c.Tx } else { $k4hta }; $rd = if ($c.Radio) { $c.Radio } else { $radio }
+        [ordered]@{ Tx = $tx; Radio = $rd; Options = [ordered]@{ Kind = $c.Kind; Radius = $c.Radius; RxHeight = 6; Metric = $false; Hd = $c.Hd; Smooth = $false; Model = 'Itwom'; OutputName = $c.Name;
+                    CitiesFile = $c.Cities; NoShading = [bool]$c.NoShading; UdtFile = $c.Udt } } |
             ConvertTo-Json -Depth 4 | Set-Content -Encoding utf8 $spec
+        $gdir = if ($c.G5) { $goldenG5 } else { $golden }; $gman = if ($c.G5) { $gmG5 } else { $gm }
         $t0 = Get-Date
         $proc = Start-Process $App -PassThru -Wait -ArgumentList @('--coverage-job', "`"$spec`"", '--terrain', "`"$($terrain.FullName)`"", '--jobs', "`"$($jobs.FullName)`"",
             '--terrain-std-url', "http://localhost:$Port/dem3/", '--terrain-hd-url', "http://localhost:$Port/skadi/")
@@ -61,15 +80,23 @@ try {
         $folder = $out[0]
 
         $gfiles = @{}; New-Item -ItemType Directory (Join-Path $lin $c.Id) | Out-Null
-        foreach ($name in $gm.($c.Id).files.PSObject.Properties.Name) {
+        foreach ($name in $gman.($c.Id).files.PSObject.Properties.Name) {
             if ($notCompared[$name]) { Write-Host "  $($c.Id)  $($name): not compared - $($notCompared[$name])"; continue }
-            Copy-Item (Join-Path $golden "$($c.Id)\$name") (Join-Path $lin $c.Id)
-            $gfiles[$name] = $gm.($c.Id).files.$name
+            if ($scfRenamed[$c.Id] -and $name -eq $scfRenamed[$c.Id][0]) {
+                $a = [IO.File]::ReadAllText((Join-Path $gdir "$($c.Id)\$name"), [Text.Encoding]::GetEncoding(28591)) -replace [regex]::Escape($name), 'X'
+                $b = [IO.File]::ReadAllText((Join-Path $folder $scfRenamed[$c.Id][1]), [Text.Encoding]::GetEncoding(28591)) -replace "`r`n", "`n" -replace [regex]::Escape($scfRenamed[$c.Id][1]), 'X'
+                if ($a -eq $b) { Write-Host "[PASS] $($c.Id)  $name identical to the app's $($scfRenamed[$c.Id][1]) apart from the file name in its header" }
+                else { Write-Host "[FAIL] $($c.Id)  $name differs from the app's $($scfRenamed[$c.Id][1]) beyond the file name"; $problems++ }
+                continue
+            }
+            Copy-Item (Join-Path $gdir "$($c.Id)\$name") (Join-Path $lin $c.Id)
+            $gfiles[$name] = $gman.($c.Id).files.$name
         }
         $lm[$c.Id] = @{ exit = 0; files = $gfiles }
         $wfiles = @{}; New-Item -ItemType Directory (Join-Path $win $c.Id) | Out-Null
-        foreach ($f in Get-ChildItem $folder -File | Where-Object { $_.Extension -notin '.qth', '.lrp' -and $_.Name -notin 'run-again.cmd', 'splat-log.txt', 'job.json', 'cities.dat' }) {
+        foreach ($f in Get-ChildItem $folder -File | Where-Object { $_.Extension -notin '.qth', '.lrp', '.az', '.el', '.udt' -and $_.Name -notin 'run-again.cmd', 'splat-log.txt', 'job.json', 'cities.dat' }) {
             $name = $f.Name
+            if ($scfRenamed[$c.Id] -and $name -eq $scfRenamed[$c.Id][1]) { continue }   # checked above
             Copy-Item $f.FullName (Join-Path $win "$($c.Id)\$name")
             $wfiles[$name] = @{ sha256 = (Get-FileHash $f.FullName).Hash.ToLower(); size = $f.Length }
         }

@@ -15,6 +15,7 @@ public partial class MainWindow
 {
     StationLibrary? _library;
     Station? _editing;            // null while adding a new station
+    AntennaPattern? _editPattern; // the pattern in the editor (saved with the station)
     double? _pinLat, _pinLon;
     string? _pinSource;           // how the pin's position was found
     bool _pinMoved;               // moved by hand after it was found
@@ -89,6 +90,7 @@ public partial class MainWindow
         NameBox.Text = s?.Name ?? "";
         HeightBox.Text = s == null ? "" : s.AntennaHeight.ToString("0.##", CultureInfo.InvariantCulture);
         UnitBox.SelectedIndex = s?.HeightUnit == HeightUnit.Meters ? 1 : 0;
+        ShowPattern(s?.Pattern?.Clone());
         MethodTabs.SelectedIndex = 0;
         ShowMethodHint();
         ClearPin();
@@ -326,6 +328,7 @@ public partial class MainWindow
             HeightUnit = UnitBox.SelectedIndex == 1 ? HeightUnit.Meters : HeightUnit.Feet,
             Source = FinalSource(), Updated = DateTime.Now,
             Radio = _editing?.Radio,   // the transmitter settings from path analysis are kept
+            Pattern = _editPattern,
         };
         if (candidate.Problem(_library.Stations.Where(x => !ReferenceEquals(x, _editing))) is { } problem)
         { EditorError.Text = problem; return; }
@@ -396,6 +399,13 @@ public partial class MainWindow
                     if (answer != MessageBoxResult.Yes) continue;
                     _library.Stations.Remove(existing);
                     st.Radio = existing.Radio;
+                    st.Pattern = existing.Pattern;
+                }
+                // So do .az/.el antenna pattern files of the same name.
+                if (File.Exists(Path.ChangeExtension(f, ".az")))
+                {
+                    try { st.Pattern = AntennaPattern.Load(Path.ChangeExtension(f, ".az")); }
+                    catch (Exception ex) when (ex is InvalidDataException or IOException) { problems.Add($"{Path.GetFileNameWithoutExtension(f)}.az wasn't used: {ex.Message}"); }
                 }
                 // A .lrp beside the .qth (as SPLAT! looks for it) brings the transmitter's radio settings.
                 string lrp = Path.ChangeExtension(f, ".lrp");
@@ -456,4 +466,24 @@ public partial class MainWindow
     }
 
     static string Num(double v) => v.ToString("R", CultureInfo.InvariantCulture);
+
+    // ---- antenna pattern (G5) ----
+    void ShowPattern(AntennaPattern? p)
+    {
+        _editPattern = p;
+        PatternText.Text = p == null ? "None: the same in all directions." : $"From {p.Source}. SPLAT! uses it when this station transmits.";
+        PatternClearButton.IsEnabled = p != null;
+    }
+
+    void Pattern_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new OpenFileDialog { Title = "Choose the antenna's SPLAT! pattern file (.az; a .el beside it is read too)",
+                                       Filter = "SPLAT! antenna pattern (*.az;*.el)|*.az;*.el|All files (*.*)|*.*" };
+        if (dlg.ShowDialog(this) != true) return;
+        try { ShowPattern(AntennaPattern.Load(dlg.FileName)); EditorError.Text = ""; }
+        catch (Exception ex) when (ex is InvalidDataException or IOException or UnauthorizedAccessException)
+        { EditorError.Text = $"{Path.GetFileName(dlg.FileName)} couldn't be used: {ex.Message}"; }
+    }
+
+    void PatternClear_Click(object sender, RoutedEventArgs e) => ShowPattern(null);
 }

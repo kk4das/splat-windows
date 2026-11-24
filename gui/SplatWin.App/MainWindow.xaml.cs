@@ -11,7 +11,7 @@ public partial class MainWindow : Window
 {
     const string AppHost = "app.splat.local";   // the map page (files shipped with the app)
     const string MapHost = "map.splat.local";   // the images made from the opened map
-    public const string AgentName = "SPLATforWindows/0.5";   // identifies the app to map-tile servers
+    public const string AgentName = "SPLATforWindows/0.6";   // identifies the app to map-tile servers
 
     static readonly string DataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SPLATforWindows");
     static readonly string MapCache = Path.Combine(DataDir, "map-cache");
@@ -19,6 +19,8 @@ public partial class MainWindow : Window
     readonly string? _startupKml;
     LoadedMap? _map;
     bool _pageReady;
+    /// <summary>What "Open in Google Earth Pro" opens: the last map or path shown.</summary>
+    string? _earthFile;
 
     public MainWindow(string? startupKml, string stationsPath)
     {
@@ -26,6 +28,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         LoadLibrary(stationsPath);
         UpdateQrzButton();
+        OpacitySlider.Value = App.Settings.MapOpacity;
         Loaded += async (_, _) => await InitWebAsync();
     }
 
@@ -98,6 +101,20 @@ public partial class MainWindow : Window
                 System.Windows.Automation.AutomationProperties.SetHelpText(Web,
                     $"Map shows the path with {doc.RootElement.GetProperty("obstructions").GetInt32()} obstruction mark(s).");
                 break;
+            case "probe":   // a click on the map while a coverage map is shown
+                {
+                    double lat = doc.RootElement.GetProperty("lat").GetDouble(), lon = doc.RootElement.GetProperty("lon").GetDouble();
+                    string? what = _map?.Probe(lat, lon);
+                    string text = what == null
+                        ? (_map == null ? "" : "Outside the coverage map, or its colour key isn't known.")
+                        : $"{what} (read from the map's colour, so approximate)";
+                    if (text.Length == 0) break;
+                    _ = Web.CoreWebView2.ExecuteScriptAsync($"window.splat.showProbe({lat.ToString(System.Globalization.CultureInfo.InvariantCulture)}, " +
+                        $"{lon.ToString(System.Globalization.CultureInfo.InvariantCulture)}, {JsonSerializer.Serialize(text)})");
+                    Status.Text = $"{lat:0.00000}, {lon:0.00000}: {text}";
+                    System.Windows.Automation.AutomationProperties.SetItemStatus(Web, "Readout: " + text);
+                    break;
+                }
             case "error":
                 Status.Text = "Map page: " + doc.RootElement.GetProperty("text").GetString();
                 break;
@@ -113,12 +130,18 @@ public partial class MainWindow : Window
         {
             // Each map gets its own cache folder so the page never shows a stale image.
             string outDir = Path.Combine(MapCache, DateTime.Now.ToString("yyyyMMdd-HHmmss-fff"));
-            var map = await Task.Run(() => MapLoader.Load(kmlPath, outDir));
+            // A map the app made knows whether it was drawn without terrain shading (its white is then shown clear).
+            bool clear = SplatWin.Core.JobRecord.Read(Path.GetDirectoryName(Path.GetFullPath(kmlPath))!)?.Coverage?.NoShading == true;
+            var pins = (_library?.Stations ?? new List<SplatWin.Core.Station>())
+                .Select(s => new SplatWin.Core.KmlPin(s.Name.Trim(), s.Lat, s.Lon, $"Station: {s.Grid}, antenna {s.HeightText}")).ToList();
+            var map = await Task.Run(() => MapLoader.Load(kmlPath, outDir, clear, pins));
             _map = map;
+            _earthFile = map.Kmz;
             string rel = Path.GetRelativePath(MapCache, map.MercatorPng).Replace('\\', '/');
             string json = MapLoader.PageJson(map, $"https://{MapHost}/{Uri.EscapeDataString(rel).Replace("%2F", "/")}");
             await Web.CoreWebView2.ExecuteScriptAsync($"window.splat.showMap({json}); window.splat.setOpacity({OpacitySlider.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)});");
-            EarthButton.IsEnabled = OpacitySlider.IsEnabled = true;
+            SetEarthFile(map.Kmz);
+            OpacitySlider.IsEnabled = true;
             Title = $"{Path.GetFileName(kmlPath)} - SPLAT! for Windows (preview)";
         }
         catch (Exception ex)
@@ -146,19 +169,42 @@ public partial class MainWindow : Window
 
     void Earth_Click(object sender, RoutedEventArgs e)
     {
-        if (_map == null) return;
+        if (_earthFile == null) return;
         string? pro = GoogleEarthPro.Find();
         try
         {
-            if (pro != null) Process.Start(new ProcessStartInfo(pro) { ArgumentList = { _map.Kmz }, UseShellExecute = false });
-            else Process.Start(new ProcessStartInfo(_map.Kmz) { UseShellExecute = true });   // whatever opens .kmz
-            Status.Text = $"Opened {Path.GetFileName(_map.Kmz)} in {(pro != null ? "Google Earth Pro" : "the program Windows uses for .kmz files")}.";
+            if (pro != null) Process.Start(new ProcessStartInfo(pro) { ArgumentList = { _earthFile }, UseShellExecute = false });
+            else Process.Start(new ProcessStartInfo(_earthFile) { UseShellExecute = true });   // whatever opens .kmz
+            Status.Text = $"Opened {Path.GetFileName(_earthFile)} in {(pro != null ? "Google Earth Pro" : "the program Windows uses for .kmz files")}.";
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException or FileNotFoundException)
         {
-            Status.Text = "Google Earth Pro was not found, and no program is set to open .kmz files. " +
-                          $"The file is {_map.Kmz} (it also opens on earth.google.com via Projects → Import). ({ex.Message})";
+            // Neither Pro nor any program for .kmz: the web version takes the same file.
+            Status.Text = "Google Earth Pro isn't installed and no program opens .kmz files, so here are the steps for Google Earth on the web.";
+            new EarthWebWindow(_earthFile) { Owner = this }.ShowDialog();
         }
+    }
+
+    void EarthWeb_Click(object sender, RoutedEventArgs e)
+    {
+        if (_earthFile != null) new EarthWebWindow(_earthFile) { Owner = this }.ShowDialog();
+    }
+
+    /// <summary>Makes a file the one the Google Earth buttons open.</summary>
+    void SetEarthFile(string? kmz)
+    {
+        _earthFile = kmz;
+        EarthButton.IsEnabled = EarthWebButton.IsEnabled = kmz != null;
+    }
+
+    void Settings_Click(object sender, RoutedEventArgs e)
+    {
+        var w = new SettingsWindow { Owner = this };
+        w.ShowDialog();
+        UpdateQrzButton();
+        ShowTerrain();
+        OpacitySlider.Value = App.Settings.MapOpacity;
+        if (w.Outcome != null) Status.Text = w.Outcome;
     }
 
     static void OpenExternal(string uri)

@@ -404,8 +404,9 @@ public class PathJobTests
         try
         {
             var j = PathJob.Create(jobs, tx, rx, radio, new PathOptions(PathModel.LongleyRice, true, 80, 9.5), Path.Combine(Repo.Root, "data", "sdf3"), Path.Combine(Repo.Root, "dist"));
-            Assert.Equal(new[] { "-t", "k4hta", "-r", "kk4das", "-d", Path.Combine(Repo.Root, "data", "sdf3"), "-olditm", "-metric", "-fz", "80", "-gc", "9.5" }, j.Args(null));
+            Assert.Equal(new[] { "-t", "k4hta", "-r", "kk4das", "-d", Path.Combine(Repo.Root, "data", "sdf3"), "-olditm", "-metric", "-fz", "80", "-gc", "9.5", "-kml" }, j.Args(null));
             Assert.Equal(new[] { "-l", "loss.png", "-gpsav" }, j.Args(GraphKind.Loss).TakeLast(3));
+            Assert.DoesNotContain("-kml", j.Args(GraphKind.Loss));   // the path KML comes from the report run only
             // Each graph folder has its own copy of the inputs (SPLAT! cuts .lrp names at the first '.').
             foreach (var g in PathJob.GraphRuns.Values)
                 Assert.Equal(new[] { "k4hta.lrp", "k4hta.qth", "kk4das.qth" }, Directory.GetFiles(Path.Combine(j.Folder, g.Folder)).Select(Path.GetFileName).Order());

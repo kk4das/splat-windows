@@ -276,7 +276,7 @@ make plots.
   against golden output**.
 - ~~A simple GUI or PowerShell front end.~~ Superseded by the GUI stages below.
 
-### Stages G0–G7 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 passed 2026-11-23; G5 next)
+### Stages G0–G7 — GUI front end (G0, G1 passed 2026-11-22; G2 passed 2026-11-22; G3 passed 2026-11-22; G4 passed 2026-11-23; G5 DONE 2026-11-23, awaiting owner's review; G6 next)
 *Plain language:* a normal Windows program, with no command line. Stations are located by call
 sign (QRZ.com, or free callook.info for US calls), Maidenhead grid, coordinates or a map click. The
 coverage map is shown in the window, with a button that opens it in Google Earth Pro.
@@ -303,7 +303,16 @@ coverage map is shown in the window, with a button that opens it in Google Earth
   From G4, `scripts\gui_coverage_uitest.ps1 -App gui\publish\SplatForWindows.exe -Work work\g4-uitest`
   and `scripts\gui_coverage_equiv.ps1 -App gui\publish\SplatForWindows.exe -Work work\g4-equiv`
   (coverage from an empty terrain folder against the Linux goldens; must say EQUIVALENT). Both use
-  `scriptsake_terrain.ps1`, a localhost stand-in for the terrain sources, so tests never download.
+  `scripts\fake_terrain.ps1`, a localhost stand-in for the terrain sources, so tests never download.
+  From G5, both gate scripts also run the G5 cases (P06, P07, P09, P10; M09, M10) against
+  `tests\golden\linux-g5` and `data\golden-linux-g5` (made by `scripts\linux-ref\run_g5.sh` from
+  `tests\cases\cases-g5.json`). The port itself on those cases:
+  `python scripts\run_cases.py --bin dist --work work\g5-port --cases tests\cases\cases-g5.json --inputs tests\cases\inputs --hgt3 data\hgt3 --hgt1 data\hgt1`
+  then `compare_outputs.py --linux data\golden-linux-g5 --windows work\g5-port --cases tests\cases\cases-g5.json --last-digit`.
+  Every UI test also passes `--settings <its own file>`, so none touches the owner's settings.json.
+  **Publish with `gui\build-gui.ps1 publish` (self-contained).** A framework-dependent publish
+  makes Windows offer to install the .NET Desktop Runtime each time the app starts (G5 finding).
+  The icon is drawn by `scripts\make_icon.ps1`.
 - **Run `verify_toolchain.ps1` from PowerShell, not Git Bash.** Git Bash sets `HOME`, so the
   "P4 HOME unset" finding can't reproduce there and the script reports PROBLEMS.
 
@@ -416,6 +425,20 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-23 — Stage G5 (Google Earth and polish) complete. HALT for owner review.**
+  - Started on the owner's words "Start G5". Owner's scope choice (asked at the start): the
+    planned items plus **stations in Google Earth, terrain shading off, antenna patterns and
+    -udt**; not town names (after an explanation).
+  - **Owner decision (2026-11-23): the last-digit tolerance now also covers point-to-point
+    `.kml`** (owner: "Allow last digit (Recommended)"). The port's path KML first point differs
+    from Linux by 0.000001° (lon1 − arccos(≈1), glibc vs UCRT). Coverage KML stays exact.
+  - New Linux golden cases P09, P10, M09, M10 (WSL `splat-ref`, same binaries as Stage 1). The
+    port: EQUIVALENT. App gates: path 10 cases and coverage 4 maps, EQUIVALENT.
+  - Unit tests 304; window tests coverage 48/48, path 36/36, stations 31/31, QRZ 24/24; 12
+    deliberate breakages all caught. Preflight OK at both ends. Report: `reports\stageG5-earth-polish.md`.
+  - Finding: the first G5 test build was published framework-dependent by mistake, so each app
+    start offered the .NET Desktop Runtime (the owner saw repeated prompts). Nothing was
+    installed; rebuilt self-contained. Also fixed: two G4 runbook paths garbled by escape codes.
 - **2026-11-23 — New stage G6, help and getting started,** at the owner's request: a Help menu
   with indexed, searchable offline help (including how to read the coverage colour key),
   step-by-step getting started, and decision **G9** (first-run wizard; open, recommended yes,

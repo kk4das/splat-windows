@@ -12,16 +12,20 @@ public enum CoverageKind { FieldStrength, PowerDbm, PathLoss, LineOfSight }
 /// <summary>
 /// Options for a coverage map. Radius and receiver height are in miles and feet, or kilometres
 /// and metres when Metric is on (as SPLAT! reads -R, -c and -L). OutputName names the map files;
-/// CitiesFile (optional) labels towns, as -s does.
+/// CitiesFile (optional) labels towns, as -s does. NoShading leaves out SPLAT!'s grey terrain shading
+/// (-ngs: those areas are white, which the app shows as clear). UdtFile is a user-defined terrain
+/// file (-udt) copied into the job.
 /// </summary>
 public sealed record CoverageOptions(CoverageKind Kind = CoverageKind.FieldStrength, double Radius = 30, double RxHeight = 6,
                                      bool Metric = false, bool Hd = false, bool Smooth = false, PathModel Model = PathModel.Itwom,
-                                     string OutputName = "coverage", string? CitiesFile = null);
+                                     string OutputName = "coverage", string? CitiesFile = null, bool NoShading = false, string? UdtFile = null);
 
 /// <summary>What a job folder records about itself (job.json), for the job history.</summary>
 public sealed record JobRecord(string Kind, string Transmitter, DateTime Created, CoverageOptions? Coverage, RadioSettings? Radio,
                                string? MapKml, string? ColourKey, bool Finished, string? Note)
 {
+    /// <summary>The antenna pattern used, if any (what the .az/.el files in the folder came from).</summary>
+    public string? Pattern { get; init; }
     public const string FileName = "job.json";
     static readonly JsonSerializerOptions Json = new() { WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
     public string ToJson() => JsonSerializer.Serialize(this, Json);
@@ -53,7 +57,8 @@ public sealed record JobRecord(string Kind, string Transmitter, DateTime Created
             CoverageKind.PathLoss => "path loss",
             _ => "line of sight",
         };
-        return $"{Created:yyyy-MM-dd HH:mm}  {Transmitter}, {c.Radius:0.##} {(c.Metric ? "km" : "mi")}, {kind}, RX {c.RxHeight:0.##} {(c.Metric ? "m" : "ft")}{(c.Hd ? ", HD" : "")}";
+        return $"{Created:yyyy-MM-dd HH:mm}  {Transmitter}, {c.Radius:0.##} {(c.Metric ? "km" : "mi")}, {kind}, RX {c.RxHeight:0.##} {(c.Metric ? "m" : "ft")}" +
+               $"{(c.Hd ? ", HD" : "")}{(Pattern != null ? ", antenna pattern" : "")}{(c.UdtFile != null ? ", obstacles" : "")}";
     }
 }
 
@@ -112,6 +117,8 @@ public sealed class CoverageJob
         string exe = Path.Combine(engine, o.Hd ? "splat-hd.exe" : "splat.exe");
         if (!File.Exists(exe)) return $"The SPLAT! program wasn't found at {exe}.";
         if (o.CitiesFile != null && !File.Exists(o.CitiesFile)) return $"The cities file {o.CitiesFile} doesn't exist.";
+        if (tx.Pattern?.Problem() is { } pp) return $"{tx.Name}'s antenna pattern: {pp}";
+        if (o.UdtFile != null && UserTerrain.Problem(o.UdtFile, Tiles(tx, o), o.Hd) is { } up) return up;
         if (o.OutputName.Length == 0 || o.OutputName.Any(c => !(char.IsLetterOrDigit(c) || c is '-' or '_'))) return "The map name may use only letters, digits, - and _.";
         return null;
     }
@@ -130,6 +137,9 @@ public sealed class CoverageJob
         File.WriteAllText(Path.Combine(folder, job.TxFile + ".qth"), QthFile.Format(tx.ToQth() with { Name = tx.Name.Trim() }), Encoding.ASCII);
         if (o.Kind != CoverageKind.LineOfSight) File.WriteAllText(Path.Combine(folder, job.TxFile + ".lrp"), LrpFile.Format(job.Radio), Encoding.ASCII);
         if (o.CitiesFile != null) File.Copy(o.CitiesFile, Path.Combine(folder, "cities.dat"));
+        // The pattern shapes the signal, so it isn't used for line of sight (SPLAT! ignores it there).
+        if (o.Kind != CoverageKind.LineOfSight) tx.Pattern?.WriteFor(folder, job.TxFile);
+        if (o.UdtFile != null) File.Copy(o.UdtFile, Path.Combine(folder, UserTerrain.JobFileName));
         File.WriteAllText(Path.Combine(folder, PathJob.ReRunFile), job.ReRunScript(), Encoding.ASCII);
         job.Record(false, null, null, "running");
         return job;
@@ -137,7 +147,8 @@ public sealed class CoverageJob
 
     void Record(bool finished, string? kml, string? key, string? note) =>
         File.WriteAllText(Path.Combine(Folder, JobRecord.FileName),
-            new JobRecord("coverage", Tx.Name.Trim(), Created, Options, Options.Kind == CoverageKind.LineOfSight ? null : Radio, kml, key, finished, note).ToJson());
+            new JobRecord("coverage", Tx.Name.Trim(), Created, Options, Options.Kind == CoverageKind.LineOfSight ? null : Radio, kml, key, finished, note)
+            { Pattern = Options.Kind != CoverageKind.LineOfSight ? Tx.Pattern?.Source : null }.ToJson());
 
     public List<string> Args()
     {
@@ -146,6 +157,8 @@ public sealed class CoverageJob
         a.AddRange(new[] { Options.Kind == CoverageKind.LineOfSight ? "-c" : "-L", Options.RxHeight.ToString("0.###", ci) });
         a.AddRange(new[] { "-R", Options.Radius.ToString("0.###", ci), "-d", TerrainFolder, "-o", Options.OutputName + ".ppm" });
         if (Options.CitiesFile != null) a.AddRange(new[] { "-s", "cities.dat" });
+        if (Options.UdtFile != null) a.AddRange(new[] { "-udt", UserTerrain.JobFileName });
+        if (Options.NoShading) a.Add("-ngs");
         a.Add("-kml");
         if (Options.Kind == CoverageKind.PowerDbm) a.Add("-dbm");
         if (Options.Smooth) a.Add("-sc");

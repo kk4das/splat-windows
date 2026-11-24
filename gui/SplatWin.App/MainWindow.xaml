@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         xmlns:local="clr-namespace:SplatWin.App"
-        Title="SPLAT! for Windows (preview)" Width="1280" Height="840" MinWidth="760" MinHeight="480"
+        Title="SPLAT! for Windows (preview)" Width="1280" Height="840" MinWidth="760" MinHeight="480" Icon="splat.ico"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style x:Key="Caption" TargetType="TextBlock">
@@ -23,10 +23,14 @@
                 <Button x:Name="OpenButton" Content="Open coverage map…" Padding="14,6" Click="Open_Click"
                         ToolTip="Open a SPLAT! coverage map (.kml made with -kml)"/>
                 <Button x:Name="EarthButton" Content="Open in Google Earth Pro" Padding="14,6" Margin="8,0,0,0"
-                        IsEnabled="False" Click="Earth_Click"/>
+                        IsEnabled="False" Click="Earth_Click" ToolTip="Open the map or path shown in Google Earth Pro"/>
+                <Button x:Name="EarthWebButton" Content="Google Earth on the web…" Padding="10,6" Margin="6,0,0,0"
+                        IsEnabled="False" Click="EarthWeb_Click" ToolTip="How to open the same file in Google Earth in a web browser"/>
                 <TextBlock Text="Map opacity" VerticalAlignment="Center" Margin="24,0,8,0"/>
                 <Slider x:Name="OpacitySlider" Width="160" Minimum="0" Maximum="1" Value="0.65" VerticalAlignment="Center"
                         ValueChanged="Opacity_Changed" IsEnabled="False"/>
+                <Button x:Name="SettingsButton" DockPanel.Dock="Right" Content="Settings…" Padding="14,6" Margin="8,0,0,0" Click="Settings_Click"
+                        ToolTip="Terrain folder, defaults for new maps, map opacity, QRZ.com and Google Earth"/>
                 <Button x:Name="QrzButton" DockPanel.Dock="Right" Content="QRZ.com: sign in…" Padding="14,6" Click="Qrz_Click"
                         ToolTip="Sign in to QRZ.com for worldwide call sign lookups (needs your QRZ XML Logbook Data subscription)"/>
             </DockPanel>
@@ -136,6 +140,14 @@
                             </ComboBox>
                         </StackPanel>
 
+                        <TextBlock Style="{StaticResource Heading}" Text="4. Antenna pattern (optional)"/>
+                        <TextBlock x:Name="PatternText" Style="{StaticResource Caption}" Margin="0,0,0,6" Text="None: the same in all directions."/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="PatternButton" Content="Choose .az file…" Padding="10,4" Click="Pattern_Click"
+                                    ToolTip="SPLAT!'s antenna pattern files: name.az (azimuth) and, beside it, name.el (elevation). Used when this station transmits."/>
+                            <Button x:Name="PatternClearButton" Content="Remove" Padding="10,4" Margin="8,0,0,0" Click="PatternClear_Click" IsEnabled="False"/>
+                        </StackPanel>
+
                         <TextBlock x:Name="EditorError" Foreground="#D13438" TextWrapping="Wrap" Margin="0,12,0,0"/>
                         <StackPanel Orientation="Horizontal" Margin="0,12,0,8">
                             <Button x:Name="SaveButton" Content="Save station" Padding="14,6" Click="Save_Click"
@@ -200,9 +212,16 @@
                                     <ComboBoxItem Content="ITWOM 3.0 (SPLAT!'s default)"/>
                                     <ComboBoxItem Content="Longley-Rice ITM (-olditm)"/>
                                 </ComboBox>
-                                <CheckBox x:Name="CovSmoothBox" Content="Smooth colour bands (-sc)" Margin="0,10,0,0"/>
+                                <CheckBox x:Name="CovShadingBox" Content="Grey terrain shading (off: only the coverage colours, over the street map)" Margin="0,10,0,0" IsChecked="True"/>
+                                <CheckBox x:Name="CovSmoothBox" Content="Smooth colour bands (-sc)" Margin="0,8,0,0"/>
                                 <CheckBox x:Name="CovMetricBox" Content="Kilometres and metres (-metric)" Margin="0,8,0,0" Click="CovMetric_Click"/>
                                 <CheckBox x:Name="CovHdBox" Content="High-definition terrain (1 arc-second, splat-hd; slower)" Margin="0,8,0,0"/>
+                                <TextBlock Text="Obstacles (SPLAT! user terrain, .udt)" Style="{StaticResource Caption}" Margin="0,10,0,3"/>
+                                <DockPanel>
+                                    <Button x:Name="CovUdtClearButton" DockPanel.Dock="Right" Content="Clear" Padding="8,3" Margin="6,0,0,0" Click="UdtClear_Click" IsEnabled="False"/>
+                                    <Button x:Name="CovUdtButton" DockPanel.Dock="Right" Content="Choose…" Padding="8,3" Margin="6,0,0,0" Click="Udt_Click"/>
+                                    <TextBlock x:Name="CovUdtText" Text="None" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                </DockPanel>
                                 <TextBlock Style="{StaticResource Caption}" Margin="0,8,0,0"
                                            Text="Ground, climate and the other radio settings are the transmitter's, from Analyse a path."/>
                             </StackPanel>
@@ -335,6 +354,12 @@
                                     <ComboBoxItem Content="Kilometres and metres (-metric)"/>
                                 </ComboBox>
                                 <CheckBox x:Name="HdBox" Content="High-definition terrain (1 arc-second, splat-hd)" Margin="0,10,0,0"/>
+                                <TextBlock Text="Obstacles (SPLAT! user terrain, .udt)" Style="{StaticResource Caption}" Margin="0,10,0,3"/>
+                                <DockPanel>
+                                    <Button x:Name="UdtClearButton" DockPanel.Dock="Right" Content="Clear" Padding="8,3" Margin="6,0,0,0" Click="UdtClear_Click" IsEnabled="False"/>
+                                    <Button x:Name="UdtButton" DockPanel.Dock="Right" Content="Choose…" Padding="8,3" Margin="6,0,0,0" Click="Udt_Click"/>
+                                    <TextBlock x:Name="UdtText" Text="None" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                </DockPanel>
                             </StackPanel>
                         </Expander>
 
@@ -360,6 +385,7 @@
                                 <TextBlock x:Name="SumNumbers" TextWrapping="Wrap" Margin="0,6,0,0" FontFamily="Consolas" FontSize="12"/>
                                 <TextBlock x:Name="SumWarning" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#D13438" Visibility="Collapsed"/>
                                 <TextBlock x:Name="SumClearance" TextWrapping="Wrap" Margin="0,6,0,0" Style="{StaticResource Caption}"/>
+                                <TextBlock x:Name="SumEarth" TextWrapping="Wrap" Margin="0,6,0,0" Style="{StaticResource Caption}"/>
                                 <Button x:Name="JobFolderButton" Content="Open the job folder" Padding="10,4" Margin="0,8,0,0" HorizontalAlignment="Left"
                                         Click="JobFolder_Click" ToolTip="The inputs, SPLAT!'s outputs and run-again.cmd, which repeats the job from the command line"/>
                             </StackPanel>

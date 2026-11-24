@@ -75,7 +75,7 @@ $fake = Start-Process powershell -WindowStyle Hidden -PassThru -ArgumentList @('
 $null = Wait-For { (Test-Path $log) -and ((Get-Content $log) -contains 'listening') } 15000
 Check (Test-Path $log) 'stand-in QRZ service started'
 
-$script:proc = Start-Process $App -PassThru -ArgumentList @('--stations', "`"$lib`"", '--qrz-url', "http://localhost:$Port/xml/current/", '--qrz-credential', "`"$target`"")
+$script:proc = Start-Process $App -PassThru -ArgumentList @('--stations', "`"$lib`"", '--settings', "`"$(Join-Path $Work 'settings.json')`"", '--qrz-url', "http://localhost:$Port/xml/current/", '--qrz-credential', "`"$target`"")
 try {
     $script:win = Wait-For { $AE::RootElement.FindFirst($TS::Children, (New-Object $PC($AE::ProcessIdProperty, $script:proc.Id))) } 20000
     $null = Wait-For { (Text 'Status') -like 'Ready.*' } 20000

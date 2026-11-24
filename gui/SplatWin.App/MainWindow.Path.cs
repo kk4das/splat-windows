@@ -15,6 +15,8 @@ public partial class MainWindow
 {
     PathResult? _pathResult;
     CancellationTokenSource? _pathCts;
+    /// <summary>The obstacles (.udt) file chosen for paths and maps, or null.</summary>
+    string? _udtFile;
     (double Dielectric, double Conductivity)? _customGround;
 
     void PathOpen_Click(object sender, RoutedEventArgs e)
@@ -70,6 +72,7 @@ public partial class MainWindow
         RadioHint.Text = tx.Radio != null
             ? $"Saved with {tx.Name}. Changes are saved with it when you click Analyse."
             : $"Not set for {tx.Name} yet. Enter them (or load a .lrp file); they are saved with {tx.Name} when you click Analyse.";
+        RadioHint.Text += tx.Pattern != null ? $" Antenna pattern: {tx.Pattern.Describe()}." : " Antenna: the same in all directions (add a pattern with Edit…).";
         FillRadio(r);
     }
 
@@ -121,7 +124,7 @@ public partial class MainWindow
         if (_customGround is { } cg && GroundBox.SelectedIndex == GroundBox.Items.Count - 1) (r.Dielectric, r.Conductivity) = cg;
         else (_, r.Dielectric, r.Conductivity) = RadioSettings.Grounds[Math.Max(0, GroundBox.SelectedIndex)];
         var o = new PathOptions(ModelBox.SelectedIndex == 1 ? PathModel.LongleyRice : PathModel.Itwom, UnitsBox.SelectedIndex == 1,
-                                Get(FzBox, "Fresnel zone clearance (%)"), Get(ClutterBox, "ground clutter height"), HdBox.IsChecked == true);
+                                Get(FzBox, "Fresnel zone clearance (%)"), Get(ClutterBox, "ground clutter height"), HdBox.IsChecked == true, _udtFile);
         return bad != null ? (null, null, bad) : (r, o, null);
     }
 
@@ -284,6 +287,8 @@ public partial class MainWindow
             err.Visibility = err.Text.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
         ReportBox.Text = r.ReportText.Replace("\r\n", "\n").Replace("\n", "\r\n");
+        SetEarthFile(r.KmzPath);
+        SumEarth.Text = r.KmzPath != null ? "Open in Google Earth Pro (top of the window) shows both stations, the path and its line-of-sight part." : "";
         ShowResults(true);
         if (ResultTabs.SelectedIndex < 0) ResultTabs.SelectedIndex = 0;
 
@@ -298,6 +303,25 @@ public partial class MainWindow
             };
             _ = Web.CoreWebView2.ExecuteScriptAsync($"window.splat.showPath({JsonSerializer.Serialize(msg)})");
         }
+    }
+
+    void Udt_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new OpenFileDialog { Title = "Choose a SPLAT! user terrain file of obstacles (.udt)", Filter = "SPLAT! user terrain (*.udt)|*.udt|All files (*.*)|*.*" };
+        if (dlg.ShowDialog(this) != true) return;
+        var (pts, why) = UserTerrain.Parse(File.ReadAllText(dlg.FileName, System.Text.Encoding.Latin1));
+        if (why != null) { (PathPanel.Visibility == Visibility.Visible ? PathError : CovError).Text = $"{Path.GetFileName(dlg.FileName)} couldn't be used: {why}"; return; }
+        SetUdt(dlg.FileName, $"{Path.GetFileName(dlg.FileName)} ({pts.Count} obstacle{(pts.Count == 1 ? "" : "s")})");
+    }
+
+    void UdtClear_Click(object sender, RoutedEventArgs e) => SetUdt(null, "None");
+
+    void SetUdt(string? file, string text)
+    {
+        _udtFile = file;
+        UdtText.Text = CovUdtText.Text = text;
+        UdtText.ToolTip = CovUdtText.ToolTip = file;
+        UdtClearButton.IsEnabled = CovUdtClearButton.IsEnabled = file != null;
     }
 
     static string Short(string name) => name.Length > 8 ? name[..8] + "…" : name;

@@ -1,0 +1,52 @@
+﻿C01  stdout-N38W077.txt                 SAME*    
+C01  stdout-N38W078.txt                 SAME*    
+C01  stdout-N39W077.txt                 SAME*    
+C01  stdout-N39W078.txt                 SAME*    
+P09  K4HTA-site_report.txt              SAME*    
+P09  K4HTA-to-KK4DAS.kml                TOL      2 numbers differ, max |diff| 1e-06, 0 beyond 1 unit in the last printed digit (first: line 79: -77.205793 vs -77.205794)
+P09  K4HTA-to-KK4DAS.txt                SAME*    
+P09  stdout.txt                         SAME*    
+P10  K4HTA_pattern-site_report.txt      SAME*    
+P10  K4HTA_pattern-to-Legion_Hall.kml   TOL      2 numbers differ, max |diff| 1e-06, 0 beyond 1 unit in the last printed digit (first: line 79: -77.205793 vs -77.205794)
+P10  K4HTA_pattern-to-Legion_Hall.txt   SAME*    
+P10  stdout.txt                         SAME*    
+M09  K4HTA_pattern-site_report.txt      SAME*    
+M09  k4hta_pat.scf                      SAME*    
+M09  stdout.txt                         SAME*    
+M10  K4HTA-site_report.txt              SAME*    
+M10  stdout.txt                         SAME*    
+------------------------------------------------------------------------------
+files: SAME=9, SAME*=15, TOL=2
+expected difference 'inputpath' applied to 4 file(s): srtm2sdf echoes the tile path it was given; the test runner passes each machine's own absolute path
+expected difference 'sdfname' applied to 8 file(s): SDF names use '_' instead of ':' on Windows (owner decision D3), as echoed in console output
+expected difference 'crlf' applied to 17 file(s): text files end lines with CR-LF on Windows (upstream text mode; owner decision D11)
+RESULT: EQUIVALENT
+[PASS] clean Windows-like copy passes               0 problems
+[PASS] G5 path KML: last digit +1 accepted          K4HTA-to-KK4DAS.kml: 1 numbers differ, max |diff| 1e-06, 0 beyond 1 unit in the last printed digit (first: line 80: -77.206543 vs -77.206544)
+[PASS] G5 path KML: last digit +2 rejected          K4HTA-to-KK4DAS.kml: 1 numbers differ, max |diff| 2e-06, 1 beyond 1 unit in the last printed digit (first: line 80: -77.206543 vs -77.206545)
+[PASS] G5 path KML: exact without --last-digit      K4HTA-to-KK4DAS.kml: 1 numbers differ, max |diff| 1e-06, 1 beyond |diff| <= 0 (first: line 80: -77.206543 vs -77.206544)
+[PASS] G5 coverage KML: last digit still exact      los_ngs.kml: 1 numbers differ, max |diff| 1e-06, 1 beyond |diff| <= 0 (first: line 37: -77.205793 vs -77.205794)
+[PASS] G5 -ngs map: 10 pixels changed               los_ngs.ppm: 10 of 5760000 pixels differ (0.0002%), box x527-1400 y2399-2399
+[PASS] G5 pattern report: a value changed           K4HTA_pattern-to-Legion_Hall.txt: 1 numbers differ, max |diff| 0.001, 1 beyond |diff| <= 0 (first: line 38: +49.68 vs +49.681)
+SELF-TEST: OK (7/7)
+[PASS] clean Windows-like copy passes               0 problems
+[PASS] report: 116.68 dB -> 116.69 dB               K4HTA-to-KK4DAS.txt: 1 numbers differ, max |diff| 0.01, 1 beyond |diff| <= 0 (first: line 46: 116.68 vs 116.69)
+[PASS] report: a word changed                       K4HTA-to-KK4DAS.txt: line 28 text differs: 'Longley-Rice Parameters Used In This Analysis:' vs 'Longley-Ricf Parameters Used In This Analysis:'
+[PASS] PPM map: 10 pixels changed                   fs.ppm: 10 of 5760000 pixels differ (0.0002%), box x527-1400 y2399-2399
+[PASS] SDF: one elevation +1 m                      38:39:77:78.sdf: 1 of 1440004 values differ (first: value #5000: 35 vs 36)
+[PASS] KML: one coordinate digit                    los.kml: 1 numbers differ, max |diff| 1, 1 beyond |diff| <= 0 (first: line 14: 38.00000 vs 39.00000)
+[PASS] gnuplot data: one value                      profile.gp: 1 numbers differ, max |diff| 9, 1 beyond |diff| <= 0 (first: line 1: 0.000000 vs 09.000000)
+[PASS] file missing on Windows                      loss.ano: 
+[PASS] extra file on Windows (M08 quirk broken)     both.kml: produced on Windows only
+[PASS] exit code changed                            (exit code): Linux 0 vs Windows 1
+[PASS] stdout: real change (not just SDF names)     stdout.txt: line 4 text differs: 'Loading "../sdf3/38_39_77_78.sdf" into page 1... Done!' vs 'Loading "../sdf3/38_39_77_78.sdf" into page 1... Dome!'
+[PASS] tolerance: .gp last digit +1 accepted        profile.gp: 1 numbers differ, max |diff| 1e-06, 0 beyond 1 unit in the last printed digit (first: line 11: 5.491410 vs 5.491411)
+[PASS] tolerance: .gp last digit +2 rejected        profile.gp: 1 numbers differ, max |diff| 2e-06, 1 beyond 1 unit in the last printed digit (first: line 11: 5.491410 vs 5.491412)
+[PASS] tolerance: .ano path loss +0.002 rejected    loss.ano: 1 numbers differ, max |diff| 0.002, 1 beyond 1 unit in the last printed digit (first: line 3: 115.368 vs 115.370)
+[PASS] tolerance: report 0.01 dB still rejected     K4HTA-to-KK4DAS.txt: 1 numbers differ, max |diff| 0.01, 1 beyond |diff| <= 0 (first: line 46: 116.68 vs 116.69)
+[PASS] stdout-: tile path normalised, content not   stdout-N38W078.txt: line 2 text differs: 'Writing 38_39_77_78.sdf... Done!' vs 'Writing 38_39_77_78.sdf... Dome!'
+[PASS] graph: same size, other pixels -> GRAPH      profile.png: 640x480, same size; 17312 of 307200 pixels differ (5.64%, information only)
+[PASS] graph: different size rejected               normheight.png: graph size 640x480 vs 10x10
+[PASS] graph: PNG missing                           loss_metric.png: 
+[PASS] graph: fails when its .gp data fails         profile.png: graph data profile.gp does not pass (640x480, same size; 17312 of 307200 pixels differ (5.64%, information only))
+SELF-TEST: OK (20/20)

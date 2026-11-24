@@ -129,12 +129,23 @@ window.splat = {
     post({ type: "path-shown", obstructions: (p.obstructions || []).length });
   },
   clearPath() { path.clearLayers(); },
+
+  // ---- readout (G5): the app's answer for a clicked point ----
+  showProbe(lat, lon, text) {
+    const div = document.createElement("div");
+    div.textContent = text;            // plain text, never HTML
+    div.style.maxWidth = "240px";
+    L.popup({ autoPan: false }).setLatLng([lat, lon]).setContent(div).openOn(map);
+  },
 };
 
 let path = L.layerGroup().addTo(map), stationList = [];
 let stations = L.layerGroup().addTo(map), pin = null, square = null, editing = false;
 map.on("click", e => {
-  if (!editing) return;
+  if (!editing) {   // on a coverage map, ask the app what the map shows here (G5 readout)
+    if (overlay) post({ type: "probe", lat: e.latlng.lat, lon: e.latlng.lng });
+    return;
+  }
   if (pin) pin.setLatLng(e.latlng);   // keeps a grid square's outline while refining inside it
   else window.splat.setPin(e.latlng.lat, e.latlng.lng, null, false);
   post({ type: "pin", lat: e.latlng.lat, lon: e.latlng.lng });

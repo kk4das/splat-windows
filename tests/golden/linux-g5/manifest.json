@@ -1,0 +1,210 @@
+{
+ "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.41",
+ "python": "3.13.5",
+ "bin": "/opt/splat-bin",
+ "started": "2026-11-23 20:28:35 -0500",
+ "cases": {
+  "C01": {
+   "program": "srtm2sdf",
+   "tiles": [
+    "N38W077.hgt",
+    "N38W078.hgt",
+    "N39W077.hgt",
+    "N39W078.hgt"
+   ],
+   "exit": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "seconds": 2.93,
+   "files": {
+    "38:39:76:77.sdf": {
+     "sha256": "9185a7bb42eff9ef69011bfb0867850690e819d36ffaf78aac44ce0c096f1d79",
+     "size": 3435886
+    },
+    "38:39:77:78.sdf": {
+     "sha256": "f079969ab2514f934aab4eeeb08c78691dd144ada66f1136387f055ec6a954ad",
+     "size": 4649968
+    },
+    "39:40:76:77.sdf": {
+     "sha256": "9609fc1f8d19597752a9a612424620831500d9a00aafcde8af33d371cc6140f3",
+     "size": 4835138
+    },
+    "39:40:77:78.sdf": {
+     "sha256": "898b1264271c40c332d31889dc918b123d332584ff5f2edf12499e539598c945",
+     "size": 5640931
+    },
+    "stdout-N38W077.txt": {
+     "sha256": "1c466ba291ded61971f5951aedf28a1d9fb9e19d31a91f3167c468b8e52b62b7",
+     "size": 71
+    },
+    "stdout-N38W078.txt": {
+     "sha256": "c969e23fe372cc66f27103037066f2190af4a23838cd3ed5b1dd1df60461ea5f",
+     "size": 71
+    },
+    "stdout-N39W077.txt": {
+     "sha256": "2e43bd2a8921a6982b556c4556b8c32430917dd0a255be410999a0d7b578bcb7",
+     "size": 71
+    },
+    "stdout-N39W078.txt": {
+     "sha256": "d49cf800227c0f666f67e70013a96d359ef82ab11b4e424e525e01a9131e7ecc",
+     "size": 71
+    }
+   }
+  },
+  "P09": {
+   "program": "splat",
+   "args": [
+    "-t",
+    "k4hta",
+    "-r",
+    "kk4das",
+    "-d",
+    "../sdf3",
+    "-kml"
+   ],
+   "exit": 0,
+   "seconds": 0.07,
+   "files": {
+    "K4HTA-site_report.txt": {
+     "sha256": "9696d25d362d719c768d47571f3dc357695c8b86948548e918c55752b043f7a6",
+     "size": 378
+    },
+    "K4HTA-to-KK4DAS.kml": {
+     "sha256": "075220d125359b17646a94fc1f92555643a3b6cf18b0ff94ee7feaead7934a22",
+     "size": 8451
+    },
+    "K4HTA-to-KK4DAS.txt": {
+     "sha256": "1eebbcb4ecb51bf960dea7bc1d536a728a21dce90dc08a11a1959f8d11b8f76b",
+     "size": 2605
+    },
+    "stdout.txt": {
+     "sha256": "c237edbbde0fa8c1387feeaa323febee03e2ebc47bd6e42f9f98309a9b2242fa",
+     "size": 250
+    }
+   }
+  },
+  "P10": {
+   "program": "splat",
+   "args": [
+    "-t",
+    "k4hta_pat",
+    "-r",
+    "legion",
+    "-d",
+    "../sdf3",
+    "-udt",
+    "obstacle.udt",
+    "-kml",
+    "-metric"
+   ],
+   "exit": 0,
+   "seconds": 0.06,
+   "files": {
+    "K4HTA_pattern-site_report.txt": {
+     "sha256": "d3b45d02d6f81c30961fc59c247651a98732044012fb0ed8a061755aaf2ef754",
+     "size": 391
+    },
+    "K4HTA_pattern-to-Legion_Hall.kml": {
+     "sha256": "ac1b14c0b1cfad9475d2471bebaebb47d7387af87fc2e3559802b2bc0b99df11",
+     "size": 7573
+    },
+    "K4HTA_pattern-to-Legion_Hall.txt": {
+     "sha256": "6cecc79672f57ee8fdf8a10928b32cc0c8988a69c0789e9125916a54baadcfe8",
+     "size": 2966
+    },
+    "stdout.txt": {
+     "sha256": "caaeb4096f940e6dfb7e35e2598d64fabd18bbde9fd91b01fa54423df0c3dd7b",
+     "size": 317
+    }
+   }
+  },
+  "M09": {
+   "program": "splat",
+   "args": [
+    "-t",
+    "k4hta_pat",
+    "-L",
+    "6",
+    "-R",
+    "30",
+    "-d",
+    "../sdf3",
+    "-o",
+    "pat.ppm",
+    "-udt",
+    "obstacle.udt",
+    "-ngs",
+    "-kml"
+   ],
+   "exit": 0,
+   "seconds": 8.63,
+   "files": {
+    "K4HTA_pattern-site_report.txt": {
+     "sha256": "bdc855c5400dfcf69f53fa21c18bb32b0d1a2ebb326c16313ece46593b13b8fe",
+     "size": 893
+    },
+    "k4hta_pat.scf": {
+     "sha256": "1a6f2e4a305cabf59c4db0eab45ea7769edb15bb63b5a2a35f48318f5cd87943",
+     "size": 750
+    },
+    "pat-ck.ppm": {
+     "sha256": "8e778f7e87f4dbbaaf79fde864ec5dca98db8f59f3813132fbbd3a3012e070bc",
+     "size": 117015
+    },
+    "pat.kml": {
+     "sha256": "7c24288ee98aefe8e90e7351d8d7d8db9145a1fc7b3eff6ec8e56d06ea925b23",
+     "size": 1702
+    },
+    "pat.ppm": {
+     "sha256": "78388820eb6abfab8d233689abad33a25eaa3435590d56e51a6e416c84ea9810",
+     "size": 17280017
+    },
+    "stdout.txt": {
+     "sha256": "40cafce00e10030fe002c3ad9970f23741d7d498f2361f575a0ffbe8f44f2877",
+     "size": 859
+    }
+   }
+  },
+  "M10": {
+   "program": "splat",
+   "args": [
+    "-t",
+    "k4hta",
+    "-c",
+    "6",
+    "-R",
+    "20",
+    "-d",
+    "../sdf3",
+    "-o",
+    "los_ngs.ppm",
+    "-ngs",
+    "-kml"
+   ],
+   "exit": 0,
+   "seconds": 1.67,
+   "files": {
+    "K4HTA-site_report.txt": {
+     "sha256": "c2089ca77c62dce1c35e238e9f7230089946ed9bdf6a37e2382dd844b2e2a3ed",
+     "size": 885
+    },
+    "los_ngs.kml": {
+     "sha256": "9f5cb511ea30a5c0e16a5edb14f97907e4bed21671d5746cc2f5071107632178",
+     "size": 1152
+    },
+    "los_ngs.ppm": {
+     "sha256": "fae7862da6bb2e47564ead9a9bce4d531e35bce465324e7c25caa74498496292",
+     "size": 17280017
+    },
+    "stdout.txt": {
+     "sha256": "030af54ceab6576d255c1148e5275000d5f80f141e7def721548d66d34f22fa0",
+     "size": 776
+    }
+   }
+  }
+ },
+ "finished": "2026-11-23 20:28:48 -0500"
+}

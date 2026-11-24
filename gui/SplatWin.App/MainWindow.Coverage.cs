@@ -21,6 +21,7 @@ public sealed record HistoryItem(string Folder, JobRecord Job)
 public partial class MainWindow
 {
     CancellationTokenSource? _covCts;
+    bool _covDefaultsApplied;
     CoverageResult? _covResult;
     string? _covFolder;
 
@@ -32,6 +33,16 @@ public partial class MainWindow
         CovTxBox.ItemsSource = list;
         CovTxBox.SelectedItem = Selected ?? list.FirstOrDefault(s => s.Radio != null) ?? list[0];
         CovError.Text = "";
+        if (!_covDefaultsApplied)   // the Settings window's defaults, once per session (then the panel keeps what you typed)
+        {
+            _covDefaultsApplied = true;
+            var s = App.Settings;
+            CovMetricBox.IsChecked = s.Metric;
+            CovMetric_Click(this, null!);
+            CovRadiusBox.Text = N(s.CoverageRadius);
+            CovRxBox.Text = N(s.CoverageRxHeight);
+            CovShadingBox.IsChecked = s.TerrainShading;
+        }
         ShowTerrain();
         CovKindBox_SelectionChanged(this, null!);
         RefreshHistory();
@@ -56,6 +67,7 @@ public partial class MainWindow
         CovRadioHint.Text = r != null
             ? $"{tx.Name}'s radio settings (saved with it). Changes are saved when you click Run."
             : $"No radio settings for {tx.Name} yet: enter the frequency and ERP (the rest are SPLAT!'s documented defaults; change them in Analyse a path).";
+        CovRadioHint.Text += tx.Pattern != null ? $" Antenna pattern: {tx.Pattern.Describe()}." : "";
     }
 
     void CovKindBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -105,7 +117,8 @@ public partial class MainWindow
             }
         }
         var o = new CoverageOptions(kind, radius, rxh, CovMetricBox.IsChecked == true, CovHdBox.IsChecked == true,
-                                    CovSmoothBox.IsChecked == true, CovModelBox.SelectedIndex == 1 ? PathModel.LongleyRice : PathModel.Itwom);
+                                    CovSmoothBox.IsChecked == true, CovModelBox.SelectedIndex == 1 ? PathModel.LongleyRice : PathModel.Itwom,
+                                    NoShading: CovShadingBox.IsChecked != true, UdtFile: _udtFile);
         if (CoverageJob.Problem(tx, radio, o, App.EngineDir) is { } p) { CovError.Text = p; return; }
 
         // The radio settings belong to the transmitter: save them with it (not for line of sight, which doesn't use them).
@@ -169,7 +182,7 @@ public partial class MainWindow
             var bmp = new BitmapImage();
             bmp.BeginInit(); bmp.CacheOption = BitmapCacheOption.OnLoad; bmp.UriSource = new Uri(key); bmp.EndInit();
             CovKeyImage.Source = bmp;
-            CovKeyText.Text = "SPLAT!'s colour key for this map.";
+            CovKeyText.Text = "SPLAT!'s colour key for this map. Click the map to read the value at a point.";
         }
         else CovKeyText.Text = rec?.Coverage?.Kind == CoverageKind.LineOfSight
             ? $"Green: a receiver antenna at {rec.Coverage.RxHeight:0.##} {(rec.Coverage.Metric ? "m" : "ft")} has line of sight to {rec.Transmitter}."

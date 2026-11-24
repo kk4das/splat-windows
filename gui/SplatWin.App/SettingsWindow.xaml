@@ -1,0 +1,86 @@
+<Window x:Class="SplatWin.App.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Settings" Width="520" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+    <Window.Resources>
+        <Style x:Key="Caption" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Opacity" Value="0.78"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style x:Key="Heading" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,16,0,6"/>
+        </Style>
+    </Window.Resources>
+    <StackPanel Margin="20,16,20,18">
+        <TextBlock Text="Settings" FontSize="20" FontWeight="SemiBold"/>
+
+        <TextBlock Style="{StaticResource Heading}" Text="Terrain"/>
+        <TextBlock x:Name="TerrainText" TextWrapping="Wrap"/>
+        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+            <Button x:Name="TerrainChangeButton" Content="Change…" Padding="10,4" Click="TerrainChange_Click"/>
+            <Button x:Name="TerrainDefaultButton" Content="Use the app's own folder" Padding="10,4" Margin="8,0,0,0" Click="TerrainDefault_Click"/>
+        </StackPanel>
+        <TextBlock Style="{StaticResource Caption}" Margin="0,6,0,0"
+                   Text="Missing tiles are downloaded here automatically. The app's own folder is local (not in Documents, which OneDrive may sync)."/>
+
+        <TextBlock Style="{StaticResource Heading}" Text="New coverage maps start with"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="Units" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                <ComboBox x:Name="UnitsBox" SelectedIndex="0" AutomationProperties.Name="Default units" SelectionChanged="Units_Changed">
+                    <ComboBoxItem Content="Miles and feet"/>
+                    <ComboBoxItem Content="Kilometres and metres"/>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <TextBlock x:Name="RadiusLabel" Text="Radius (miles)" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                <TextBox x:Name="RadiusBox" AutomationProperties.Name="Default radius"/>
+            </StackPanel>
+            <StackPanel Grid.Column="4">
+                <TextBlock x:Name="RxLabel" Text="Receiver antenna (ft)" Style="{StaticResource Caption}" Margin="0,0,0,3"/>
+                <TextBox x:Name="RxBox" AutomationProperties.Name="Default receiver antenna height"/>
+            </StackPanel>
+        </Grid>
+        <CheckBox x:Name="ShadingBox" Content="Grey terrain shading" Margin="0,10,0,0" AutomationProperties.Name="Default terrain shading"/>
+
+        <TextBlock Style="{StaticResource Heading}" Text="Map"/>
+        <DockPanel>
+            <TextBlock x:Name="OpacityText" DockPanel.Dock="Right" Width="44" TextAlignment="Right" VerticalAlignment="Center"/>
+            <TextBlock Text="Coverage map opacity" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Slider x:Name="OpacitySlider" Minimum="0.1" Maximum="1" VerticalAlignment="Center" ValueChanged="Opacity_Changed"
+                    AutomationProperties.Name="Default map opacity"/>
+        </DockPanel>
+
+        <TextBlock Style="{StaticResource Heading}" Text="QRZ.com"/>
+        <DockPanel>
+            <Button x:Name="QrzButton" DockPanel.Dock="Right" Content="Sign in or out…" Padding="10,4" Margin="8,0,0,0" Click="Qrz_Click"/>
+            <TextBlock x:Name="QrzText" TextWrapping="Wrap" VerticalAlignment="Center"/>
+        </DockPanel>
+
+        <TextBlock Style="{StaticResource Heading}" Text="Google Earth"/>
+        <TextBlock x:Name="EarthText" TextWrapping="Wrap"/>
+
+        <TextBlock Style="{StaticResource Heading}" Text="Job folders"/>
+        <DockPanel>
+            <Button x:Name="JobsButton" DockPanel.Dock="Right" Content="Open" Padding="10,4" Margin="8,0,0,0" Click="Jobs_Click"/>
+            <TextBlock x:Name="JobsText" TextWrapping="Wrap" VerticalAlignment="Center"/>
+        </DockPanel>
+
+        <TextBlock x:Name="ErrorText" Foreground="#D13438" TextWrapping="Wrap" Margin="0,12,0,0"/>
+        <StackPanel Orientation="Horizontal" Margin="0,12,0,0" HorizontalAlignment="Right">
+            <Button x:Name="SaveButton" Content="Save" Padding="18,6" Click="Save_Click" IsDefault="True" Style="{DynamicResource AccentButtonStyle}"/>
+            <Button x:Name="CancelButton" Content="Cancel" Padding="14,6" Margin="8,0,0,0" IsCancel="True"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

@@ -14,6 +14,11 @@
     P04  report folder                 Fresnel 80%, ground clutter 30 ft
     P05  graph-loss folder             metric units: report and path-loss graph data
     P08  graph-profile folder (HD)     splat-hd on 1" terrain: report and terrain-profile data
+    Stage G5 (the same cases' golden runs, tests\golden\linux; and tests\golden\linux-g5 for P09/P10):
+    P06  graph-profile folder          user terrain (-udt obstacle.udt): report and terrain-profile data
+    P07  report folder                 antenna pattern (k4hta_pat.az/.el, kept with the station)
+    P09  report folder                 point-to-point KML (-kml): report and KML (last-digit rule for path KML)
+    P10  report folder                 pattern + user terrain + KML + metric, to Legion_Hall
 .EXAMPLE
   .\scripts\gui_path_equiv.ps1 -App .\work\g3-app\SplatForWindows.exe -Work .\work\g3-equiv
 #>
@@ -29,6 +34,7 @@ $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $inputs = Join-Path $root 'tests\cases\inputs'
 $golden = Join-Path $root 'tests\golden\linux'
+$goldenG5 = Join-Path $root 'tests\golden\linux-g5'
 if (-not $Sdf3) { $Sdf3 = Join-Path $root 'data\sdf3' }
 if (-not $Sdf1) { $Sdf1 = Join-Path $root 'work\windows-s4\sdf1' }
 $Work = (New-Item -ItemType Directory -Force $Work).FullName
@@ -42,12 +48,16 @@ function Site([string]$file) {
     [ordered]@{ Name = $l[0].Trim(); Lat = [double]$l[1]; Lon = $(if ($west -gt 180) { 360 - $west } else { -$west });
                 AntennaHeight = [double]($l[3] -replace '[^0-9.]', ''); HeightUnit = 'Feet'; Source = "test case $file"; Updated = '2026-11-22T00:00:00' }
 }
-function Radio([double]$erp) {
-    $l = Get-Content (Join-Path $inputs 'k4hta.lrp') | ForEach-Object { ($_ -split ';')[0].Trim() }
+function Radio([double]$erp, [string]$lrp = 'k4hta.lrp') {
+    $l = Get-Content (Join-Path $inputs $lrp) | ForEach-Object { ($_ -split ';')[0].Trim() }
     [ordered]@{ Dielectric = [double]$l[0]; Conductivity = [double]$l[1]; Bending = [double]$l[2]; FrequencyMHz = [double]$l[3];
                 Climate = [int]$l[4]; Polarization = [int]$l[5]; Situations = [double]$l[6]; Time = [double]$l[7]; ErpWatts = $erp }
 }
 $k4hta = Site 'k4hta.qth'; $kk4das = Site 'kk4das.qth'; $legion = Site 'legion.qth'
+# The pattern transmitter: its .az/.el kept with the station, as the window does (Edit > Antenna pattern).
+$k4htaPat = Site 'k4hta_pat.qth'
+$k4htaPat.Pattern = [ordered]@{ Az = [IO.File]::ReadAllText((Join-Path $inputs 'k4hta_pat.az')); El = [IO.File]::ReadAllText((Join-Path $inputs 'k4hta_pat.el')); Source = 'k4hta_pat.az and k4hta_pat.el' }
+$udt = Join-Path $inputs 'obstacle.udt'
 
 # case id, receiver, ERP, model, metric, Fresnel %, clutter, HD, which job folder to compare
 $cases = @(
@@ -56,22 +66,29 @@ $cases = @(
     @{ Id = 'P03'; Rx = $legion; Erp = 93; Model = 'Itwom'; Metric = $false; Fz = 60; Gc = 0; Hd = $false; Sub = 'graph-height' },
     @{ Id = 'P04'; Rx = $legion; Erp = 93; Model = 'Itwom'; Metric = $false; Fz = 80; Gc = 30; Hd = $false; Sub = '' },
     @{ Id = 'P05'; Rx = $kk4das; Erp = 93; Model = 'Itwom'; Metric = $true; Fz = 60; Gc = 0; Hd = $false; Sub = 'graph-loss' },
-    @{ Id = 'P08'; Rx = $kk4das; Erp = 93; Model = 'Itwom'; Metric = $false; Fz = 60; Gc = 0; Hd = $true; Sub = 'graph-profile' }
+    @{ Id = 'P08'; Rx = $kk4das; Erp = 93; Model = 'Itwom'; Metric = $false; Fz = 60; Gc = 0; Hd = $true; Sub = 'graph-profile' },
+    @{ Id = 'P06'; Rx = $kk4das; Erp = 93; Model = 'Itwom'; Metric = $false; Fz = 60; Gc = 0; Hd = $false; Sub = 'graph-profile'; Udt = $udt },
+    @{ Id = 'P07'; Tx = $k4htaPat; Lrp = 'k4hta_pat.lrp'; Rx = $kk4das; Erp = 93; Model = 'Itwom'; Metric = $false; Fz = 60; Gc = 0; Hd = $false; Sub = '' },
+    @{ Id = 'P09'; Rx = $kk4das; Erp = 93; Model = 'Itwom'; Metric = $false; Fz = 60; Gc = 0; Hd = $false; Sub = ''; G5 = $true },
+    @{ Id = 'P10'; Tx = $k4htaPat; Lrp = 'k4hta_pat.lrp'; Rx = $legion; Erp = 93; Model = 'Itwom'; Metric = $true; Fz = 60; Gc = 0; Hd = $false; Sub = ''; Udt = $udt; G5 = $true }
 )
 # Golden files not compared, and why. Everything else in each golden case must match.
 $notCompared = @{
     'stdout.txt' = 'console output: the app passes an absolute terrain path (-d), and the app never runs gnuplot'
     '*.png'      = 'graph pictures: the app draws graphs itself from the .gp data, which is compared'
 }
-$renamed = @{ 'P05' = 'loss_metric.png'; 'P08' = 'profile_hd.png' }   # the golden graph's file name; the app's is loss.png / profile.png
+$renamed = @{ 'P05' = 'loss_metric.png'; 'P08' = 'profile_hd.png'; 'P06' = 'profile_udt.png' }   # the golden graph's file name; the app's is loss.png / profile.png
 $skipGp = @{ 'P04' = 'normalized-height (-H) graph data: the app draws the height graph (-h), compared in P03' }
 
 $lin = New-Item -ItemType Directory (Join-Path $run 'linux'); $win = New-Item -ItemType Directory (Join-Path $run 'windows')
 $lm = @{}; $wm = @{}; $notes = @(); $problems = 0
 foreach ($c in $cases) {
     $spec = Join-Path $run "$($c.Id).json"
-    [ordered]@{ Tx = $k4hta; Rx = $c.Rx; Radio = (Radio $c.Erp); Model = $c.Model; Metric = $c.Metric; FresnelPercent = $c.Fz; Clutter = $c.Gc; Hd = $c.Hd } |
+    $tx = if ($c.Tx) { $c.Tx } else { $k4hta }
+    $lrp = if ($c.Lrp) { $c.Lrp } else { 'k4hta.lrp' }
+    [ordered]@{ Tx = $tx; Rx = $c.Rx; Radio = (Radio $c.Erp $lrp); Model = $c.Model; Metric = $c.Metric; FresnelPercent = $c.Fz; Clutter = $c.Gc; Hd = $c.Hd; UdtFile = $c.Udt } |
         ConvertTo-Json -Depth 4 | Set-Content -Encoding utf8 $spec
+    $gdir = if ($c.G5) { Join-Path $goldenG5 $c.Id } else { Join-Path $golden $c.Id }
     $terrain = if ($c.Hd) { $Sdf1 } else { $Sdf3 }
     $p = Start-Process $App -PassThru -Wait -ArgumentList @('--path-job', "`"$spec`"", '--terrain', "`"$terrain`"", '--jobs', "`"$($jobs.FullName)`"")
     if ($p.ExitCode -ne 0 -or -not (Test-Path "$spec.out")) {
@@ -85,7 +102,7 @@ foreach ($c in $cases) {
     # The golden case, minus what isn't compared.
     $gfiles = @{}
     New-Item -ItemType Directory (Join-Path $lin $c.Id) | Out-Null
-    foreach ($f in Get-ChildItem (Join-Path $golden $c.Id) -File) {
+    foreach ($f in Get-ChildItem $gdir -File) {
         $why = $null
         if ($f.Name -eq 'stdout.txt') { $why = $notCompared['stdout.txt'] }
         elseif ($f.Extension -eq '.png') { $why = $notCompared['*.png'] }
@@ -100,8 +117,11 @@ foreach ($c in $cases) {
     # What the app's job produced there: SPLAT!'s outputs, not the app's own inputs and log.
     $wfiles = @{}
     New-Item -ItemType Directory (Join-Path $win $c.Id) | Out-Null
-    foreach ($f in Get-ChildItem $src -File | Where-Object { $_.Extension -notin '.qth', '.lrp' -and $_.Name -notin 'run-again.cmd', 'splat-log.txt' }) {
+    $goldenHasKml = @(Get-ChildItem $gdir -Filter *.kml -File).Count -gt 0
+    foreach ($f in Get-ChildItem $src -File | Where-Object { $_.Extension -notin '.qth', '.lrp', '.az', '.el', '.udt', '.kmz' -and $_.Name -notin 'run-again.cmd', 'splat-log.txt' }) {
         if ($renamed[$c.Id] -and $f.Name -eq 'splat.gp') { continue }
+        if ($f.Extension -eq '.kml' -and -not $goldenHasKml) {   # the app always asks for the path KML; this golden run didn't
+            $notes += "$($c.Id)  $($f.Name): app output not in this golden run (it didn't use -kml); path KML is compared in P09 and P10"; continue }
         Copy-Item $f.FullName (Join-Path $win $c.Id)
         $wfiles[$f.Name] = @{ sha256 = (Get-FileHash $f.FullName).Hash.ToLower(); size = $f.Length }
     }
@@ -109,7 +129,7 @@ foreach ($c in $cases) {
 
     # splat.gp for renamed graphs: identical apart from the "set output" line.
     if ($renamed[$c.Id]) {
-        $g = (Get-Content (Join-Path $golden "$($c.Id)\splat.gp") -Encoding Byte -Raw)
+        $g = (Get-Content (Join-Path $gdir 'splat.gp') -Encoding Byte -Raw)
         $a = [Text.Encoding]::GetEncoding(28591).GetString($g) -replace "set output `"[^`"]*`"", 'set output X'
         $b = [IO.File]::ReadAllText((Join-Path $src 'splat.gp'), [Text.Encoding]::GetEncoding(28591)) -replace "`r`n", "`n" -replace "set output `"[^`"]*`"", 'set output X'
         if ($a -eq $b) { Write-Host "[PASS] $($c.Id)  splat.gp identical apart from the output file name" }
@@ -119,7 +139,7 @@ foreach ($c in $cases) {
 @{ cases = $lm } | ConvertTo-Json -Depth 5 | Set-Content -Encoding ascii (Join-Path $lin 'manifest.json')
 @{ cases = $wm } | ConvertTo-Json -Depth 5 | Set-Content -Encoding ascii (Join-Path $win 'manifest.json')
 $notes | ForEach-Object { Write-Host $_ }
-Write-Host "--- compare_outputs.py (Stage 3/4 comparer, last-digit tolerance for .gp) ---"
+Write-Host "--- compare_outputs.py (Stage 3/4 comparer, last-digit tolerance for .gp and path .kml) ---"
 & $Python (Join-Path $root 'scripts\compare_outputs.py') --linux $lin.FullName --windows $win.FullName --cases (Join-Path $root 'tests\cases\cases.json') --last-digit
 $cmp = $LASTEXITCODE
 Write-Host ("GUI path equivalence: {0} (comparer exit {1}, {2} other problem(s)); run folder {3}" -f $(if ($cmp -eq 0 -and $problems -eq 0) { 'EQUIVALENT' } else { 'NOT EQUIVALENT' }), $cmp, $problems, $run.FullName)

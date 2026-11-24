@@ -10,16 +10,21 @@ public enum PathModel { Itwom, LongleyRice }
 /// SPLAT! reuses the same data file names (profile.gp, ...) for every graph.</summary>
 public enum GraphKind { Profile, Elevation, Height, Loss }
 
-/// <summary>Options for a path analysis. Clutter is in metres when Metric is on (as SPLAT! reads -gc).</summary>
+/// <summary>Options for a path analysis. Clutter is in metres when Metric is on (as SPLAT! reads -gc).
+/// UdtFile is a user-defined terrain file (-udt) to copy into the job; Kml asks SPLAT! for its path KML (-kml, report run only).</summary>
 public sealed record PathOptions(PathModel Model = PathModel.Itwom, bool Metric = false, double FresnelPercent = 60,
-                                 double Clutter = 0, bool Hd = false);
+                                 double Clutter = 0, bool Hd = false, string? UdtFile = null, bool Kml = true);
 
 public sealed record SplatRun(string Folder, IReadOnlyList<string> Args, int ExitCode, string Output);
 
 /// <summary>What a finished path job produced. A graph that couldn't be read has an error text instead.</summary>
 public sealed record PathResult(string Folder, string ReportPath, string ReportText, PathSummary Summary,
                                 IReadOnlyDictionary<GraphKind, GraphData> Graphs,
-                                IReadOnlyDictionary<GraphKind, string> GraphErrors, IReadOnlyList<SplatRun> Runs);
+                                IReadOnlyDictionary<GraphKind, string> GraphErrors, IReadOnlyList<SplatRun> Runs)
+{
+    /// <summary>The Google Earth file made from SPLAT!'s path KML (null when -kml wasn't asked for).</summary>
+    public string? KmzPath { get; init; }
+}
 
 /// <summary>
 /// A point-to-point job. It writes the stations' .qth files and the transmitter's .lrp into a new
@@ -92,6 +97,8 @@ public sealed class PathJob
                 return $"SPLAT! can't name its report after \"{s.Name.Trim()}\" (Windows doesn't allow : ? \" < > | in file names). Rename the station.";
         }
         if (radio.Problem() is { } rp) return rp;
+        if (tx.Pattern?.Problem() is { } pp) return $"{tx.Name}'s antenna pattern: {pp}";
+        if (o.UdtFile != null && UserTerrain.Problem(o.UdtFile, TilesFor(tx, rx, o), o.Hd) is { } up) return up;
         if (!(o.FresnelPercent >= 1 && o.FresnelPercent <= 100)) return "The Fresnel zone clearance should be between 1% and 100% (60% is usual).";
         if (!(o.Clutter >= 0 && o.Clutter <= 1000)) return "The ground clutter height should be between 0 and 1000.";
         string exe = Path.Combine(engine, o.Hd ? "splat-hd.exe" : "splat.exe");
@@ -124,7 +131,12 @@ public sealed class PathJob
         File.WriteAllText(Path.Combine(dir, TxFile + ".qth"), QthFile.Format(Tx.ToQth() with { Name = Tx.Name.Trim() }), Encoding.ASCII);
         File.WriteAllText(Path.Combine(dir, RxFile + ".qth"), QthFile.Format(Rx.ToQth() with { Name = Rx.Name.Trim() }), Encoding.ASCII);
         File.WriteAllText(Path.Combine(dir, TxFile + ".lrp"), LrpFile.Format(Radio), Encoding.ASCII);
+        Tx.Pattern?.WriteFor(dir, TxFile);
+        if (Options.UdtFile != null) File.Copy(Options.UdtFile, Path.Combine(dir, UserTerrain.JobFileName), overwrite: true);
     }
+
+    /// <summary>SPLAT!'s path KML name: the report's, ending .kml.</summary>
+    public string KmlName => Path.ChangeExtension(ReportName(Tx.Name.Trim(), Rx.Name.Trim()), ".kml");
 
     /// <summary>The SPLAT! arguments for the report run (graph = null) or one graph run.</summary>
     public List<string> Args(GraphKind? graph)
@@ -134,6 +146,8 @@ public sealed class PathJob
         if (Options.Metric) a.Add("-metric");
         if (Options.FresnelPercent != 60) a.AddRange(new[] { "-fz", Options.FresnelPercent.ToString("0.###", CultureInfo.InvariantCulture) });
         if (Options.Clutter > 0) a.AddRange(new[] { "-gc", Options.Clutter.ToString("0.###", CultureInfo.InvariantCulture) });
+        if (Options.UdtFile != null) a.AddRange(new[] { "-udt", UserTerrain.JobFileName });
+        if (graph == null && Options.Kml) a.Add("-kml");
         if (graph is { } g) a.AddRange(new[] { GraphRuns[g].Flag, GraphRuns[g].File, "-gpsav" });
         return a;
     }
@@ -166,6 +180,14 @@ public sealed class PathJob
             throw new InvalidOperationException($"SPLAT! didn't write the path report (exit code {runs[0].ExitCode}). Its output is in {Path.Combine(Folder, LogFile)}:\n{Tail(runs[0].Output)}");
         string text = File.ReadAllText(report, Encoding.Latin1);
         var summary = PathSummary.Parse(text);
+        string? kmz = null;
+        if (Options.Kml)
+        {
+            string kml = Path.Combine(Folder, KmlName);
+            if (!File.Exists(kml)) throw new InvalidOperationException($"SPLAT! didn't write its path KML ({KmlName}). Its output is in {Path.Combine(Folder, LogFile)}.");
+            kmz = Path.ChangeExtension(kml, ".kmz");
+            Kmz.WritePath(kmz, Kmz.ReadSplatKml(kml));
+        }
 
         var graphs = new Dictionary<GraphKind, GraphData>();
         var errors = new Dictionary<GraphKind, string>();
@@ -186,7 +208,7 @@ public sealed class PathJob
                 errors[kind] = ex.Message;
             }
         }
-        return new PathResult(Folder, report, text, summary, graphs, errors, runs);
+        return new PathResult(Folder, report, text, summary, graphs, errors, runs) { KmzPath = kmz };
     }
 
     public static string Describe(GraphKind k) => k switch

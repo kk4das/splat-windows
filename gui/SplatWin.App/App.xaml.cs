@@ -33,9 +33,10 @@ public partial class App : Application
     /// <summary>Path jobs: Documents\SPLAT\Jobs\&lt;date&gt; &lt;tx&gt; to &lt;rx&gt;\.</summary>
     public static string JobsDir { get; private set; } =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SPLAT", "Jobs");
-    public static readonly string SettingsPath =
+    /// <summary>The app's preferences; "--settings <file>" (tests) uses another file, so the real one is never touched.</summary>
+    public static string SettingsPath { get; private set; } =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SPLATforWindows", "settings.json");
-    public static AppSettings Settings { get; } = AppSettings.Load(SettingsPath);
+    public static AppSettings Settings { get; private set; } = AppSettings.Load(SettingsPath);
     /// <summary>Set by --terrain (tests): used instead of the saved choice, and never saved.</summary>
     public static string? TerrainOverride { get; private set; }
 
@@ -62,9 +63,10 @@ public partial class App : Application
 
     public static TerrainFetcher Fetcher(string folder) => new(TerrainHttp, folder, EngineDir, TerrainStdSource, TerrainHdSource);
 
-    public static void SetTerrainFolder(string folder)
+    /// <summary>Saves the terrain folder choice; null goes back to the app's own folder.</summary>
+    public static void SetTerrainFolder(string? folder)
     {
-        if (TerrainOverride != null) { TerrainOverride = folder; return; }
+        if (TerrainOverride != null) { TerrainOverride = folder ?? DefaultTerrainFolder; return; }
         Settings.TerrainFolder = folder;
         Settings.Save(SettingsPath);
     }
@@ -75,7 +77,8 @@ public partial class App : Application
         return i >= 0 && i + 1 < args.Length ? args[i + 1] : null;
     }
 
-    sealed record JobSpec(Station Tx, Station Rx, RadioSettings Radio, PathModel Model, bool Metric, double FresnelPercent, double Clutter, bool Hd);
+    sealed record JobSpec(Station Tx, Station Rx, RadioSettings Radio, PathModel Model, bool Metric, double FresnelPercent, double Clutter, bool Hd,
+                          string? UdtFile = null);
 
     static int HeadlessPathJob(string spec)
     {
@@ -83,7 +86,7 @@ public partial class App : Application
         {
             var o = new System.Text.Json.JsonSerializerOptions { Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() } };
             var s = System.Text.Json.JsonSerializer.Deserialize<JobSpec>(File.ReadAllText(spec), o) ?? throw new InvalidDataException("empty job spec");
-            var job = PathJob.Create(JobsDir, s.Tx, s.Rx, s.Radio, new PathOptions(s.Model, s.Metric, s.FresnelPercent, s.Clutter, s.Hd),
+            var job = PathJob.Create(JobsDir, s.Tx, s.Rx, s.Radio, new PathOptions(s.Model, s.Metric, s.FresnelPercent, s.Clutter, s.Hd, s.UdtFile),
                                      TerrainFolder ?? "", EngineDir);
             var r = Task.Run(() => job.RunAsync()).GetAwaiter().GetResult();   // off the UI thread, or the awaits would deadlock
             File.WriteAllText(spec + ".out", r.Folder + "\n" + string.Join("\n", r.Runs.Select(x => $"{Path.GetRelativePath(r.Folder, x.Folder)}\t{x.ExitCode}")));
@@ -149,6 +152,7 @@ public partial class App : Application
         // "--stations <file>" uses another stations library (for testing); the default is Documents\SPLAT\stations.json.
         string stations = StationLibrary.DefaultPath;
         if (Arg(e.Args, "--stations") is { } st) stations = Path.GetFullPath(st);
+        if (Arg(e.Args, "--settings") is { } se) { SettingsPath = Path.GetFullPath(se); Settings = AppSettings.Load(SettingsPath); }
         // Test hooks: "--qrz-url <url>" talks to a stand-in QRZ service, and "--qrz-credential <name>"
         // keeps the test sign-in in its own Credential Manager entry, away from the real one.
         if (Arg(e.Args, "--qrz-url") is { } qu) QrzService = new Uri(qu);
