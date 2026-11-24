@@ -14,3 +14,5 @@ src/hd-parms.h
 gui/**/bin/
 gui/**/obj/
 gui/publish/
+# Packaged releases (G7): made by scripts/make_package.ps1, published on GitHub
+release/

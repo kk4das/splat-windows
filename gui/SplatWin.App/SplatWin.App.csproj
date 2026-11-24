@@ -16,7 +16,9 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>SplatForWindows</AssemblyName>
     <Product>SPLAT! for Windows</Product>
-    <Version>0.7.0</Version>
+    <Version>0.9.0</Version>
+    <!-- English only: leaves out .NET's resource folders for other languages (cs, de, ...), which the app doesn't use. -->
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <ApplicationIcon>splat.ico</ApplicationIcon>
     <!-- ThemeMode (the Fluent theme) is marked experimental in WPF; it is what gives the modern look. -->
     <NoWarn>$(NoWarn);WPF0001</NoWarn>

@@ -33,7 +33,7 @@ public sealed class QrzSignInException(string message, Exception? inner = null) 
 public static class Qrz
 {
     public static readonly Uri DefaultService = new("https://xmldata.qrz.com/xml/current/");
-    public const string Agent = "SPLATWin0.7";   // the spec asks for a short product name and version
+    public const string Agent = "SPLATWin0.9";   // the spec asks for a short product name and version
 
     /// <summary>Upper-cases and checks a call sign (QRZ knows calls worldwide, and DL/AA7BQ style forms).</summary>
     public static string NormalizeCall(string input)

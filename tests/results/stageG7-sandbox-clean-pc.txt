@@ -1,0 +1,23 @@
+﻿Windows Sandbox clean-PC test, 2026-11-24 11:20:08
+Windows: Microsoft Windows 11 Enterprise 10.0.26100 (64-bit)
+[PASS] no .NET SDK or dotnet command on this PC  none
+[PASS] no MSYS2 (the build toolchain) on this PC  
+WebView2 runtime: 155.0.4283.45
+Google Earth Pro: not installed
+Package: SPLATforWindows-0.9.0-win64.zip, SHA-256 817ca3693aaa193a01ff0092200e1a096948c010cbf93bb0f0c99094f0a0e999
+[PASS] the zip matches its published SHA-256  
+[PASS] unzipped; SplatForWindows.exe is there  C:\SPLATtest\SPLATforWindows-0.9.0\SplatForWindows.exe
+[FAIL] engine\splat.exe runs on its own (prints its usage)  exit 1
+[PASS] engine\splat-hd.exe runs on its own  exit 1
+[PASS] path K4HTA to KK4DAS: the report is the Linux report, character for character  exit 0
+[PASS] line-of-sight map, 20 mi, no shading: byte-identical to the Linux map  exit 0, fae7862da6bb2e47564ead9a9bce4d531e35bce465324e7c25caa74498496292
+[PASS] Add Start menu shortcut.cmd makes a shortcut to the app  C:\SPLATtest\SPLATforWindows-0.9.0\SplatForWindows.exe
+[PASS] Remove Start menu shortcut.cmd removes it  
+
+CLEAN-PC TEST: 1 FAILED
+The app is now open as a first-time user sees it: the setup should be showing. Look around (Help, the map), then close the Sandbox window; nothing is kept.
+
+Note (2026-11-24): the one FAIL is a fault in the check, not the package. splat.exe printed its
+full option list (work/sandbox/results/splat-usage.txt: "SPLAT! v1.4.2 Available Options"), but the
+check looked for the word "Usage", which SPLAT! never prints. splat.exe also computed the path and the
+map above in this Sandbox, matching Linux exactly. The check is corrected in scripts/sandbox/sandbox_test.ps1.

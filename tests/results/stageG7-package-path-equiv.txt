@@ -1,0 +1,61 @@
+﻿[PASS] P05  splat.gp identical apart from the output file name
+[PASS] P08  splat.gp identical apart from the output file name
+[PASS] P06  splat.gp identical apart from the output file name
+P01  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d), and the app never runs gnuplot
+P01  K4HTA-to-KK4DAS.kml: app output not in this golden run (it didn't use -kml); path KML is compared in P09 and P10
+P02  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d), and the app never runs gnuplot
+P02  K4HTA-to-KK4DAS.kml: app output not in this golden run (it didn't use -kml); path KML is compared in P09 and P10
+P03  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d), and the app never runs gnuplot
+P04  clutter.gp: not compared - normalized-height (-H) graph data: the app draws the height graph (-h), compared in P03
+P04  curvature.gp: not compared - normalized-height (-H) graph data: the app draws the height graph (-h), compared in P03
+P04  fresnel.gp: not compared - normalized-height (-H) graph data: the app draws the height graph (-h), compared in P03
+P04  fresnel_pt_6.gp: not compared - normalized-height (-H) graph data: the app draws the height graph (-h), compared in P03
+P04  profile.gp: not compared - normalized-height (-H) graph data: the app draws the height graph (-h), compared in P03
+P04  reference.gp: not compared - normalized-height (-H) graph data: the app draws the height graph (-h), compared in P03
+P04  splat.gp: not compared - normalized-height (-H) graph data: the app draws the height graph (-h), compared in P03
+P04  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d), and the app never runs gnuplot
+P04  K4HTA-to-Legion_Hall.kml: app output not in this golden run (it didn't use -kml); path KML is compared in P09 and P10
+P05  splat.gp: not compared - checked separately below (its output-file line names loss_metric.png)
+P05  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d), and the app never runs gnuplot
+P08  splat.gp: not compared - checked separately below (its output-file line names profile_hd.png)
+P08  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d), and the app never runs gnuplot
+P06  splat.gp: not compared - checked separately below (its output-file line names profile_udt.png)
+P06  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d), and the app never runs gnuplot
+P07  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d), and the app never runs gnuplot
+P07  K4HTA_pattern-to-KK4DAS.kml: app output not in this golden run (it didn't use -kml); path KML is compared in P09 and P10
+P09  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d), and the app never runs gnuplot
+P10  stdout.txt: not compared - console output: the app passes an absolute terrain path (-d), and the app never runs gnuplot
+--- compare_outputs.py (Stage 3/4 comparer, last-digit tolerance for .gp and path .kml) ---
+P08  profile.gp                         TOL      1 numbers differ, max |diff| 1e-06, 0 beyond 1 unit in the last printed digit (first: line 235: 3.702228 vs 3.702227)
+P08  K4HTA-site_report.txt              SAME*    
+P08  K4HTA-to-KK4DAS.txt                SAME*    
+P10  K4HTA_pattern-to-Legion_Hall.kml   TOL      2 numbers differ, max |diff| 1e-06, 0 beyond 1 unit in the last printed digit (first: line 79: -77.205793 vs -77.205794)
+P10  K4HTA_pattern-to-Legion_Hall.txt   SAME*    
+P10  K4HTA_pattern-site_report.txt      SAME*    
+P06  profile.gp                         TOL      1 numbers differ, max |diff| 1e-06, 0 beyond 1 unit in the last printed digit (first: line 79: 3.702228 vs 3.702227)
+P06  K4HTA-site_report.txt              SAME*    
+P06  K4HTA-to-KK4DAS.txt                SAME*    
+P01  K4HTA-to-KK4DAS.txt                SAME*    
+P01  K4HTA-site_report.txt              SAME*    
+P04  K4HTA-to-Legion_Hall.txt           SAME*    
+P04  K4HTA-site_report.txt              SAME*    
+P07  K4HTA_pattern-site_report.txt      SAME*    
+P07  K4HTA_pattern-to-KK4DAS.txt        SAME*    
+P02  K4HTA-to-KK4DAS.txt                SAME*    
+P02  K4HTA-site_report.txt              SAME*    
+P05  profile.gp                         SAME*    
+P05  K4HTA-site_report.txt              SAME*    
+P05  K4HTA-to-KK4DAS.txt                SAME*    
+P03  splat.gp                           SAME*    
+P03  profile.gp                         TOL      2 numbers differ, max |diff| 1e-06, 0 beyond 1 unit in the last printed digit (first: line 11: 5.491410 vs 5.491409)
+P03  K4HTA-to-Legion_Hall.txt           SAME*    
+P03  K4HTA-site_report.txt              SAME*    
+P03  curvature.gp                       TOL      2 numbers differ, max |diff| 1e-06, 0 beyond 1 unit in the last printed digit (first: line 11: -401.332750 vs -401.332751)
+P09  K4HTA-to-KK4DAS.kml                TOL      2 numbers differ, max |diff| 1e-06, 0 beyond 1 unit in the last printed digit (first: line 79: -77.205793 vs -77.205794)
+P09  K4HTA-site_report.txt              SAME*    
+P09  K4HTA-to-KK4DAS.txt                SAME*    
+------------------------------------------------------------------------------
+files: SAME=3, SAME*=22, TOL=6
+expected difference 'crlf' applied to 24 file(s): text files end lines with CR-LF on Windows (upstream text mode; owner decision D11)
+RESULT: EQUIVALENT
+GUI path equivalence: EQUIVALENT (comparer exit 0, 0 other problem(s)); run folder D:\ClaudeAI\projects\SPLATWIN\work\pkg-path-equiv\20261124-073422

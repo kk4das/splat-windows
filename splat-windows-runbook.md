@@ -428,6 +428,20 @@ Add the project folder to the Nightly Backup job (owner action, or Code with app
 `data\` can be re-downloaded and needn't be backed up if space matters.
 
 ## Change log
+- **2026-11-24 — Stage G7 (packaging) started** on the owner's words "Start G7". Owner's decisions:
+  **a zip** (no installer; optional Start-menu shortcut script); **clean-PC test in Windows
+  Sandbox** (the owner turns it on: admin and a restart); **version 0.9.0, still "(preview)"**
+  for the club test, 1.0 after feedback; **GPL source: on the kk4das GitHub** (owner: "we'll put
+  the source up on the kk4das github"; creating the repository and pushing wait for an explicit
+  go-ahead).
+  Then: repository **kk4das/splat-windows, public, with the 0.9.0 zip as the first release**
+  (owner: "you can call the repository splat-windows, public - you can include the zip as the
+  initial release"). **Full history is published as is**: the owner chose it over a single
+  snapshot and said the home QTH needn't be hidden ("its openly available on QRZ and FCC
+  database"), so the D7 rounding note no longer applies to publishing. A pre-publish search of
+  all commits found no passwords, keys or tokens (the only e-mail address is upstream's, in
+  src/CHANGES). GitHub CLI 2.105.0 kept portable in D:\ClaudeAI	ools\gh (checksum and
+  signature checked), signed in as kk4das.
 - **2026-11-24 — Owner's G6 review passed, with one change: American spelling.** Owner: "change
   colour to color and any other british english spellings to american english. Everything else
   with help looks good. setup wizard seems helpful - I'll have others test it when we get the app
